@@ -8,6 +8,7 @@ import Profile from "./Bookazon/Profile";
 import Navigation from "./Bookazon/Navigation";
 import SignIn from "./Bookazon/SignIn";
 import SignUp from "./Bookazon/SignUp";
+import Search from "./Search";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
                 <Route path="Bookazon/Profile" element={<Profile/>}/>
                 <Route path="Bookazon/SignIn" element={<SignIn/>}/>
                 <Route path="Bookazon/SignUp" element={<SignUp/>}/>
+                <Route path="Bookazon/Search" element={<Search/>}/>
             </Routes>
         </HashRouter>
     </div>
