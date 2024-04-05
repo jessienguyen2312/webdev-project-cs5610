@@ -8,6 +8,7 @@ function Navigation() {
             <Link to="/Bookazon/SignIn">Sign in</Link> |
             <Link to="/Bookazon/SignUp">Sign up</Link> |
             <Link to="/Bookazon/Reviews">Reviews</Link> |
+            <Link to="/Bookazon/Search">Search Books</Link> |
             <Link to="/Bookazon/SearchResult">SearchResult</Link> |
             <Link to="/Bookazon/BookDetail">BookDetail</Link> |
         </div>
