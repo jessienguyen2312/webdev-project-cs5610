@@ -5,52 +5,37 @@ import {
     List,
     ListItem,
     TextField,
-    ListItemText
+    ListItemText, Card, CardContent, CardMedia, CardActions, Typography, Grid
 } from "@mui/material";
-import image from "../no_cover.png"
+import no_cover from "../no_cover.png"
+import * as clientExternal from "../../src/Bookazon/clientExternal";
 
 function Search() {
     const [query, setQuery] = useState("");
-    const [result, setResult] = useState();
+    const [result, setResult] = useState<any>([]);
     const [resObjects, setResObject] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
-    const OPENLIB_API = "https://openlibrary.org/search.json?q=";
-    const COVER_API = "https://covers.openlibrary.org/b/olid/";
-    const processInput = async () => {
-        const queryList = query.split(" ");
-        const queryString = queryList.join("+");
-        try {
-            const res = await fetch(OPENLIB_API + queryString + "&limit=10");
-            const data = await res.json();
-            setResult(data)
 
-        } catch (error: any) {
-            setErrorMessage(error.response.data.message)
-        }
+    const fullTextSearch = async (query: string) => {
+        const results = await clientExternal.fullTextBookSearch(query);
+        setResult(results);
     }
 
     useEffect(() => {
-        // @ts-ignore
         if (result && result.docs) {
-            // @ts-ignore
-            // const resList = result.docs.map(doc => doc.cover_edition_key);
-            // const filtered_covers = resList.filter((item: any) => item !== null && item !== undefined);
-
-            const resList = result.docs;
-            // @ts-ignore
-
-            // const filtered_covers = resList.filter((item: any) => item !== null && item !== undefined);
-            console.log(resList)
-            setResObject(resList);
+            console.log(result.docs);
+            setResObject(result.docs)
         }
     }, [result]);
+
 
     return(
         <div>
             <h1>Search </h1>
             <TextField variant="outlined" label="Search books" id="search-query" onChange={(e) => setQuery(e.target.value)} size="small"/>
-            <Button variant="contained" size="large" onClick={processInput}>Search</Button>
-            <h1>{resObjects.length} result(s) for {query}: </h1>
+            <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
+
+            <h1>{resObjects.length} result(s): </h1>
             {errorMessage && (
                 <Alert severity="error">
                     {errorMessage}
@@ -58,22 +43,42 @@ function Search() {
             )}
 
 
-            {resObjects.map((object: any) => (
-                <List>
-                    <ListItem sx={{border: "1px solid grey"}}>
+            <Grid container spacing={2} justifySelf="center">
 
-                        <img src={COVER_API + object?.cover_edition_key + "-M.jpg?default=false"}
-                             onError={(e) => (e.target as HTMLImageElement).src=image}
-                             style={{width:200, height: 200}}
-                        />
-                        <ListItemText
-                            primary={object.title}
-                            secondary={object.author_name}
-                        />
+                    {resObjects.map((object: any) => (
+                        <Grid item spacing={2}>
+                            <Card sx={{ width: 400, maxHeight: 500 }}>
 
-                    </ListItem>
-                </List>
-            ))}
+                                <CardMedia
+                                    sx={{height: 300}}
+                                    src={clientExternal.bookCoverUrl(object)}
+                                    component="img"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = no_cover}
+                                    }
+                                />
+
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {object.title}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {object.author_name}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">See reviews</Button>
+                                    <Button size="small">Write a review</Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+
+                    ))}
+
+
+            </Grid>
+
+
 
 
         </div>
