@@ -11,7 +11,9 @@ import no_cover from "../no_cover.png"
 import * as clientExternal from "../../src/Bookazon/clientExternal";
 
 function Search() {
+    // grab query
     const [query, setQuery] = useState("");
+    // result of search
     const [result, setResult] = useState<any>([]);
     const [resObjects, setResObject] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
