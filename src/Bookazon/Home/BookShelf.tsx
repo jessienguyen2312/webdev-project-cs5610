@@ -1,104 +1,72 @@
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
+import { Box, Card, CardContent, CardMedia, IconButton, Tab, Tabs, Typography, CardActionArea } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { CardActionArea, Tab, Tabs, Typography } from '@mui/material';
-import React from 'react';
+import axios from 'axios';
 
-function BookShelf() {
-    // Example images data
-    const imageData = [
-        {
-            img: 'logo192.png',
-            title: 'Image 1',
-            author: "author1",
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 2',
-            author: "author1",
+const OPENLIB_API = "https://openlibrary.org/search.json?q=subject:";
+const COVER_API = "https://covers.openlibrary.org/b/olid/";
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 3',
-            author: "author1",
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 4',
-            author: "author1",
+interface Book {
+    key: string;
+    title: string;
+    author_name: string[];
+    author_key: string[];
+    cover_edition_key: string;
+}
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
+
+function BookShelf({ genre }: { genre: string }) {
+    const navigate = useNavigate();
+
+    // navigate to book detail page and pass in key for book
+    const bookDetail = (bookID: any) => {
+        navigate(`/Bookazon/BookDetail/${bookID}`)
+    };
+
+    // navigate to author profil page and pass in author key
+    const authorDetail = (authorID: any) => {
+        navigate(`/Bookazon/Profile/${authorID}`)
+    };
+
+    const url = OPENLIB_API + genre + "&limit=7";
+
+    const [books, setBooks] = useState<Book[]>([]);
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
+    useEffect(() => {
+        const fetchData = async () => {
+
+            try {
+                const res = await axios.get(`${url}`);
+                setBooks(res.data.docs || []);
+
+            } catch (error) {
+                console.error('There was an error fetching the books:', error);
+            }
+        };
+        fetchData();
+    }, [genre]);
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
+    console.log({ books })
+
+    // making sure I can get the info USED FOR checking
+    useEffect(() => {
+        if (books.length > 1) {
+            // console.log(books[0].cover_edition_key);
+            console.log(typeof books[0].author_name);
+        }
+    }, [books]);
 
 
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
-
-
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
-
-
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
-
-
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 5',
-            author: "author1",
-
-
-        },
-        {
-            img: 'logo192.png',
-            title: 'Image 10',
-            author: "author1",
-
-
-        },
-
-    ];
-
-
+    // used for the arrow clicks on the shelf
     const [value, setValue] = React.useState(0);
-
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -107,6 +75,7 @@ function BookShelf() {
     return (
         <div >
 
+
             < Box sx={{
                 display: 'flex',
             }}>
@@ -114,58 +83,76 @@ function BookShelf() {
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    overflowX: 'hidden',
+                    overflowX: 'auto',
                     width: '100%',
-                    height: 200,
+                    height: 300,
                 }}  >
                     <Tabs
-                       
+
                         onChange={handleChange}
                         variant="scrollable"
                         scrollButtons="auto"
                         aria-label="scrollable auto tabs example"
                     >
 
-                        {imageData.map((item, index) => (
+                        {books.map((item, index) => (
+
+
                             <Tab label={
-                                <Card sx={{ minWidth: 150, width: '100%' }}>
-                                    <CardActionArea>
+                                <Card sx={{ width: 250, height: '100%' }}>
+                                    <CardActionArea onClick={() => bookDetail(item.key)} >
                                         <CardMedia
                                             component="img"
                                             sx={{
                                                 maxHeight: 100,
+
                                                 // minHeight: 50,
                                                 objectFit: 'contain',
                                                 width: '100%'
                                             }}
-                                            image={`${process.env.PUBLIC_URL}/${item.img}`}
+                                            image={item.cover_edition_key ? `${COVER_API}${item.cover_edition_key}.jpg?default=false` : '/no_cover.png'}
+
                                             title={item.title}
+
                                         />
                                     </CardActionArea>
 
                                     <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: "center" }}>
 
                                         <Box>
-                                            <CardActionArea>
-                                                <Typography variant='subtitle2' display="block">
+                                            <CardActionArea onClick={() => bookDetail(item.key)}>
+                                                <Typography variant='subtitle1' display="block" sx={{
+
+                                                    whiteSpace: 'nowrap',
+                                                    // overflow: 'hidden',      
+                                                    textOverflow: 'ellipsis',
+                                                    width: 190,
+                                                }}>
                                                     {item.title}
                                                 </Typography>
                                             </CardActionArea>
 
-                                            <CardActionArea>
-                                                <Typography variant='subtitle2' display="block">
-                                                    {item.author}
-                                                </Typography>
-                                            </CardActionArea>
-                                        </Box>
-                                        <Box>
-                                            <IconButton>
-                                                <FavoriteBorderIcon />
-                                            </IconButton>
+                                            <Box sx={{ display: 'flex' }}>
+                                                {item.author_name.map((author, index) => (
+                                                    <CardActionArea onClick={() => authorDetail(item.author_key[index])}>
+                                                        <Typography key={index} variant='caption'>
+                                                            {author}
+                                                        </Typography>
+                                                    </CardActionArea>
+                                                ))}
+                                            </Box>
+
 
                                         </Box>
+
 
                                     </CardContent>
+
+                                    <IconButton>
+                                        <FavoriteBorderIcon />
+                                    </IconButton>
+
+
 
 
                                 </Card>

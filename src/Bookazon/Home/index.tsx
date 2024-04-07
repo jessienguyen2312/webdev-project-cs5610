@@ -15,6 +15,7 @@ function Home() {
             <Profile />
             <SearchBar />
             <ListOfBooks />
+            {/* <BookShelf genre={"romance"} /> */}
         </div>
     )
 }
