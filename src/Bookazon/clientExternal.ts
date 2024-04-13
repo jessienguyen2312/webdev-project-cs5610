@@ -1,12 +1,84 @@
 import axios from "axios";
 import no_cover from "../no_cover.png"
+
 const OPENLIB_API = "https://openlibrary.org/search.json?q=";
+const TITLE_SEARCH_API = "https://openlibrary.org/search.json?title="
+const SUBJECT_SEARCH_API = "https://openlibrary.org/search.json?subject="
+const ISBN_SEARCH_API = "https://openlibrary.org/isbn/"
 const COVER_API = "https://covers.openlibrary.org/b/olid";
 const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
 
+
+// CONST FOR DEBUGGING PURPOSE
+const LIMIT_PAGE = "&limit=10"
+
 //TODO: search by ISBN, author, search for authors
+
+/**
+ * Function to process query string by separating it by "+".
+ * @param text
+ */
+const stringQueryProcess = (text: string) => {
+    const queryList = text.split(" ");
+    return queryList.join("+");
+}
+
+/**
+ * Function to fetch result of a specific book by ISBN. The search result will
+ * redirect to the book detail API with the following
+ * URL format https://openlibrary.org/books/OL7353617M.json
+ * OL7353617M is an example of the primary key for all books.
+ * @param isbn can be 10 or 13 digit format.
+ */
+export const isbnSearch = async (isbn: string) => {
+    if (isbn.length === 10 || isbn.length === 13) {
+        try {
+            const response = await axios.get(`${ISBN_SEARCH_API}${isbn}.json`);
+            return response.data;
+        } catch (error: any) {
+            console.log(error.response.data.message);
+        }
+    } else {
+        throw new Error("isbn has to be 10 or 13 digits format");
+    }
+}
+
+
+/**
+ * Function to fetch result of search by subject/genre. Each query string will be split
+ * by white space, and "+" is added between each word. The result is currently limited
+ * to 10 pages because of API throttling.
+ * @param text
+ */
+export const subjectTextBookSearch = async (text: string) => {
+    const queryString = stringQueryProcess(text);
+    try {
+        const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
+        return response.data;
+    } catch (error: any) {
+        console.log(error.response.data.message);
+    }
+}
+
+
+/**
+ * Function to fetch result of search specifically by book title. Each query string will be split
+ * by white space, and "+" is added between each word. The result is currently limited
+ * to 10 pages because of API throttling.
+ * @param text
+ */
+export const titleTextBookSearch = async (text: string) => {
+    const queryString = stringQueryProcess(text);
+    try {
+        const response = await axios.get(`${TITLE_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
+        return response.data;
+    } catch (error: any) {
+        console.log(error.response.data.message);
+    }
+}
+
 
 /**
  * Function to fetch result of book search using full text. Each query string will be split
@@ -19,7 +91,7 @@ export const fullTextBookSearch = async (text: string) => {
     const queryList = text.split(" ");
     const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${OPENLIB_API}/${queryString}/&limit=10`);
+        const response = await axios.get(`${OPENLIB_API}${queryString}/&limit=10`);
         return response.data;
     } catch (error: any) {
         console.log(error);
