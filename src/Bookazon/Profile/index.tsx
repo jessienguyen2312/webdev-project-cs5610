@@ -11,8 +11,11 @@ import ShowUserFollows from "./ShowUserFollows";
 function Profile() {
     const user = {
         username: "IHaveNoName",
+        password: "hashed_password",
         firstName: "First",
         lastName: "Last",
+        email: "john.doe@example.com",
+        role: "READER",
         description: "Valar Morghulis",
         favoriteBooks: [
             { key: "book1" }, // These would be expanded in a real app
