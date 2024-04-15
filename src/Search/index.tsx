@@ -9,6 +9,10 @@ import {
 } from "@mui/material";
 import no_cover from "../no_cover.png"
 import * as clientExternal from "../../src/Bookazon/clientExternal";
+import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
+import {bookState} from "../Bookazon/store";
 
 function Search() {
     // grab query
@@ -17,6 +21,7 @@ function Search() {
     const [result, setResult] = useState<any>([]);
     const [resObjects, setResObject] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
+    const dispatch = useDispatch();
 
     const fullTextSearch = async (query: string) => {
         const results = await clientExternal.fullTextBookSearch(query);
@@ -29,6 +34,8 @@ function Search() {
             setResObject(result.docs)
         }
     }, [result]);
+
+    const book = useSelector((state: bookState) => state.bookReducer.book);
 
 
     return(
@@ -46,10 +53,9 @@ function Search() {
 
 
             <Grid container spacing={2} justifySelf="center">
-
                     {resObjects.map((object: any) => (
                         <Grid item spacing={2}>
-                            <Card sx={{ width: 400, maxHeight: 500 }}>
+                            <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
 
                                 <CardMedia
                                     sx={{height: 300}}
@@ -62,11 +68,19 @@ function Search() {
 
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        {object.title}
+                                        <Link to={`/Bookazon/BookDetail${object.key}`} onClick={()=> dispatch(setBook({
+                                            key: object.key,
+                                            author_name: object.author_name,
+                                            author_key: object.author_key,
+                                            cover: object.cover_edition_key,
+                                        }))}>
+                                            {object.title}
+                                        </Link>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {object.author_name}
                                     </Typography>
+                                    {object.key}
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">See reviews</Button>

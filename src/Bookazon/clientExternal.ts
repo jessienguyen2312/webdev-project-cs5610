@@ -10,6 +10,8 @@ const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
 
+const BOOK_DETAIL_API = "https://openlibrary.org"
+
 
 // CONST FOR DEBUGGING PURPOSE
 const LIMIT_PAGE = "&limit=10"
@@ -26,6 +28,37 @@ const stringQueryProcess = (text: string) => {
 }
 
 /**
+ * Function to fetch book ratings on OpenLibrary.
+ * A sample book rating can be seen here: https://openlibrary.org/works/OL18020194W/ratings.json
+ * @param key format "/work/OL#####W"
+ */
+export const bookRating = async (key: string) => {
+    try {
+        const response = await axios.get(`${BOOK_DETAIL_API}${key}/ratings.json`);
+        console.log(response.data);
+        return response.data;
+    } catch (error: any) {
+        console.log(error);
+    }
+}
+
+/**
+ * Function to fetch book detail by work key with the format "/work/OL#####W".
+ * Book detail consists of title, author, synopsis
+ * A sample book detail can be seen here: https://openlibrary.org/works/OL45804W.json
+ * @param key format "/work/OL#####W"
+ */
+export const bookDetail = async (key: String) => {
+    try {
+        const response = await axios.get(`${BOOK_DETAIL_API}${key}.json`);
+        console.log(response.data);
+        return response.data;
+    } catch (error: any) {
+        console.log(error);
+    }
+}
+
+/**
  * Function to fetch result of a specific book by ISBN. The search result will
  * redirect to the book detail API with the following
  * URL format https://openlibrary.org/books/OL7353617M.json
@@ -38,7 +71,7 @@ export const isbnSearch = async (isbn: string) => {
             const response = await axios.get(`${ISBN_SEARCH_API}${isbn}.json`);
             return response.data;
         } catch (error: any) {
-            console.log(error.response.data.message);
+            console.log(error);
         }
     } else {
         throw new Error("isbn has to be 10 or 13 digits format");
@@ -58,7 +91,7 @@ export const subjectTextBookSearch = async (text: string) => {
         const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
         return response.data;
     } catch (error: any) {
-        console.log(error.response.data.message);
+        console.log(error);
     }
 }
 
@@ -75,7 +108,7 @@ export const titleTextBookSearch = async (text: string) => {
         const response = await axios.get(`${TITLE_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
         return response.data;
     } catch (error: any) {
-        console.log(error.response.data.message);
+        console.log(error);
     }
 }
 

@@ -10,6 +10,8 @@ import SignIn from "./Bookazon/SignIn";
 import SignUp from "./Bookazon/SignUp";
 import Search from "./Search";
 import BookDetail from './Bookazon/BookDetail';
+import store from '../src/Bookazon/store'
+import {Provider} from "react-redux";
 
 
 // import Box from '@mui/material/Box';
@@ -19,18 +21,20 @@ import BookDetail from './Bookazon/BookDetail';
 function App() {
   return (
     <div>
-        <HashRouter>
-            <Navigation/>
-            <Routes>
-                <Route path="/" element={<Navigate to="Bookazon/Home/"/>} />
-                <Route path="Bookazon/Home" element={<Home/>}/>
-                <Route path="Bookazon/Profile/*" element={<Profile/>}/>
-                <Route path="Bookazon/SignIn" element={<SignIn/>}/>
-                <Route path="Bookazon/SignUp" element={<SignUp/>}/>
-                <Route path="Bookazon/Search" element={<Search/>}/>
-                <Route path="Bookazon/BookDetail/*" element={<BookDetail/>}/>
-            </Routes>
-        </HashRouter>
+        <Provider store={store}>
+            <HashRouter>
+                <Navigation/>
+                <Routes>
+                    <Route path="/" element={<Navigate to="Bookazon/Home/"/>} />
+                    <Route path="Bookazon/Home" element={<Home/>}/>
+                    <Route path="Bookazon/Profile/*" element={<Profile/>}/>
+                    <Route path="Bookazon/SignIn" element={<SignIn/>}/>
+                    <Route path="Bookazon/SignUp" element={<SignUp/>}/>
+                    <Route path="Bookazon/Search" element={<Search/>}/>
+                    <Route path="Bookazon/BookDetail/*" element={<BookDetail/>}/>
+                </Routes>
+            </HashRouter>
+        </Provider>
     </div>
 
   );
