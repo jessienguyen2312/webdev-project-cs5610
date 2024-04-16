@@ -25,6 +25,7 @@
 },
   {
     "username": "String",
+    "author_OL_key": "String, not required",
     "password": "String",
     "firstName": "String",
     "lastName": "String",

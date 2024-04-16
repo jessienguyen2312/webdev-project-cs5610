@@ -20,7 +20,7 @@ function Search() {
     // result of search
     const [result, setResult] = useState<any>([]);
     const [resObjects, setResObject] = useState([]);
-    const [errorMessage, setErrorMessage] = useState(null);
+
     const dispatch = useDispatch();
 
     const fullTextSearch = async (query: string) => {
@@ -45,11 +45,6 @@ function Search() {
             <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
 
             <h1>{resObjects.length} result(s): </h1>
-            {errorMessage && (
-                <Alert severity="error">
-                    {errorMessage}
-                </Alert>
-            )}
 
 
             <Grid container spacing={2} justifySelf="center">
