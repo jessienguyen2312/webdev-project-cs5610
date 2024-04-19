@@ -7,8 +7,10 @@ import React from "react";
 
 
 
+
 function ProfileUser({ userName }: { userName: string }) {
     
+
     const [criteria, setCriteria] = React.useState('All');
     const GREETING = "Hi, " + userName;
     console.log(GREETING)
@@ -59,4 +61,5 @@ function ProfileUser({ userName }: { userName: string }) {
     );
 
 }
+
 export default ProfileUser

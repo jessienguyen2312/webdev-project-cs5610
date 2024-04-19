@@ -1,0 +1,43 @@
+[{
+  "username": "String",
+  "password": "String",
+  "firstName": "String",
+  "lastName": "String",
+  "email": "String",
+  "role": "enum: {READER, AUTHOR, ADMIN}",
+  "aboutMe": "String",
+  "profilePicture": "String",
+  "follower": ["username1", "username2", "username3"],
+  "following": ["username1", "username2", "username3"],
+  "favoriteBook": ["OL_work_key1", "OL_work_key2"]
+},
+  {
+    "username": "String",
+    "author_OL_key": "String, not required",
+    "password": "String",
+    "firstName": "String",
+    "lastName": "String",
+    "email": "String",
+    "role": "AUTHOR",
+    "aboutMe": "String",
+    "profilePicture": "String",
+    "review": {
+      "key": "String",
+      "dateReviewed": "Date",
+      "rating": "Double",
+      "content": "String"
+    },
+    "follower": [{
+      "username": "String"
+    }],
+    "following": [{
+      "username": "String"
+    }],
+    "favoriteBook": [{
+      "key": "String"
+    }],
+    "booksWritten": [{
+      "key": "String"
+    }]
+  }
+]

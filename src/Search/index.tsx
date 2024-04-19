@@ -5,75 +5,103 @@ import {
     List,
     ListItem,
     TextField,
-    ListItemText
+    ListItemText, Card, CardContent, CardMedia, CardActions, Typography, Grid
 } from "@mui/material";
-import image from "../no_cover.png"
+import no_cover from "../no_cover.png"
+import * as clientExternal from "../../src/Bookazon/clientExternal";
+import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
+import {setResult, resetResult} from "./ResultReducer";
+import {bookState} from "../Bookazon/store";
 
 function Search() {
+    // grab query
     const [query, setQuery] = useState("");
-    const [result, setResult] = useState();
-    const [resObjects, setResObject] = useState([]);
-    const [errorMessage, setErrorMessage] = useState(null);
-    const OPENLIB_API = "https://openlibrary.org/search.json?q=";
-    const COVER_API = "https://covers.openlibrary.org/b/olid/";
-    const processInput = async () => {
-        const queryList = query.split(" ");
-        const queryString = queryList.join("+");
-        try {
-            const res = await fetch(OPENLIB_API + queryString + "&limit=10");
-            const data = await res.json();
-            setResult(data)
+    // result of search
+    const [resObjects, setResObject] = useState<any>([]);
 
-        } catch (error: any) {
-            setErrorMessage(error.response.data.message)
-        }
+    const dispatch = useDispatch();
+
+    const fullTextSearch = async (query: string) => {
+        const object = await clientExternal.fullTextBookSearch(query);
+        setResObject(object);
+        console.log(object.docs);
     }
 
     useEffect(() => {
-        // @ts-ignore
-        if (result && result.docs) {
-            // @ts-ignore
-            // const resList = result.docs.map(doc => doc.cover_edition_key);
-            // const filtered_covers = resList.filter((item: any) => item !== null && item !== undefined);
+        if (resObjects && resObjects.docs) {
+            // setResObject(result.docs.slice(1))
+            dispatch(setResult(resObjects.docs))
+            console.log(result);
 
-            const resList = result.docs;
-            // @ts-ignore
-
-            // const filtered_covers = resList.filter((item: any) => item !== null && item !== undefined);
-            console.log(resList)
-            setResObject(resList);
         }
-    }, [result]);
+    }, [resObjects, dispatch]);
+
+    const book = useSelector((state: bookState) => state.bookReducer.book);
+    const result = useSelector((state: bookState) => state.resultReducer.result)
+    // console.log(result)
+
+    const extractOLID = (input: string) => {
+        const result = input.match(/OL.*$/);
+        if (result !== null) {
+            return result[0];
+        }
+    }
+
 
     return(
         <div>
             <h1>Search </h1>
             <TextField variant="outlined" label="Search books" id="search-query" onChange={(e) => setQuery(e.target.value)} size="small"/>
-            <Button variant="contained" size="large" onClick={processInput}>Search</Button>
-            <h1>{resObjects.length} result(s) for {query}: </h1>
-            {errorMessage && (
-                <Alert severity="error">
-                    {errorMessage}
-                </Alert>
-            )}
+            <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
+
+            <h1>{result.length} result(s): </h1>
 
 
-            {resObjects.map((object: any) => (
-                <List>
-                    <ListItem sx={{border: "1px solid grey"}}>
+            <Grid container spacing={2} justifySelf="center">
+                    {result.map((object: any) => (
+                        <Grid item spacing={2}>
+                            <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
 
-                        <img src={COVER_API + object?.cover_edition_key + "-M.jpg?default=false"}
-                             onError={(e) => (e.target as HTMLImageElement).src=image}
-                             style={{width:200, height: 200}}
-                        />
-                        <ListItemText
-                            primary={object.title}
-                            secondary={object.author_name}
-                        />
+                                <CardMedia
+                                    sx={{height: 300}}
+                                    src={clientExternal.bookCoverUrl(extractOLID(object.editions.docs[0].key))}
+                                    component="img"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = no_cover}
+                                    }
+                                />
 
-                    </ListItem>
-                </List>
-            ))}
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
+                                            key: extractOLID(object.editions.docs[0].key),
+                                            author_name: object.author_name[0],
+                                            author_key: object.author_key,
+                                            cover: object.cover_edition_key,
+                                        }))}>
+                                            {object.title}
+                                        </Link>
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {object.author_name[0]}
+                                    </Typography>
+                                    {book.key}
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">See reviews</Button>
+                                    <Button size="small">Write a review</Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+
+                    ))}
+
+
+            </Grid>
+
+
 
 
         </div>
