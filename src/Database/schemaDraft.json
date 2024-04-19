@@ -7,21 +7,9 @@
   "role": "enum: {READER, AUTHOR, ADMIN}",
   "aboutMe": "String",
   "profilePicture": "String",
-  "review": {
-    "key": "String",
-    "dateReviewed": "Date",
-    "rating": "Double",
-    "content": "String"
-  },
-  "follower": [{
-    "username": "String"
-  }],
-  "following": [{
-    "username": "String"
-  }],
-  "favoriteBook": [{
-    "key": "String"
-  }]
+  "follower": ["username1", "username2", "username3"],
+  "following": ["username1", "username2", "username3"],
+  "favoriteBook": ["OL_work_key1", "OL_work_key2"]
 },
   {
     "username": "String",

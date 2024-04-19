@@ -4,12 +4,14 @@ import {bookState} from "../store";
 import * as clientExternal from "../clientExternal";
 import {useEffect, useState} from "react";
 import no_cover from "../../no_cover.png";
+import {bookDetailBookey} from "../clientExternal";
 
 interface bookDetail {
     description: string
     title: string
     cover: string
 }
+
 
 function BookDetail() {
     const dispatch = useDispatch();
@@ -19,7 +21,7 @@ function BookDetail() {
     // const [bookRating, setBookRating] = useState();
 
     const fetchBookDetail = async (key: string) => {
-        const result = await clientExternal.bookDetail(key);
+        const result = await clientExternal.bookDetailBookey(key);
         // const rating = await clientExternal.bookRating(key);
         setBookDetail(result);
         // setBookRating(rating);
@@ -30,7 +32,7 @@ function BookDetail() {
         fetchBookDetail(book.key);
         // await clientExternal.bookDetail(book.key)
         console.log(bookDetail);
-    }, [book.key])
+    }, [book.cover])
 
     return (
         <div>
@@ -40,11 +42,11 @@ function BookDetail() {
                     <h3>{book.author_name}</h3>
                     <h4>Local DB rating here...</h4>
                     <img
-                        src={`https://covers.openlibrary.org/b/olid/${book.cover}-M.jpg?default=false`}
+                        src={`https://covers.openlibrary.org/b/olid/${book.key}-M.jpg?default=false`}
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
-                    <p>{bookDetail.description}</p>
+                    <p>{bookDetail.description}{book.key}</p>
                     <button>Add to Favorite</button>
                     <button> Write a review</button>
 
