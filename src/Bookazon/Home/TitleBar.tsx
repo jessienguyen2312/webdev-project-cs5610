@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import Profile from "./Profile";
+import Profile from "./ProfileNav";
 
 function TitleBar() {
 

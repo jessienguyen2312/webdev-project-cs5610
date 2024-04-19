@@ -1,0 +1,14 @@
+{
+  "username": "String",
+  "OL_author_key": "String",
+  "password": "String",
+  "firstName": "String",
+  "lastName": "String",
+  "email": "String",
+  "role": "AUTHOR",
+  "aboutMe": "String",
+  "profilePicture": "String",
+  "follower": ["username1", "username2", "username3"],
+  "following": ["username1", "username2", "username3"],
+  "favoriteBook": ["OL_work_key1", "OL_work_key2"]
+}

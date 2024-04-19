@@ -1,0 +1,7 @@
+{
+  "username": "String",
+  "OL_book_key": "String",
+  "dateReviewed": "Date",
+  "rating": "Double",
+  "description": "String"
+}

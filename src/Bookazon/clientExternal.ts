@@ -43,6 +43,23 @@ export const bookRating = async (key: string) => {
 }
 
 /**
+ * Function to fetch book detail by book key with the format "/book/OL#####M".
+ * Book detail consists of title, author, synopsis
+ * A sample book detail can be seen here: https://openlibrary.org/books/OL20930632M.json
+ * @param key format "/work/OL#####M"
+ */
+export const bookDetailBookey = async (key: String) => {
+    try {
+        const response = await axios.get(`${BOOK_DETAIL_API}/books/${key}.json`);
+        console.log(response.data);
+        return response.data;
+    } catch (error: any) {
+        console.log(error);
+    }
+}
+
+
+/**
  * Function to fetch book detail by work key with the format "/work/OL#####W".
  * Book detail consists of title, author, synopsis
  * A sample book detail can be seen here: https://openlibrary.org/works/OL45804W.json
@@ -124,7 +141,7 @@ export const fullTextBookSearch = async (text: string) => {
     const queryList = text.split(" ");
     const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${OPENLIB_API}${queryString}/&limit=10`);
+        const response = await axios.get(`${OPENLIB_API}${queryString}&fields=key,title,author_name,editions${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -139,7 +156,7 @@ export const fullTextBookSearch = async (text: string) => {
  */
 export const bookCoverUrl = (book: any) => {
     try {
-        return `${COVER_API}/${book?.cover_edition_key}-M.jpg?default=false`;
+        return `${COVER_API}/${book}-M.jpg?default=false`;
     } catch (error: any) {
         return no_cover;
     }

@@ -3,7 +3,7 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import BookShelf from "./BookShelf";
 import ListOfBooks from "./ListOfBooks";
-import Profile from "./Profile";
+import ProfileNav from "./ProfileNav";
 import TitleBar from "./TitleBar";
 
 
@@ -12,7 +12,7 @@ function Home() {
         <div>
             {/* <h1>Bookazon :D</h1> */}
             <TitleBar />
-            <Profile />
+            <ProfileNav />
             <SearchBar />
             <ListOfBooks />
             {/* <BookShelf genre={"romance"} /> */}

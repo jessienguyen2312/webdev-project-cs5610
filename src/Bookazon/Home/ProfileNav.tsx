@@ -7,7 +7,7 @@ import React from "react";
 
 
 
-function Profile() {
+function ProfileNav() {
     const [criteria, setCriteria] = React.useState('All');
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -52,4 +52,4 @@ function Profile() {
     );
 
 }
-export default Profile
+export default ProfileNav
