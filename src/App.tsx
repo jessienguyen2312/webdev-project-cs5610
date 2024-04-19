@@ -10,8 +10,11 @@ import SignIn from "./Bookazon/SignIn";
 import SignUp from "./Bookazon/SignUp";
 import Search from "./Search";
 import BookDetail from './Bookazon/BookDetail';
-import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
 
+import store from '../src/Bookazon/store'
+import {Provider} from "react-redux";
+
+import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
 
 // import Box from '@mui/material/Box';
 // import TextField from '@mui/material/TextField';
@@ -50,20 +53,21 @@ function App() {
         };
   return (
     <div>
-        <HashRouter>
-            <Navigation/>
-            <Routes>
-                <Route path="/" element={<Navigate to="Bookazon/Home/"/>} />
-                <Route path="Bookazon/Home" element={<Home/>}/>
-                <Route path="Bookazon/Profile" element={<Profile/>}/>
-                <Route path="Bookazon/SignIn" element={<SignIn/>}/>
-                <Route path="Bookazon/SignUp" element={<SignUp/>}/>
-                <Route path="Bookazon/Search" element={<Search/>}/>
-                <Route path="Bookazon/BookDetail/*" element={<BookDetail/>}/>
-                {/* For now... */}
-                <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/> 
-            </Routes>
-        </HashRouter>
+        <Provider store={store}>
+            <HashRouter>
+                <Navigation/>
+                <Routes>
+                    <Route path="/" element={<Navigate to="Bookazon/Home/"/>} />
+                    <Route path="Bookazon/Home" element={<Home/>}/>
+                    <Route path="Bookazon/Profile/*" element={<Profile/>}/>
+                    <Route path="Bookazon/SignIn" element={<SignIn/>}/>
+                    <Route path="Bookazon/SignUp" element={<SignUp/>}/>
+                    <Route path="Bookazon/Search" element={<Search/>}/>             
+                    <Route path="Bookazon/BookDetail/*" element={<BookDetail/>}/>
+                    <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/> 
+                </Routes>
+            </HashRouter>
+        </Provider>
     </div>
 
   );
