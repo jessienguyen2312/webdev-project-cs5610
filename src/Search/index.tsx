@@ -12,30 +12,42 @@ import * as clientExternal from "../../src/Bookazon/clientExternal";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
+import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
 
 function Search() {
     // grab query
     const [query, setQuery] = useState("");
     // result of search
-    const [result, setResult] = useState<any>([]);
-    const [resObjects, setResObject] = useState([]);
+    const [resObjects, setResObject] = useState<any>([]);
 
     const dispatch = useDispatch();
 
     const fullTextSearch = async (query: string) => {
-        const results = await clientExternal.fullTextBookSearch(query);
-        setResult(results);
+        const object = await clientExternal.fullTextBookSearch(query);
+        setResObject(object);
+        console.log(object.docs);
     }
 
     useEffect(() => {
-        if (result && result.docs) {
-            console.log(result.docs.slice(1));
-            setResObject(result.docs.slice(1))
+        if (resObjects && resObjects.docs) {
+            // setResObject(result.docs.slice(1))
+            dispatch(setResult(resObjects.docs))
+            console.log(result);
+
         }
-    }, [result]);
+    }, [resObjects, dispatch]);
 
     const book = useSelector((state: bookState) => state.bookReducer.book);
+    const result = useSelector((state: bookState) => state.resultReducer.result)
+    // console.log(result)
+
+    const extractOLID = (input: string) => {
+        const result = input.match(/OL.*$/);
+        if (result !== null) {
+            return result[0];
+        }
+    }
 
 
     return(
@@ -44,17 +56,17 @@ function Search() {
             <TextField variant="outlined" label="Search books" id="search-query" onChange={(e) => setQuery(e.target.value)} size="small"/>
             <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
 
-            <h1>{resObjects.length} result(s): </h1>
+            <h1>{result.length} result(s): </h1>
 
 
             <Grid container spacing={2} justifySelf="center">
-                    {resObjects.map((object: any) => (
+                    {result.map((object: any) => (
                         <Grid item spacing={2}>
                             <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
 
                                 <CardMedia
                                     sx={{height: 300}}
-                                    src={clientExternal.bookCoverUrl(object)}
+                                    src={clientExternal.bookCoverUrl(extractOLID(object.editions.docs[0].key))}
                                     component="img"
                                     onError={(e) => {
                                         (e.target as HTMLImageElement).src = no_cover}
@@ -63,9 +75,9 @@ function Search() {
 
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link to={`/Bookazon/BookDetail/${object.edition_key[0]}`} onClick={()=> dispatch(setBook({
-                                            key: object.edition_key[0],
-                                            author_name: object.author_name,
+                                        <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
+                                            key: extractOLID(object.editions.docs[0].key),
+                                            author_name: object.author_name[0],
                                             author_key: object.author_key,
                                             cover: object.cover_edition_key,
                                         }))}>
@@ -73,7 +85,7 @@ function Search() {
                                         </Link>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        {object.author_name}
+                                        {object.author_name[0]}
                                     </Typography>
                                     {book.key}
                                 </CardContent>

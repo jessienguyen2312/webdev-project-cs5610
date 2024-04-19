@@ -7,7 +7,7 @@ import no_cover from "../../no_cover.png";
 import {bookDetailBookey} from "../clientExternal";
 
 interface bookDetail {
-    description: string
+    description: {value: String}
     title: string
     cover: string
 }
@@ -46,7 +46,7 @@ function BookDetail() {
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
-                    <p>{bookDetail.description}{book.key}</p>
+                    <p>{bookDetail.description?.value}{book.key}</p>
                     <button>Add to Favorite</button>
                     <button> Write a review</button>
 
