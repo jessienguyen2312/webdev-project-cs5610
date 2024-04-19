@@ -14,7 +14,7 @@ const BOOK_DETAIL_API = "https://openlibrary.org"
 
 
 // CONST FOR DEBUGGING PURPOSE
-const LIMIT_PAGE = "&limit=50"
+const LIMIT_PAGE = "&limit=10"
 
 //TODO: search by ISBN, author, search for authors
 
@@ -141,7 +141,7 @@ export const fullTextBookSearch = async (text: string) => {
     const queryList = text.split(" ");
     const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${OPENLIB_API}${queryString}/${LIMIT_PAGE}`);
+        const response = await axios.get(`${OPENLIB_API}${queryString}&fields=key,title,author_name,editions${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -156,7 +156,7 @@ export const fullTextBookSearch = async (text: string) => {
  */
 export const bookCoverUrl = (book: any) => {
     try {
-        return `${COVER_API}/${book?.cover_edition_key}-M.jpg?default=false`;
+        return `${COVER_API}/${book}-M.jpg?default=false`;
     } catch (error: any) {
         return no_cover;
     }
