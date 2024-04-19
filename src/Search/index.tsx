@@ -30,8 +30,8 @@ function Search() {
 
     useEffect(() => {
         if (result && result.docs) {
-            console.log(result.docs);
-            setResObject(result.docs)
+            console.log(result.docs.slice(1));
+            setResObject(result.docs.slice(1))
         }
     }, [result]);
 
@@ -63,8 +63,8 @@ function Search() {
 
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link to={`/Bookazon/BookDetail${object.key}`} onClick={()=> dispatch(setBook({
-                                            key: object.key,
+                                        <Link to={`/Bookazon/BookDetail/${object.edition_key[0]}`} onClick={()=> dispatch(setBook({
+                                            key: object.edition_key[0],
                                             author_name: object.author_name,
                                             author_key: object.author_key,
                                             cover: object.cover_edition_key,
@@ -75,7 +75,7 @@ function Search() {
                                     <Typography variant="body2" color="text.secondary">
                                         {object.author_name}
                                     </Typography>
-                                    {object.key}
+                                    {book.key}
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">See reviews</Button>

@@ -14,7 +14,7 @@ const BOOK_DETAIL_API = "https://openlibrary.org"
 
 
 // CONST FOR DEBUGGING PURPOSE
-const LIMIT_PAGE = "&limit=10"
+const LIMIT_PAGE = "&limit=50"
 
 //TODO: search by ISBN, author, search for authors
 
@@ -41,6 +41,23 @@ export const bookRating = async (key: string) => {
         console.log(error);
     }
 }
+
+/**
+ * Function to fetch book detail by book key with the format "/book/OL#####M".
+ * Book detail consists of title, author, synopsis
+ * A sample book detail can be seen here: https://openlibrary.org/books/OL20930632M.json
+ * @param key format "/work/OL#####M"
+ */
+export const bookDetailBookey = async (key: String) => {
+    try {
+        const response = await axios.get(`${BOOK_DETAIL_API}/books/${key}.json`);
+        console.log(response.data);
+        return response.data;
+    } catch (error: any) {
+        console.log(error);
+    }
+}
+
 
 /**
  * Function to fetch book detail by work key with the format "/work/OL#####W".
@@ -124,7 +141,7 @@ export const fullTextBookSearch = async (text: string) => {
     const queryList = text.split(" ");
     const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${OPENLIB_API}${queryString}/&limit=10`);
+        const response = await axios.get(`${OPENLIB_API}${queryString}/${LIMIT_PAGE}`);
         return response.data;
     } catch (error: any) {
         console.log(error);
