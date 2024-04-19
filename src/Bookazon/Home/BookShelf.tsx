@@ -48,7 +48,7 @@ function BookShelf({ genre }: { genre: string }) {
             cover_edition_key: bookItem.cover_edition_key,
         }))
         console.log(JSON.stringify(book, null, 2))
-        // navigate(`/Bookazon/BookDetail/${bookItem.edition_key[0]}`)
+        navigate(`/Bookazon/BookDetail/${bookItem.edition_key[0]}`)
     };
 
     // navigate to author profil page and pass in author key
