@@ -1,5 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import Profile from "./ProfileAnon";
+
+import Profile from "./ProfileAnon"; // which one is it?
+
+//import Profile from "./ProfileNav"; <- this was on main
+
 
 function TitleBar() {
 
