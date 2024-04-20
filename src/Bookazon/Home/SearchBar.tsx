@@ -16,7 +16,7 @@ import {bookState} from "../store";
 import {setSearch} from "../../Search/SearchReducer";
 import * as clientExternal from "../clientExternal";
 import {useState} from "react";
-import {setResult} from "../../Search/ResultReducer";
+import {resetResult, setResult} from "../../Search/ResultReducer";
 import {setBook} from "../BookDetail/BookReducer";
 import {extractOLID} from "../../Search";
 import {titleTextBookSearch} from "../clientExternal";
@@ -27,6 +27,7 @@ function SearchBar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
+    const result = useSelector((state: bookState) => state.resultReducer.result);
 
     // search criteria by title, author, subject, isbn
     const searchCriteria = [
@@ -37,6 +38,7 @@ function SearchBar() {
     const handleChange = (event: SelectChangeEvent) => {
         // setCriteria(event.target.value as string);
         dispatch(setSearch({...searchQuery, criteria: event.target.value}));
+        dispatch(resetResult(result));
         console.log(searchQuery);
     };
 
@@ -50,6 +52,8 @@ function SearchBar() {
             }
             // This returns a list of authors
             case 'Author': {
+                const object = await clientExternal.searchAuthorsByName(query);
+                dispatch(setResult(object?.docs));
                 break;
             }
             // This returns a list of books

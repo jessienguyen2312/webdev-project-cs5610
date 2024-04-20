@@ -15,6 +15,7 @@ const BOOK_DETAIL_API = "https://openlibrary.org"
 
 // CONST FOR DEBUGGING PURPOSE
 const LIMIT_PAGE = "&limit=10"
+const LIMIT_PAGE_AUTHOR = "&limit=20"
 
 //TODO: search by ISBN, author, search for authors
 
@@ -169,9 +170,10 @@ export const bookCoverUrl = (book: any) => {
  */
 export const searchAuthorsByName = async (name: string) => {
     const queryList = name.split(" ");
-    const queryString = queryList.join("%");
+    const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${AUTHOR_SEARCH_API}/${queryString}`);
+        const response = await axios.get(`${AUTHOR_SEARCH_API}/${queryString}&fields=key,name,top_work,work_count,type${LIMIT_PAGE_AUTHOR}`);
+        console.log(`${AUTHOR_SEARCH_API}/${queryString}&fields=key,name,top_work,work_count${LIMIT_PAGE_AUTHOR}`)
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -213,12 +215,13 @@ export const fetchSpecificAuthorPage = async (authorId: string) => {
  * https://openlibrary.org/dev/docs/api/covers
  * @param authorId
  */
-export const authorPhotoUrl = async (authorId: string) => {
+export const authorPhotoUrl = (authorId: any) => {
     try {
-        const response = await axios.get(`${AUTHOR_PHOTO_API}/${authorId}-M.jpg`);
-        return response.data;
+        // const response = await axios.get(`${AUTHOR_PHOTO_API}/${authorId}-M.jpg`);
+        // return response.data;
+        return `${AUTHOR_PHOTO_API}/${authorId}-M.jpg?default=false`
     } catch (error: any) {
-        console.log(error);
+        return no_cover;
     }
 }
 

@@ -42,16 +42,51 @@ function Search() {
     }
 
 
+
     return(
         <div>
             <SearchBar/>
             <h1>{result.length} result(s): </h1>
 
-            <Grid container spacing={2} justifySelf="center">
+            {searchQuery.criteria === 'Author' && result && (
+                <Grid container spacing={2} justifySelf="center">
                     {result.map((object: any) => (
                         <Grid item spacing={2}>
                             <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
+                                <CardMedia
+                                    sx={{height: 300}}
+                                    src={clientExternal.authorPhotoUrl(object.key)}
+                                    component="img"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = no_cover}
+                                    }
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        <Link to={`#`}>
+                                            {object.name}
+                                        </Link>
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Top work: {object.top_work} <br/>
+                                        Work count: {object.work_count}
+                                    </Typography>
+                                    {object.key}
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">View Bookazon Profile</Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
 
+            {searchQuery.criteria !== 'Author' && result && result.type !== 'author' && (
+                <Grid container spacing={2} justifySelf="center">
+                    {result.map((object: any) => (
+                        <Grid item spacing={2}>
+                            <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
                                 <CardMedia
                                     sx={{height: 300}}
                                     src={clientExternal.bookCoverUrl(extractOLID(object.editions.docs[0].key))}
@@ -60,7 +95,6 @@ function Search() {
                                         (e.target as HTMLImageElement).src = no_cover}
                                     }
                                 />
-
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
                                         <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
@@ -83,12 +117,9 @@ function Search() {
                                 </CardActions>
                             </Card>
                         </Grid>
-
                     ))}
-
-
-            </Grid>
-
+                </Grid>
+            )}
 
 
 
