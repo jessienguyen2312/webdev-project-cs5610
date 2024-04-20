@@ -1,0 +1,7 @@
+background color
+text color
+nav color
+secondary nav color - complementary shades of each other
+buttons color
+card colors
+
