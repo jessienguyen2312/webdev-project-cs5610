@@ -1,11 +1,20 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import SignIn from './Signin';
+import SignUp from './Signup';
+import UserReviews from './UserReviews';
+
+
 
 function App() {
   return (
+
     <div>
-      <h1>Welcome to Bookazon (dummy name change later) - your 1 stop shop for books :D</h1>
+      <SignIn/>
+      <SignUp/>
+      <UserReviews/>
     </div>
   );
 }
