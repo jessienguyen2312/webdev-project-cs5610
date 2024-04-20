@@ -24,9 +24,6 @@ function Home() {
 
             {/* needs to be changed to incorporate the actual session variables */}
             {user === null ? (<ProfileAnon />): (<ProfileUser userName = {user}/>)}
-            
-
-            // <ProfileNav /> <- this was also from main
 
             <SearchBar />
             <ListOfBooks />

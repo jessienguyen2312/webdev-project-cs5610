@@ -43,9 +43,7 @@ function EditUserProfile({ user }: { user: any }) {
     return (
         <div>
 
-            <ProfileUser userName={user.userName}  /> 
-        
-            // <ProfileNav /> <- this was from main
+            <ProfileUser userName={user.userName}  />
 
             <SearchBar />
             <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>

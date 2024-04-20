@@ -48,9 +48,6 @@ function Profile() {
         <div>
 
             <ProfileUser userName={user.username} />
-
-            // <ProfileNav /> <- this was from main
-
             <SearchBar />
             <UserProfileInfo user={user} />
             <FavoriteBooks books={user.favoriteBooks} />
