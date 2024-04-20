@@ -34,7 +34,7 @@ function ProfileUser({ userName }: { userName: string }) {
                         label= "profileHome"
                         onChange={handleChange}
                     >
-                        <MenuItem>My Profile</MenuItem>
+                        <MenuItem >My Profile</MenuItem>
                         <MenuItem>Favorites List</MenuItem>
                         <MenuItem>Want to Read</MenuItem>
                         <MenuItem>Add Friends</MenuItem>

@@ -10,7 +10,7 @@ import ProfileUser from "./ProfileUser";
 
 function Home() {
     // to navigate between an anon and non anon user test
-    const user = null
+    const user = "gigi"
      const userRole = 'admin'
     return (
 

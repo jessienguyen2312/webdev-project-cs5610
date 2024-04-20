@@ -16,6 +16,7 @@ import {Provider} from "react-redux";
 
 import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
 import Reviews from './Bookazon/BookDetail/reviews';
+import ReviewsAdmin from './Bookazon/BookDetail/reviewsAdmin';
 
 // import Box from '@mui/material/Box';
 // import TextField from '@mui/material/TextField';
@@ -65,7 +66,7 @@ function App() {
                     <Route path="Bookazon/SignUp" element={<SignUp/>}/>
                     <Route path="Bookazon/Search" element={<Search/>}/>             
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
-                    <Route path="Bookazon/BookDetail/:key/reviews" element={<Reviews/>}/>
+                    <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsAdmin/>}/>
                     <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/> 
                 </Routes>
             </HashRouter>

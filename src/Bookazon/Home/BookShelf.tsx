@@ -32,6 +32,8 @@ interface bookDetail {
 
 
 function BookShelf({ genre }: { genre: string }) {
+    
+    
     const navigate = useNavigate();
 
 

@@ -8,8 +8,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { Link } from 'react-router-dom';
 
 
 
@@ -25,10 +26,12 @@ function SearchBar() {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, ml:1 }}>
+        <Box sx={{ flexGrow: 1, ml: 1 }}>
             <Grid container alignItems="center" sx={{ mt: 2 }}>
                 <Grid item sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'block' } }}>
-                    <h1>Bookazone</h1>
+                    <Link to="/Bookazon/Home"  style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Typography variant="h3">Bookazone</Typography>
+                    </Link>
                 </Grid>
                 {/* Drop Down Menu */}
                 <Grid item xs={1}>
@@ -58,7 +61,7 @@ function SearchBar() {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     {/* this needs to be able to navigate to the search page */}
-                                    <IconButton aria-label= "search" color='primary'>
+                                    <IconButton aria-label="search" color='primary'>
                                         <SearchIcon />
                                     </IconButton>
                                 </InputAdornment>
