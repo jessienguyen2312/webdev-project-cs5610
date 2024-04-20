@@ -1,12 +1,16 @@
 import {Link} from "react-router-dom";
 
 import SearchBar from "../Home/SearchBar";
-import ProfileNav from "../Home/ProfileNav"
+
+// import ProfileNav from "../Home/ProfileNav"
 
 import UserProfileInfo from "./UserInfo";
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserReviews from "./ShowUserReviews";
 import ShowUserFollows from "./ShowUserFollows";
+
+import ProfileUser from "../Home/ProfileUser";
+
 
 function Profile() {
     const user = {
@@ -42,7 +46,11 @@ function Profile() {
 
     return (
         <div>
-            <ProfileNav />
+
+            <ProfileUser userName={user.username} />
+
+            // <ProfileNav /> <- this was from main
+
             <SearchBar />
             <UserProfileInfo user={user} />
             <FavoriteBooks books={user.favoriteBooks} />

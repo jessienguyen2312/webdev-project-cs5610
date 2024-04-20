@@ -3,19 +3,33 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import BookShelf from "./BookShelf";
 import ListOfBooks from "./ListOfBooks";
-import ProfileNav from "./ProfileNav";
+
+import ProfileAnon from "./ProfileAnon";
+
+// import ProfileNav from "./ProfileNav"; <- this was from main
+
 import TitleBar from "./TitleBar";
+import ProfileUser from "./ProfileUser";
 
 
 function Home() {
+    // to navigate between an anon and non anon user test
+    const user = null
+     const userRole = 'admin'
     return (
+
         <div>
             {/* <h1>Bookazon :D</h1> */}
             <TitleBar />
-            <ProfileNav />
+
+            {/* needs to be changed to incorporate the actual session variables */}
+            {user === null ? (<ProfileAnon />): (<ProfileUser userName = {user}/>)}
+            
+
+            // <ProfileNav /> <- this was also from main
+
             <SearchBar />
             <ListOfBooks />
-            {/* <BookShelf genre={"romance"} /> */}
         </div>
     )
 }

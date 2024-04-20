@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { bookState } from "../store";
+import { setBook } from '../BookDetail/BookReducer';
 
 const OPENLIB_API = "https://openlibrary.org/search.json?q=subject:";
 const COVER_API = "https://covers.openlibrary.org/b/olid/";
@@ -12,11 +15,18 @@ const COVER_API = "https://covers.openlibrary.org/b/olid/";
 
 
 interface Book {
-    key: string;
+    edition_key: any;
+    // key: string;
     title: string;
     author_name: string[];
     author_key: string[];
     cover_edition_key: string;
+}
+
+interface bookDetail {
+    description: string
+    title: string
+    cover: string
 }
 
 
@@ -24,9 +34,21 @@ interface Book {
 function BookShelf({ genre }: { genre: string }) {
     const navigate = useNavigate();
 
+
+    const dispatch = useDispatch();
+    const book = useSelector((state: bookState) => state.bookReducer.book);
+    // const [bookDetail, setBookDetail] = useState<bookDetail>();
+
     // navigate to book detail page and pass in key for book
-    const bookDetail = (bookID: any) => {
-        navigate(`/Bookazon/BookDetail/${bookID}`)
+    const bookDetailPage = (bookItem: Book) => {
+        dispatch(setBook({
+            key: bookItem.edition_key[0],
+            author_name: bookItem.author_name,
+            author_key: bookItem.author_key,
+            cover_edition_key: bookItem.cover_edition_key,
+        }))
+        console.log(JSON.stringify(book, null, 2))
+        navigate(`/Bookazon/BookDetail/${bookItem.edition_key[0]}`)
     };
 
     // navigate to author profil page and pass in author key
@@ -54,13 +76,13 @@ function BookShelf({ genre }: { genre: string }) {
     }, [genre]);
 
 
-    console.log({ books })
+    // console.log({ books })
 
     // making sure I can get the info USED FOR checking
     useEffect(() => {
         if (books.length > 1) {
             // console.log(books[0].cover_edition_key);
-            console.log(typeof books[0].author_name);
+            // console.log(typeof books[0].author_name);
         }
     }, [books]);
 
@@ -100,7 +122,7 @@ function BookShelf({ genre }: { genre: string }) {
 
                             <Tab label={
                                 <Card sx={{ width: 250, height: '100%' }}>
-                                    <CardActionArea onClick={() => bookDetail(item.key)} >
+                                    <CardActionArea onClick={() => bookDetailPage(item)} >
                                         <CardMedia
                                             component="img"
                                             sx={{
@@ -120,7 +142,7 @@ function BookShelf({ genre }: { genre: string }) {
                                     <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: "center" }}>
 
                                         <Box>
-                                            <CardActionArea onClick={() => bookDetail(item.key)}>
+                                            <CardActionArea onClick={() => bookDetailPage(item)}>
                                                 <Typography variant='subtitle1' display="block" sx={{
 
                                                     whiteSpace: 'nowrap',
