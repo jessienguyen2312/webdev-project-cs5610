@@ -105,7 +105,7 @@ export const isbnSearch = async (isbn: string) => {
 export const subjectTextBookSearch = async (text: string) => {
     const queryString = stringQueryProcess(text);
     try {
-        const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
+        const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}&fields=key,title,author_name,editions,author_key${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -122,7 +122,7 @@ export const subjectTextBookSearch = async (text: string) => {
 export const titleTextBookSearch = async (text: string) => {
     const queryString = stringQueryProcess(text);
     try {
-        const response = await axios.get(`${TITLE_SEARCH_API}${queryString}/${LIMIT_PAGE}`);
+        const response = await axios.get(`${TITLE_SEARCH_API}${queryString}&fields=key,title,author_name,editions,author_key${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -141,7 +141,7 @@ export const fullTextBookSearch = async (text: string) => {
     const queryList = text.split(" ");
     const queryString = queryList.join("+");
     try {
-        const response = await axios.get(`${OPENLIB_API}${queryString}&fields=key,title,author_name,editions${LIMIT_PAGE}&language=eng`);
+        const response = await axios.get(`${OPENLIB_API}${queryString}&fields=key,title,author_name,editions,author_key${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);

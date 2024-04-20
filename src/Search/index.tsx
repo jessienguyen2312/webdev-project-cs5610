@@ -16,6 +16,13 @@ import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
 import SearchBar from "../Bookazon/Home/SearchBar";
 
+export const extractOLID = (input: string) => {
+    const result = input.match(/OL.*$/);
+    if (result !== null) {
+        return result[0];
+    }
+}
+
 function Search() {
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
     console.log(searchQuery);
@@ -25,6 +32,7 @@ function Search() {
 
     const book = useSelector((state: bookState) => state.bookReducer.book);
     const result = useSelector((state: bookState) => state.resultReducer.result)
+    console.log(result);
 
     const extractOLID = (input: string) => {
         const result = input.match(/OL.*$/);
@@ -36,11 +44,8 @@ function Search() {
 
     return(
         <div>
-            <h1>Search </h1>
             <SearchBar/>
-
             <h1>{result.length} result(s): </h1>
-
 
             <Grid container spacing={2} justifySelf="center">
                     {result.map((object: any) => (
@@ -60,7 +65,7 @@ function Search() {
                                     <Typography gutterBottom variant="h5" component="div">
                                         <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
                                             key: extractOLID(object.editions.docs[0].key),
-                                            author_name: object.author_name[0],
+                                            author_name: object.author_name,
                                             author_key: object.author_key,
                                             cover: object.cover_edition_key,
                                         }))}>
