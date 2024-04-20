@@ -14,33 +14,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
 import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
+import SearchBar from "../Bookazon/Home/SearchBar";
 
 function Search() {
-    // grab query
-    const [query, setQuery] = useState("");
-    // result of search
-    const [resObjects, setResObject] = useState<any>([]);
+    const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
+    console.log(searchQuery);
 
     const dispatch = useDispatch();
 
-    const fullTextSearch = async (query: string) => {
-        const object = await clientExternal.fullTextBookSearch(query);
-        setResObject(object);
-        console.log(object.docs);
-    }
-
-    useEffect(() => {
-        if (resObjects && resObjects.docs) {
-            // setResObject(result.docs.slice(1))
-            dispatch(setResult(resObjects.docs))
-            console.log(result);
-
-        }
-    }, [resObjects, dispatch]);
 
     const book = useSelector((state: bookState) => state.bookReducer.book);
     const result = useSelector((state: bookState) => state.resultReducer.result)
-    // console.log(result)
 
     const extractOLID = (input: string) => {
         const result = input.match(/OL.*$/);
@@ -53,8 +37,7 @@ function Search() {
     return(
         <div>
             <h1>Search </h1>
-            <TextField variant="outlined" label="Search books" id="search-query" onChange={(e) => setQuery(e.target.value)} size="small"/>
-            <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
+            <SearchBar/>
 
             <h1>{result.length} result(s): </h1>
 

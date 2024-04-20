@@ -46,7 +46,7 @@ function BookDetail() {
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
-                    <p>{bookDetail.description?.value}{book.key}</p>
+                    <p>{bookDetail.description?.value}{JSON.stringify(book)}</p>
                     <button>Add to Favorite</button>
                     <button> Write a review</button>
 
