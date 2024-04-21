@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE = process.env.REACT_APP_API_BASE;
+// const API_BASE = process.env.REACT_APP_API_BASE;
+const API_BASE = `https://bookazon-node-server.onrender.com`
 const API_USERS = `${API_BASE}/api/users`
 
 axios.defaults.withCredentials = true
@@ -21,47 +22,53 @@ export interface User {
     OL_author_key: String
 };
 
+//TODO: Where's sign up?
+
 
 export const findUserByUserName = async (username: any) => {
-    const response = await axios.get(`${API_USERS}/find/${username}`)
+    const response = await axios.get(`${API_USERS}/find/${username}`, { withCredentials: true })
     return response.data;
 }
 
 export const findAllUsers = async () => {
-    const response = await axios.get(`${API_USERS}`);
+    const response = await axios.get(`${API_USERS}`, { withCredentials: true });
     return response.data;
 };
 
 export const findUserById = async (id: string) => {
-    const response = await axios.get(`${API_USERS}/${id}`);
+    const response = await axios.get(`${API_USERS}/${id}`, { withCredentials: true });
     return response.data;
 };
 
 // are we gonna use id or username?
 export const updateUser = async (user: any) => {
-    const response = await axios.put(`${API_USERS}/${user._id}`, user);
+    const response = await axios.put(`${API_USERS}/${user._id}`, user, { withCredentials: true });
     return response.data;
 };
 
 export const deleteUser = async (user: any) => {
     const response = await axios.delete(
-        `${API_USERS}/${user._id}`);
+        `${API_USERS}/${user._id}`, { withCredentials: true });
     return response.data;
 };
 
 export const signin = async (credentials: User) => {
     console.log(credentials)
-    const response = await axios.post(`${API_USERS}/signin`, credentials);
+    const response = await axios.post(`${API_USERS}/signin`, credentials, { withCredentials: true });
     return response.data;
 };
 
 export const signout = async () => {
-    const response = await axios.post(`${API_USERS}/signout`);
+    const response = await axios.post(`${API_USERS}/signout`, { withCredentials: true });
     return response.data;
 };
 
 
 export const profile = async () => {
-    const response = await axios.post(`${API_USERS}/profile`);
+    const response = await axios.post(`${API_USERS}/profile`, { withCredentials: true });
     return response.data;
 };
+
+export const signup = async (user: any) => {
+    const response = await axios.post(`${API_USERS}/signup`, user, { withCredentials: true });
+}
