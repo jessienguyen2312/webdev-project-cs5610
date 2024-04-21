@@ -1,12 +1,12 @@
-import { Box, Button, Divider, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Rating, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 
 import * as client from "./clientReview";
-
-
 import { Review } from "./clientReview";
+
 
 
 function Reviews() {
@@ -141,6 +141,11 @@ function Reviews() {
                 {reviews.map((item, index) => (
                     <Box key={index}  >
                         <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                            <ListItemIcon sx={{ color: 'red' }} >
+                                <IconButton >
+                                    <FlagOutlinedIcon/>
+                                </IconButton>
+                            </ListItemIcon>
                             <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                 By {item.username}
                             </Link>} />
