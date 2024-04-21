@@ -22,6 +22,11 @@ export interface User {
 };
 
 
+export const findUserByUserName = async (username: any) => {
+    const response = await axios.get(`${API_USERS}/find/${username}`)
+    return response.data;
+}
+
 export const findAllUsers = async () => {
     const response = await axios.get(`${API_USERS}`);
     return response.data;
@@ -59,4 +64,4 @@ export const signout = async () => {
 export const profile = async () => {
     const response = await axios.post(`${API_USERS}/profile`);
     return response.data;
-  };
+};

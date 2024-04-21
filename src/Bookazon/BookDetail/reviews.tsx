@@ -1,88 +1,69 @@
-import { Box, Divider, List, ListItem, ListItemText, Rating } from "@mui/material";
+import { Box, Button, Divider, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 
-interface Review {
-    username: String;
-    bookId: String;
-    rating: number;
-    text: String;
-}
+import * as client from "./clientReview";
+
+
+import { Review } from "./clientReview";
+
 
 function Reviews() {
 
 
-    const { key } = useParams();
-    console.log(key)
+    // const { usernameID = '' } = useParams(useParams<{ username: string | undefined }>(););
+    const { key = '' } = useParams<{ key: string | undefined }>();
+    const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
 
 
+
+    const [newReview, setNewReview] = useState<Review>({
+        _id: "",
+        username: usernameId,
+        bookId: key,
+        rating: 0,
+        text: "",
+        datePosted: new Date(),
+        flagged: false,
+        likes: 0
+    });
 
     const [reviews, setReviews] = useState<Review[]>([]);
 
-    // useEffect(() => {
-    //     fetchReviews(bookId).then(data => {
-    //         setReviews(data);
-    //     });
-    // }, [bookId]);
+    const fetchReviews = async () => {
+        console.log(key)
+        const bookReviews = await client.findReviewByBook(key);
+        setReviews(bookReviews)
+    };
+    useEffect(() => { fetchReviews(); }, []);
 
 
-    const reviewList = [
-        {
-            "username": "booklover123",
-            "bookId": "OL34886052M",
-            "rating": 5,
-            "text": "Absolutely loved this book! It's a masterpiece that's both captivating and emotionally driven."
-        },
-        {
-            "username": "pageTurner",
-            "bookId": "OL34886052M",
-            "rating": 5,
-            "text": "This book was a fantastic read! Highly recommend to anyone who loves epic sagas."
-        },
-        {
-            "username": "pageTurner",
-            "bookId": "OL22449759M",
-            "rating": 1,
-            "text": "Really struggled to finish this book. Not what I was hoping for at all."
-        },
-        {
-            "username": "novelFan",
-            "bookId": "OL7826547M",
-            "rating": 4,
-            "text": "Great thriller with lots of twists. Kept me on the edge of my seat!"
-        },
-        {
-            "username": "novelFan",
-            "bookId": "OL7826547M",
-            "rating": 1,
-            "text": "Too slow for my taste. The story didn't hold my interest."
-        },
-        {
-            "username": "mysteryReader",
-            "bookId": "OL22449759M",
-            "rating": 5,
-            "text": "A brilliant crime novel. Perfectly paced with a plot that keeps you guessing."
-        },
-        {
-            "username": "mysteryReader",
-            "bookId": "OL1743891M",
-            "rating": 2,
-            "text": "Not as thrilling as I expected. The mystery was too easily solved."
-        },
-        {
-            "username": "epicReader",
-            "bookId": "OL7826547M",
-            "rating": 5,
-            "text": "An epic story that I couldn't put down. The characters were deep and memorable."
-        },
-        {
-            "username": "epicReader",
-            "bookId": "OL1743891M",
-            "rating": 2,
-            "text": "I found it underwhelming. Lacked the depth and detail I look for in historical epics."
+    const createReview = async () => {
+        try {
+            const userReview = await client.createReview(newReview);
+            setReviews(prevReviews => [userReview, ...prevReviews]);
+
+            // reset newReview
+            setNewReview({
+                _id: "",
+                username: usernameId,
+                bookId: key,
+                rating: 0,
+                text: "",
+                datePosted: new Date(),
+                flagged: false,
+                likes: 0
+            });
+
+        } catch (err) {
+            console.log(err);
         }
-    ]
+
+    }
+
+
+
     const style = {
         p: 3,
         width: '100%',
@@ -91,16 +72,72 @@ function Reviews() {
     };
 
 
-    useEffect(() => {
-        // Filter and set reviews directly
-        setReviews(reviewList.filter(review => review.bookId === key));
-    }, [key]);
+    // useEffect(() => {
+    //     // Filter and set reviews directly
+    //     setReviews(reviewList.filter(review => review.bookId === key));
+    // }, [key]);
 
     return (
+
+
         <Box>
+            <Box sx={{
+                m: 2,
+                mt: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
+
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '100%'
+                }}>
+                    <Rating
+                        sx={{ mb: 2 }}
+                        size="large"
+                        name="new-rating"
+                        value={newReview.rating}
+                        onChange={(event, newValue) => {
+                            setNewReview(prevReview => ({
+                                ...prevReview,
+                                rating: newValue || 0 // Ensures a number is always set
+                            }));
+                        }}
+                    />
+                </Box>
+
+                <TextField sx={{ width: '100%' }}
+                    placeholder="What did you think about the book?"
+                    multiline
+                    rows={2}
+                    value={newReview.text}
+                    onChange={(event) => {
+                        const newText = event.target.value;
+                        setNewReview(prevReview => ({
+                            ...prevReview,
+                            text: newText
+                        }));
+                    }}
+                />
+
+
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'end',
+                    width: '100%',
+                    mt: 1
+                }}>
+                    <Button variant="contained" onClick={createReview}>Post</Button>
+
+                </Box>
+            </Box>
+
 
 
             <List sx={style} aria-label="review list">
+
                 {reviews.map((item, index) => (
                     <Box key={index}  >
                         <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>

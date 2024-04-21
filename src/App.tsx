@@ -67,7 +67,8 @@ function App() {
                     <Route path="Bookazon/SignUp" element={<SignUp/>}/>
                     <Route path="Bookazon/Search" element={<Search/>}/>             
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
-                    <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsAdmin/>}/>
+                    <Route path="Bookazon/BookDetail/:key/reviews/admin" element={<ReviewsAdmin/>}/>
+                    <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews/>}/>
                     <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/> 
                 </Routes>
             </HashRouter>

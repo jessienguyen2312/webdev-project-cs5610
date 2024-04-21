@@ -4,88 +4,28 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface Review {
-    username: String;
-    bookId: String;
-    rating: number;
-    text: String;
-}
+import * as client from "./clientReview";
+
+import { Review } from "./clientReview";
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import red from "@mui/material/colors/red";
+
 
 function ReviewsAdmin() {
 
 
     const { key } = useParams();
-    console.log(key)
-
 
 
     const [reviews, setReviews] = useState<Review[]>([]);
 
-
-
-    // useEffect(() => {
-    //     fetchReviews(bookId).then(data => {
-    //         setReviews(data);
-    //     });
-    // }, [bookId]);
-
-
-    const reviewList = [
-        {
-            "username": "booklover123",
-            "bookId": "OL34886052M",
-            "rating": 5,
-            "text": "Absolutely loved this book! It's a masterpiece that's both captivating and emotionally driven."
-        },
-        {
-            "username": "pageTurner",
-            "bookId": "OL34886052M",
-            "rating": 5,
-            "text": "This book was a fantastic read! Highly recommend to anyone who loves epic sagas."
-        },
-        {
-            "username": "pageTurner",
-            "bookId": "OL22449759M",
-            "rating": 1,
-            "text": "Really struggled to finish this book. Not what I was hoping for at all."
-        },
-        {
-            "username": "novelFan",
-            "bookId": "OL7826547M",
-            "rating": 4,
-            "text": "Great thriller with lots of twists. Kept me on the edge of my seat!"
-        },
-        {
-            "username": "novelFan",
-            "bookId": "OL7826547M",
-            "rating": 1,
-            "text": "Too slow for my taste. The story didn't hold my interest."
-        },
-        {
-            "username": "mysteryReader",
-            "bookId": "OL22449759M",
-            "rating": 5,
-            "text": "A brilliant crime novel. Perfectly paced with a plot that keeps you guessing."
-        },
-        {
-            "username": "mysteryReader",
-            "bookId": "OL1743891M",
-            "rating": 2,
-            "text": "Not as thrilling as I expected. The mystery was too easily solved."
-        },
-        {
-            "username": "epicReader",
-            "bookId": "OL7826547M",
-            "rating": 5,
-            "text": "An epic story that I couldn't put down. The characters were deep and memorable."
-        },
-        {
-            "username": "epicReader",
-            "bookId": "OL1743891M",
-            "rating": 2,
-            "text": "I found it underwhelming. Lacked the depth and detail I look for in historical epics."
-        }
-    ]
+    const fetchReviews = async () => {
+        console.log(key)
+        const bookReviews = await client.findReviewByBook(key);
+        console.log(bookReviews)
+        setReviews(bookReviews)
+    };
+    useEffect(() => { fetchReviews(); }, []);
     const style = {
         p: 3,
         width: '100%',
@@ -94,47 +34,50 @@ function ReviewsAdmin() {
     };
 
 
-    useEffect(() => {
-        // Filter and set reviews directly
-        setReviews(reviewList.filter(review => review.bookId === key));
-    }, [key]);
+    // useEffect(() => {
+    //     // Filter and set reviews directly
+    //     setReviews(reviews.filter(review => review.bookId === key));
+    // }, [key]);
 
 
-    const deleteReview = (review: any) => {
-        console.log(`deleting review ${review}`);
+    const deleteReview = async (review: any) => {
+        await client.deleteReview(review);
+        setReviews(currentReviews => 
+            currentReviews.filter(r => r._id !== review._id))
+
     };
 
     return (
         <Box>
-
             {reviews.length > 0 ? (
                 <List sx={style} aria-label="review list">
                     {reviews.map((item, index) => (
-                        <Box key={index}  >
-
+                        <Box key={index}>
                             <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}
                                 secondaryAction={
-                                    <IconButton aria-label="comment" onClick={() => deleteReview(item)} >
+                                    <IconButton aria-label="delete" onClick={() => deleteReview(item)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 }>
+                                {item.flagged && (
+                                    <ListItemIcon sx={{ color: 'red' }} >
+                                        <PriorityHighIcon />
+                                    </ListItemIcon>
+                                )}
                                 <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                     By {item.username}
                                 </Link>} />
                                 <Rating name="read-only" value={item.rating} readOnly />
-
                             </ListItem>
                             <Divider component="li" />
                         </Box>
                     ))}
-
                 </List>
             ) : (
                 <Box sx={{ p: 3 }}>
-                    <Typography>No reviews available for this book at this time</Typography>
+                    <Typography>No reviews available for this book at this time.</Typography>
                 </Box>
             )}
-
         </Box>
     )
 }
