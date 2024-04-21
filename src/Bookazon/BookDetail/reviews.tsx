@@ -63,6 +63,17 @@ function Reviews() {
     }
 
 
+    // const updateUser = async () => {
+    //     try {
+    //         const status = await client.updateReview(user);
+    //         setUsers(users.map((u) =>
+    //             (u._id === user._id ? user : u)));
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
+
+
 
     const style = {
         p: 3,
