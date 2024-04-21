@@ -1,7 +1,6 @@
 import {Link} from "react-router-dom";
 
 import SearchBar from "../Home/SearchBar";
-
 // import ProfileNav from "../Home/ProfileNav"
 
 import UserProfileInfo from "./UserInfo";
@@ -46,7 +45,6 @@ function Profile() {
 
     return (
         <div>
-
             <ProfileUser userName={user.username} />
             <SearchBar />
             <UserProfileInfo user={user} />
