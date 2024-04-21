@@ -27,16 +27,15 @@ function SearchBar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
+    console.log(searchQuery);
     const result = useSelector((state: bookState) => state.resultReducer.result);
 
     // search criteria by title, author, subject, isbn
     const searchCriteria = [
         "Title", "Author", "Subject", "ISBN"
     ]
-    // const [criteria, setCriteria] = React.useState("Title/Fulltext");
 
     const handleChange = (event: SelectChangeEvent) => {
-        // setCriteria(event.target.value as string);
         dispatch(setSearch({...searchQuery, criteria: event.target.value}));
         dispatch(resetResult(result));
         console.log(searchQuery);
@@ -92,7 +91,7 @@ function SearchBar() {
             <Grid container alignItems="center" sx={{ mt: 2 }}>
                 <Grid item sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'block' } }}>
                     <Link to="/Bookazon/Home"  style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Typography variant="h3">Bookazone</Typography>
+                        <Typography variant="h3">Bookazon</Typography>
                     </Link>
                 </Grid>
                 {/* Drop Down Menu */}

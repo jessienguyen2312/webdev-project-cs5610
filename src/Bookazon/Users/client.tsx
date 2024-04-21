@@ -71,4 +71,5 @@ export const profile = async () => {
 
 export const signup = async (user: any) => {
     const response = await axios.post(`${API_USERS}/signup`, user, { withCredentials: true });
+    return response.data;
 }

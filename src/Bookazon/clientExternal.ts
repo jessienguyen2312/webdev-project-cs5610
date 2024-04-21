@@ -61,12 +61,12 @@ export const bookDetailBookey = async (key: String) => {
 
 
 /**
- * Function to fetch book detail by work key with the format "/work/OL#####W".
+ * Function to fetch book synopsis by work key with the format "/work/OL#####W".
  * Book detail consists of title, author, synopsis
  * A sample book detail can be seen here: https://openlibrary.org/works/OL45804W.json
  * @param key format "/work/OL#####W"
  */
-export const bookDetail = async (key: String) => {
+export const bookSynopsis = async (key: String) => {
     try {
         const response = await axios.get(`${BOOK_DETAIL_API}${key}.json`);
         console.log(response.data);
