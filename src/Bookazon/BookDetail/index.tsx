@@ -16,6 +16,7 @@ interface bookDetail {
 function BookDetail() {
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
+    console.log(book)
 
     const [bookDetail, setBookDetail] = useState<bookDetail>();
     // const [bookRating, setBookRating] = useState();
@@ -46,7 +47,8 @@ function BookDetail() {
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
-                    <p>{bookDetail.description?.value}{book.key}</p>
+                    <p>{bookDetail.description?.value}</p>
+                    <p>{JSON.stringify(book)}</p>
                     <button>Add to Favorite</button>
                     <button> Write a review</button>
 

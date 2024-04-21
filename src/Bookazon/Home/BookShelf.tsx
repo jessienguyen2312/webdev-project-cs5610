@@ -85,6 +85,7 @@ function BookShelf({ genre }: { genre: string }) {
         if (books.length > 1) {
             // console.log(books[0].cover_edition_key);
             // console.log(typeof books[0].author_name);
+            console.log(books);
         }
     }, [books]);
 

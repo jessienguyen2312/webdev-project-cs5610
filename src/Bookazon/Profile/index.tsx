@@ -7,7 +7,9 @@ import UserProfileInfo from "./UserInfo";
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserReviews from "./ShowUserReviews";
 import ShowUserFollows from "./ShowUserFollows";
+
 import ProfileUser from "../Home/ProfileUser";
+
 
 function Profile() {
     const user = {

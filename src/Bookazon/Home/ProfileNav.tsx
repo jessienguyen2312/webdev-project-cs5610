@@ -7,13 +7,8 @@ import React from "react";
 
 
 
-
-function ProfileUser({ userName }: { userName: string }) {
-    
-
+function ProfileNav() {
     const [criteria, setCriteria] = React.useState('All');
-    const GREETING = "Hi, " + userName;
-    console.log(GREETING)
 
     const handleChange = (event: SelectChangeEvent) => {
         setCriteria(event.target.value as string);
@@ -27,20 +22,16 @@ function ProfileUser({ userName }: { userName: string }) {
                 </Avatar>
 
                 <FormControl sx={{minWidth: 100}}>
-                    <InputLabel id="profileHome">{GREETING}</InputLabel>
+                    <InputLabel id="profileHome">Profile</InputLabel>
                     <Select
                         labelId="profileHome"
                         id="profilSelect"
-                        label= "profileHome"
+                        label="profile"
                         onChange={handleChange}
                     >
-                        <MenuItem >My Profile</MenuItem>
-                        <MenuItem>Favorites List</MenuItem>
-                        <MenuItem>Want to Read</MenuItem>
-                        <MenuItem>Add Friends</MenuItem>
-                        <MenuItem>Reviews</MenuItem>
-                        <MenuItem>Authors</MenuItem>
-                        <MenuItem>Log Out</MenuItem>
+                        <MenuItem>Ten</MenuItem>
+                        <MenuItem>Twenty</MenuItem>
+                        <MenuItem>Thirty</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -52,7 +43,7 @@ function ProfileUser({ userName }: { userName: string }) {
                 <IconButton aria-label="wishlist">
                     <FavoriteBorderIcon />
                     <Typography variant="button" >
-                        Favorits
+                        WISHLIST
                     </Typography>
                 </IconButton>
             </Box>
@@ -61,5 +52,4 @@ function ProfileUser({ userName }: { userName: string }) {
     );
 
 }
-
-export default ProfileUser
+export default ProfileNav

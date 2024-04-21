@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import './index.css'; 
 import Select from '@mui/material/Select'; 
 import MenuItem from '@mui/material/MenuItem'; // Import the MenuItem component
 import { RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
@@ -27,7 +28,7 @@ export default function SignUp() {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ backgroundColor: "#F4EEE7", height: "100vh" }}>
+    <Container maxWidth="xl" sx={{ backgroundColor: "#F4EEE7" }}>
       <Container component="main" maxWidth="xs" sx={{padding: 0.25, backgroundColor: "#F4EEE7" }}>
         <CssBaseline />
         <Box
