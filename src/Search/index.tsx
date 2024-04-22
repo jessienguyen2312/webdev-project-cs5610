@@ -15,6 +15,8 @@ import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
 import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
 import SearchBar from "../Bookazon/Home/SearchBar";
+import {setAuthorKey} from "../Bookazon/Profile/OLAuthorReducer";
+
 
 export const extractOLID = (input: string) => {
     const result = input.match(/OL.*$/);
@@ -23,16 +25,17 @@ export const extractOLID = (input: string) => {
     }
 }
 
+//TODO: Add link to the button to navigate to review page
+
 function Search() {
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
-    console.log(searchQuery);
 
     const dispatch = useDispatch();
 
 
     const book = useSelector((state: bookState) => state.bookReducer.book);
     const result = useSelector((state: bookState) => state.resultReducer.result)
-    console.log(result);
+    const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
 
     const extractOLID = (input: string) => {
         const result = input.match(/OL.*$/);
@@ -42,12 +45,11 @@ function Search() {
     }
 
 
-
     return(
         <div>
             <SearchBar/>
             <h1>{result.length} result(s): </h1>
-
+            {/*display search result for authors*/}
             {searchQuery.criteria === 'Author' && result && (
                 <Grid container spacing={2} justifySelf="center">
                     {result.map((object: any) => (
@@ -63,15 +65,17 @@ function Search() {
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link to={`#`}>
+                                        <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
+                                            dispatch(setAuthorKey({author_key: object.key}));
+                                            console.log(OLAuthor);
+                                        }}>
                                             {object.name}
                                         </Link>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        Top work: {object.top_work} <br/>
+                                        Top work: {object.top_work === undefined? 'No work found' : object.top_work} <br/>
                                         Work count: {object.work_count}
                                     </Typography>
-                                    {object.key}
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">View Bookazon Profile</Button>
@@ -97,11 +101,12 @@ function Search() {
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
+                                        <Link style={{textDecoration: "none", color: "#222C4E"}} to={`/Bookazon/BookDetail/${extractOLID(object.editions.docs[0].key)}`} onClick={()=> dispatch(setBook({
                                             key: extractOLID(object.editions.docs[0].key),
                                             author_name: object.author_name,
                                             author_key: object.author_key,
                                             cover: object.cover_edition_key,
+                                            work_key: object.key
                                         }))}>
                                             {object.title}
                                         </Link>
@@ -109,11 +114,9 @@ function Search() {
                                     <Typography variant="body2" color="text.secondary">
                                         {object.author_name[0]}
                                     </Typography>
-                                    {book.key}
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">See reviews</Button>
-                                    <Button size="small">Write a review</Button>
+                                    <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>Reviews</Button>
                                 </CardActions>
                             </Card>
                         </Grid>

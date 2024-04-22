@@ -6,6 +6,7 @@ const initialState = {
         author_name: "",
         author_key: "",
         cover: "",
+        work_key: ""
     }
 };
 
