@@ -1,6 +1,6 @@
 import axios from "axios";
-// const API_BASE = process.env.REACT_APP_API_BASE;
-const API_BASE = `https://bookazon-node-server.onrender.com`
+const API_BASE = process.env.REACT_APP_API_BASE;
+// const API_BASE = `https://bookazon-node-server.onrender.com`
 const REVIEWS_API = `${API_BASE}/api/reviews`;
 
 // axios.defaults.withCredentials = true

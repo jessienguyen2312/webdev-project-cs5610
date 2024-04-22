@@ -32,6 +32,7 @@ interface bookDetail {
 
 
 function BookShelf({ genre }: { genre: string }) {
+    // console.log(genre)
     
     
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ function BookShelf({ genre }: { genre: string }) {
             author_key: bookItem.author_key,
             cover_edition_key: bookItem.cover_edition_key,
         }))
-        console.log(JSON.stringify(book, null, 2))
+        // console.log(JSON.stringify(book, null, 2))
         navigate(`/Bookazon/BookDetail/${bookItem.edition_key[0]}`)
     };
 
@@ -57,37 +58,45 @@ function BookShelf({ genre }: { genre: string }) {
     const authorDetail = (authorID: any) => {
         navigate(`/Bookazon/Profile/${authorID}`)
     };
+    
 
+    
     const url = OPENLIB_API + genre + "&limit=7";
 
     const [books, setBooks] = useState<Book[]>([]);
 
 
     useEffect(() => {
+        if (genre.toLowerCase() === 'favorites') {
+            // If the genre is 'favorites', skip fetching 
+            console.log('Skipping fetch for favorites genre');
+            return;
+        }
+    
         const fetchData = async () => {
-
             try {
-                const res = await axios.get(`${url}`);
-                setBooks(res.data.docs || []);
-
+                const response = await axios.get(`${OPENLIB_API}${genre}&limit=7`);
+                setBooks(response.data.docs || []);
             } catch (error) {
                 console.error('There was an error fetching the books:', error);
             }
         };
+    
         fetchData();
     }, [genre]);
+    
 
 
     // console.log({ books })
 
     // making sure I can get the info USED FOR checking
-    useEffect(() => {
-        if (books.length > 1) {
-            // console.log(books[0].cover_edition_key);
-            // console.log(typeof books[0].author_name);
-            console.log(books);
-        }
-    }, [books]);
+    // useEffect(() => {
+    //     if (books.length > 1) {
+    //         // console.log(books[0].cover_edition_key);
+    //         // console.log(typeof books[0].author_name);
+    //         // console.log(books);
+    //     }
+    // }, [books]);
 
 
     // used for the arrow clicks on the shelf

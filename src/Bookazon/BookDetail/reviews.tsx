@@ -1,26 +1,29 @@
-import { Box, Button, Divider, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 
 import * as client from "./clientReview";
 
 
 import { Review } from "./clientReview";
+import { User } from "../Users/client";
 
 
-function Reviews() {
+function Reviews({ user }: { user: any }) {
+    // console.log(user)
 
 
     // const { usernameID = '' } = useParams(useParams<{ username: string | undefined }>(););
     const { key = '' } = useParams<{ key: string | undefined }>();
-    const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
+    // const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
 
 
 
     const [newReview, setNewReview] = useState<Review>({
         _id: "",
-        username: usernameId,
+        username: user.username,
         bookId: key,
         rating: 0,
         text: "",
@@ -28,6 +31,7 @@ function Reviews() {
         flagged: false,
         likes: 0
     });
+    console.log(newReview)
 
     const [reviews, setReviews] = useState<Review[]>([]);
 
@@ -47,7 +51,7 @@ function Reviews() {
             // reset newReview
             setNewReview({
                 _id: "",
-                username: usernameId,
+                username: user.username,
                 bookId: key,
                 rating: 0,
                 text: "",
@@ -141,6 +145,9 @@ function Reviews() {
                 {reviews.map((item, index) => (
                     <Box key={index}  >
                         <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                            <IconButton >
+                                <FlagOutlinedIcon />
+                            </IconButton>
                             <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                 By {item.username}
                             </Link>} />
