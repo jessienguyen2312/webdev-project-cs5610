@@ -13,7 +13,7 @@ function ProfileUser({ userName }: { userName: string }) {
 
     const [criteria, setCriteria] = React.useState('All');
     const GREETING = "Hi, " + userName;
-    console.log(GREETING)
+    // console.log(GREETING)
 
     const handleChange = (event: SelectChangeEvent) => {
         setCriteria(event.target.value as string);
