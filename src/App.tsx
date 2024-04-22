@@ -18,7 +18,7 @@ import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
 import Reviews from './Bookazon/BookDetail/reviews';
 import ReviewsAdmin from './Bookazon/BookDetail/reviewsAdmin';
 import OLAuthorProfile from "./Bookazon/Profile/OLAuthorProfile";
-import ReviewsIndex from './Bookazon/BookDetail/ReviewsIndex';
+import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
 
 
 // import Box from '@mui/material/Box';
@@ -71,7 +71,7 @@ function App() {
                     <Route path="Bookazon/Search" element={<Search/>}/>             
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
                     <Route path="Bookazon/BookDetail/:key/reviews/admin" element={<ReviewsAdmin/>}/>
-                    <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews/>}/>
+                    <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews user={user}/>}/>
                     <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/>
                     <Route path="/Bookazon/Profile/OlAuthorProfile" element={<OLAuthorProfile/>}/>
                     <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsIndex />}/>
