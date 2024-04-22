@@ -9,6 +9,7 @@ const COVER_API = "https://covers.openlibrary.org/b/olid";
 const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
+const AUTHORS_WORK_API = "https://openlibrary.org/query.json?type=/type/edition&authors=/authors"
 
 const BOOK_DETAIL_API = "https://openlibrary.org"
 
@@ -209,6 +210,22 @@ export const fetchSpecificAuthorPage = async (authorId: string) => {
         console.log(error);
     }
 }
+
+/**
+ * Fetch the first 20 works from the author (can expand limit but it's gonna be slow).
+ */
+export const fetchOLAuthorWorks = async (authorId: string) => {
+    try {
+        const response = await axios.get(`${AUTHORS_WORK_API}/${authorId}&works=&title=`);
+        return response.data;
+    } catch (error: any) {
+        console.log(error);
+    }
+
+}
+
+
+
 
 /**
  * Function to fetch the author's cover image by their authorId.
