@@ -63,7 +63,7 @@ function OLAuthorProfile() {
                                 <Typography gutterBottom variant="h5" component="div">
                                     <Link style={{textDecoration: "none", color: "#222C4E"}} to={`/Bookazon/BookDetail/${extractOLID(work.key)}`} onClick={()=> dispatch(setBook({
                                         key: extractOLID(work.key),
-                                        author_name: OLAuthor.author_name,
+                                        author_name: [OLAuthor.author_name],
                                         author_key: OLAuthor.author_key,
                                         work_key: work.works[0].key
                                     }))}>
