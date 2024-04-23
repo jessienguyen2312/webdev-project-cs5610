@@ -58,9 +58,9 @@ export const deleteUser = async (user: any) => {
 };
 
 export const signin = async (credentials: any) => {
-    // console.log(credentials)
+    console.log(credentials)
     const response = await request.post(`${API_USERS}/signin`, credentials, { withCredentials: true });
-    // console.log(response.data)
+    console.log(response.data)
     return response.data;
 };
 
