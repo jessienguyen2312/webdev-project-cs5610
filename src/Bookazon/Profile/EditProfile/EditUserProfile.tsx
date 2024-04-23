@@ -3,7 +3,9 @@ import { Button, TextField, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import SearchBar from "../../Home/SearchBar";
-import ProfileNav from "../../Home/ProfileNav"
+import ProfileUser from '../../Home/ProfileUser';
+// import ProfileNav from "../../Home/ProfileNav" <- this was from main
+
 
 function EditUserProfile({ user }: { user: any }) {
     const navigate = useNavigate();
@@ -40,7 +42,9 @@ function EditUserProfile({ user }: { user: any }) {
 
     return (
         <div>
-            <ProfileNav />
+
+            <ProfileUser userName={user.userName}  />
+
             <SearchBar />
             <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>
                 <h2>Edit Profile</h2>

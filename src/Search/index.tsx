@@ -14,33 +14,28 @@ import {useDispatch, useSelector} from "react-redux";
 import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
 import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
+import SearchBar from "../Bookazon/Home/SearchBar";
+import {setAuthorKey} from "../Bookazon/Profile/OLAuthorReducer";
+
+
+export const extractOLID = (input: string) => {
+    const result = input.match(/OL.*$/);
+    if (result !== null) {
+        return result[0];
+    }
+}
+
+//TODO: Add link to the button to navigate to review page
 
 function Search() {
-    // grab query
-    const [query, setQuery] = useState("");
-    // result of search
-    const [resObjects, setResObject] = useState<any>([]);
+    const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
 
     const dispatch = useDispatch();
 
-    const fullTextSearch = async (query: string) => {
-        const object = await clientExternal.fullTextBookSearch(query);
-        setResObject(object);
-        console.log(object.docs);
-    }
-
-    useEffect(() => {
-        if (resObjects && resObjects.docs) {
-            // setResObject(result.docs.slice(1))
-            dispatch(setResult(resObjects.docs))
-            console.log(result);
-
-        }
-    }, [resObjects, dispatch]);
 
     const book = useSelector((state: bookState) => state.bookReducer.book);
     const result = useSelector((state: bookState) => state.resultReducer.result)
-    // console.log(result)
+    const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
 
     const extractOLID = (input: string) => {
         const result = input.match(/OL.*$/);
@@ -52,18 +47,50 @@ function Search() {
 
     return(
         <div>
-            <h1>Search </h1>
-            <TextField variant="outlined" label="Search books" id="search-query" onChange={(e) => setQuery(e.target.value)} size="small"/>
-            <Button variant="contained" size="large" onClick={() => fullTextSearch(query)}>Search</Button>
-
+            <SearchBar/>
             <h1>{result.length} result(s): </h1>
-
-
-            <Grid container spacing={2} justifySelf="center">
+            {/*display search result for authors*/}
+            {searchQuery.criteria === 'Author' && result && (
+                <Grid container spacing={2} justifySelf="center">
                     {result.map((object: any) => (
                         <Grid item spacing={2}>
                             <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
+                                <CardMedia
+                                    sx={{height: 300}}
+                                    src={clientExternal.authorPhotoUrl(object.key)}
+                                    component="img"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = no_cover}
+                                    }
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
+                                            dispatch(setAuthorKey({author_key: object.key}));
+                                            console.log(OLAuthor);
+                                        }}>
+                                            {object.name}
+                                        </Link>
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Top work: {object.top_work === undefined? 'No work found' : object.top_work} <br/>
+                                        Work count: {object.work_count}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">View Bookazon Profile</Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
 
+            {searchQuery.criteria !== 'Author' && result && result.type !== 'author' && (
+                <Grid container spacing={2} justifySelf="center">
+                    {result.map((object: any) => (
+                        <Grid item spacing={2}>
+                            <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
                                 <CardMedia
                                     sx={{height: 300}}
                                     src={clientExternal.bookCoverUrl(extractOLID(object.editions.docs[0].key))}
@@ -72,14 +99,14 @@ function Search() {
                                         (e.target as HTMLImageElement).src = no_cover}
                                     }
                                 />
-
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link to={`/Bookazon/BookDetail${object.editions.docs[0].key}`} onClick={()=> dispatch(setBook({
+                                        <Link style={{textDecoration: "none", color: "#222C4E"}} to={`/Bookazon/BookDetail/${extractOLID(object.editions.docs[0].key)}`} onClick={()=> dispatch(setBook({
                                             key: extractOLID(object.editions.docs[0].key),
-                                            author_name: object.author_name[0],
+                                            author_name: object.author_name,
                                             author_key: object.author_key,
                                             cover: object.cover_edition_key,
+                                            work_key: object.key
                                         }))}>
                                             {object.title}
                                         </Link>
@@ -87,20 +114,15 @@ function Search() {
                                     <Typography variant="body2" color="text.secondary">
                                         {object.author_name[0]}
                                     </Typography>
-                                    {book.key}
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">See reviews</Button>
-                                    <Button size="small">Write a review</Button>
+                                    <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>Reviews</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
-
                     ))}
-
-
-            </Grid>
-
+                </Grid>
+            )}
 
 
 

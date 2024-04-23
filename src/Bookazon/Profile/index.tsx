@@ -8,6 +8,9 @@ import FavoriteBooks from "./FavoriteBooks";
 import ShowUserReviews from "./ShowUserReviews";
 import ShowUserFollows from "./ShowUserFollows";
 
+import ProfileUser from "../Home/ProfileUser";
+
+
 function Profile() {
     const user = {
         username: "IHaveNoName",
@@ -42,7 +45,7 @@ function Profile() {
 
     return (
         <div>
-            <ProfileNav />
+            <ProfileUser userName={user.username} />
             <SearchBar />
             <UserProfileInfo user={user} />
             <FavoriteBooks books={user.favoriteBooks} />
