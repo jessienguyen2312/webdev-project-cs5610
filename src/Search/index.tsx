@@ -47,7 +47,7 @@ function Search() {
 
     return(
         <div>
-            <SearchBar/>
+            {/*<SearchBar/>*/}
             <h1>{result.length} result(s): </h1>
             {/*display search result for authors*/}
             {searchQuery.criteria === 'Author' && result && (
