@@ -15,7 +15,7 @@ import store from '../src/Bookazon/store'
 import {Provider} from "react-redux";
 
 import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
-import ReviewsIndex from './Bookazon/BookDetail/ReviewsIndex';
+import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
 
 
 // import Box from '@mui/material/Box';
