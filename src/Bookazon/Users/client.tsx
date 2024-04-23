@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 // const API_BASE = `https://bookazon-node-server.onrender.com`
-const API_USERS = `${API_BASE}/api/users`
-const API_SESSION = `${API_BASE}/api/session`
+const API_USERS = `http://localhost:4000/api/users`
+const API_SESSION = `http://localhost:4000/api/session`
 
 const request = axios.create({
 
@@ -12,6 +12,7 @@ const request = axios.create({
 });
 
 export interface User {
+    _id: String,
     username: String,
     password: String,
     firstName: String,
@@ -58,9 +59,9 @@ export const deleteUser = async (user: any) => {
 };
 
 export const signin = async (credentials: any) => {
-    console.log(credentials)
+    console.log("Credentials", credentials)
     const response = await request.post(`${API_USERS}/signin`, credentials, { withCredentials: true });
-    console.log(response.data)
+    console.log("Response data", response.data)
     return response.data;
 };
 
