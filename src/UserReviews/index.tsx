@@ -1,23 +1,65 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import {useState, useEffect} from "react"; 
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-//Import UserReviews 
-
-export default function UserReviews() {
+import SearchBar from '../Bookazon/Home/SearchBar';
+import ProfileNav from "../Bookazon/Home/ProfileNav";
+import * as client from "./ShowUserReviewsClient"; 
+import Popover from '@mui/material/Popover';
+import { Link } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
  
+interface Review {
+  _id: string;
+  username: string; 
+  bookId: string;
+  rating: Number;
+  text: string; 
+  datePosted: string; 
+  flagged: boolean; 
+  likes: Number; 
+}
+
+export default function UserReviewsPage() {
+ 
+  const [review, setReview] = useState({username: "", bookId: "",
+    rating: 0, text: "", datePosted: "01/01/1998", flagged: false, 
+    likes: 0
+  })
+  const [reviews, setReviews] = useState<Review[]>([]); 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  
+  const fetchReviews = async () => {
+    const reviews = await client.findAllReviews(); 
+    setReviews(reviews); 
+  }
+
+  const deleteReview = async (review: any) => {
+    await client.deleteReview(review)
+    setReviews(reviews.filter((u) => u._id !== review._id));
+  }
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);  
+
+
     return (
         <Container maxWidth="xl" >
+          <ProfileNav/>
+          <SearchBar/>
             <Container component="main" maxWidth="lg" sx={{padding: 0.25}}>
             <Box
           sx={{
@@ -82,9 +124,38 @@ export default function UserReviews() {
           }}>
             
 
-            <h1> <Button>Previous</Button>Reviews<Button>Next</Button></h1>
+            <h1>Reviews</h1>
             </Container>
         <div>
+   
+      <ul>
+        {reviews.map(a => (
+          <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>
+            <p style={{width: '66.67%'}}>{`${a.rating}`}</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <p style={{width: '66.67%'}}>{a.text}</p>
+            <Button onClick={handleClick} style={{width: '10%'}}><MoreVertIcon/></Button>
+            <Popover
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Button><Link to="/Bookazon/Profile/EditReview">Edit</Link></Button>
+              <Button className="editing-dashboard-button" onClick={(event) => {
+                        event.preventDefault();
+                        deleteReview(a);
+                        handleClose();
+                      }}>Delete</Button>
+              </Popover> 
+            </div>
+            
+          </Box>
+        ))}
+      </ul>
         <Box
       height={200}
       width={600}
