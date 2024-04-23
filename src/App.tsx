@@ -70,8 +70,6 @@ function App() {
                     <Route path="Bookazon/SignUp" element={<SignUp/>}/>
                     <Route path="Bookazon/Search" element={<Search/>}/>             
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
-                    <Route path="Bookazon/BookDetail/:key/reviews/admin" element={<ReviewsAdmin/>}/>
-                    <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews user={user}/>}/>
                     <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/>
                     <Route path="/Bookazon/Profile/OlAuthorProfile" element={<OLAuthorProfile/>}/>
                     <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsIndex />}/>
