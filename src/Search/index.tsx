@@ -116,7 +116,9 @@ function Search() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>Reviews</Button>
+                                    <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
+                                        <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>Reviews</Button>
+                                    </Link>
                                 </CardActions>
                             </Card>
                         </Grid>

@@ -13,8 +13,6 @@ interface bookDetail {
     cover: string
 }
 
-//TODO: Add link to the button to navigate to review page
-
 function BookDetail() {
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
@@ -51,7 +49,13 @@ function BookDetail() {
                     {bookDetail.description ? bookDetail.description : "No synopsis found"}
                     <br/>
 
-                    <Button variant="contained">Reviews</Button>
+
+                    <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
+                        <Button variant="contained">
+                            Reviews
+                        </Button>
+                    </Link>
+
 
                 </>
                 )}
