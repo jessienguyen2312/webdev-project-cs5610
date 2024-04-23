@@ -61,12 +61,6 @@ function Home() {
 
         
         <div>
-            {/* <h1>Bookazon :D</h1> */}
-            <TitleBar />
-            {/* needs to be changed to incorporate the actual session variables */}
-            {user === null ? (<ProfileAnon />) : (<ProfileUser userName={user.username} />)}
-            {/* <ProfileAnon /> */}
-            <SearchBar />
             <ListOfBooks user={user}/>
         </div>
     )
