@@ -39,14 +39,14 @@ function Home() {
 
     // UNCOMMENT THIS TO DO A FAKE LOG IN
 
-    // const signin = async () => {
-    //     const userlog = await userClient.signin(fakeUser);
-    //     console.log("Signed in successfully.");
-    // };
+    const signin = async () => {
+        const userlog = await userClient.signin(fakeUser);
+        console.log("Signed in successfully.");
+    };
 
-    // useEffect(() => {
-    //     signin(); // testing sign in
-    // }, []);
+    useEffect(() => {
+        signin(); // testing sign in
+    }, []);
 
 
 
