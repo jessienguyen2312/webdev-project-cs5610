@@ -7,6 +7,11 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { bookState } from "../store";
 import { setBook } from '../BookDetail/BookReducer';
+import * as clientExternal from "../clientExternal";
+import {trendingDaily} from "../clientExternal";
+import no_cover from "../../no_cover.png";
+import {extractOLID} from "../../Search";
+import {setAuthorKey} from "../Profile/OLAuthorReducer";
 
 const OPENLIB_API = "https://openlibrary.org/search.json?q=subject:";
 const COVER_API = "https://covers.openlibrary.org/b/olid/";
@@ -15,12 +20,13 @@ const COVER_API = "https://covers.openlibrary.org/b/olid/";
 
 
 interface Book {
-    edition_key: any;
+    editions: { docs: [{key: string}] }
     // key: string;
     title: string;
     author_name: string[];
     author_key: string[];
     cover_edition_key: string;
+    key: string;
 }
 
 interface bookDetail {
@@ -33,37 +39,60 @@ interface bookDetail {
 
 function BookShelf({ genre }: { genre: string }) {
     // console.log(genre)
-    
-    
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
-    // const [bookDetail, setBookDetail] = useState<bookDetail>();
+
 
     // navigate to book detail page and pass in key for book
     const bookDetailPage = (bookItem: Book) => {
-        dispatch(setBook({
-            key: bookItem.edition_key[0],
-            author_name: bookItem.author_name,
-            author_key: bookItem.author_key,
-            cover_edition_key: bookItem.cover_edition_key,
-        }))
-        // console.log(JSON.stringify(book, null, 2))
-        navigate(`/Bookazon/BookDetail/${bookItem.edition_key[0]}`)
+        if (genre === 'Daily Trending') {
+            dispatch(setBook({
+                key: bookItem.cover_edition_key,
+                author_name: bookItem.author_name,
+                author_key: bookItem.author_key,
+                cover: bookItem.cover_edition_key,
+                work_key: bookItem.key
+            }));
+
+            navigate(`/Bookazon/BookDetail/${bookItem.cover_edition_key}`);
+
+        } else {
+            dispatch(setBook({
+                key: extractOLID(bookItem.editions.docs[0].key),
+                author_name: bookItem.author_name,
+                author_key: bookItem.author_key,
+                cover: bookItem.cover_edition_key,
+                work_key: bookItem.key
+            }))
+
+            navigate(`/Bookazon/BookDetail/${extractOLID(bookItem.editions.docs[0].key)}`)
+        }
+
     };
 
     // navigate to author profil page and pass in author key
     const authorDetail = (authorID: any) => {
-        navigate(`/Bookazon/Profile/${authorID}`)
+        dispatch(setAuthorKey({author_key: authorID}));
+        navigate(`/Bookazon/Profile/OlAuthorProfile`);
     };
-    
 
-    
-    const url = OPENLIB_API + genre + "&limit=7";
-
+    // const url = OPENLIB_API + genre + "&limit=7";
     const [books, setBooks] = useState<Book[]>([]);
+
+    const fetchBookSelection = async () => {
+        if (genre === 'Daily Trending') {
+            const response = await clientExternal.trendingDaily();
+            setBooks(response.works || []);
+
+        } else {
+            const response = await clientExternal.subjectTextBookSearch(genre);
+            console.log(response.docs);
+            setBooks(response.docs || []);
+        }
+    }
 
 
     useEffect(() => {
@@ -75,8 +104,9 @@ function BookShelf({ genre }: { genre: string }) {
     
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${OPENLIB_API}${genre}&limit=7`);
-                setBooks(response.data.docs || []);
+                // const response = await axios.get(`${OPENLIB_API}${genre}&limit=7`);
+                // setBooks(response.data.docs || []);
+                fetchBookSelection()
             } catch (error) {
                 console.error('There was an error fetching the books:', error);
             }
@@ -144,7 +174,10 @@ function BookShelf({ genre }: { genre: string }) {
                                                 objectFit: 'contain',
                                                 width: '100%'
                                             }}
-                                            image={item.cover_edition_key ? `${COVER_API}${item.cover_edition_key}.jpg?default=false` : '/no_cover.png'}
+                                            src={clientExternal.bookCoverUrl(item.editions === undefined? item.cover_edition_key : extractOLID(item.editions.docs[0].key))}
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = no_cover}
+                                            }
 
                                             title={item.title}
 

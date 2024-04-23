@@ -10,6 +10,7 @@ const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
 const AUTHORS_WORK_API = "https://openlibrary.org/query.json?type=/type/edition&authors=/authors"
+const DAILY_TRENDING_API = "https://openlibrary.org/trending/daily.json?"
 
 const BOOK_DETAIL_API = "https://openlibrary.org"
 
@@ -30,13 +31,11 @@ const stringQueryProcess = (text: string) => {
 }
 
 /**
- * Function to fetch book ratings on OpenLibrary.
- * A sample book rating can be seen here: https://openlibrary.org/works/OL18020194W/ratings.json
- * @param key format "/work/OL#####W"
+ * Function to fetch book that are trending on OpenLibrary.
  */
-export const bookRating = async (key: string) => {
+export const trendingDaily = async () => {
     try {
-        const response = await axios.get(`${BOOK_DETAIL_API}${key}/ratings.json`);
+        const response = await axios.get(`${DAILY_TRENDING_API}${LIMIT_PAGE}`);
         console.log(response.data);
         return response.data;
     } catch (error: any) {
