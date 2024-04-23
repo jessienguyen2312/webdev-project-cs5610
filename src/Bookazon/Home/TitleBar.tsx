@@ -9,14 +9,12 @@ function TitleBar() {
 
     return (
         <Box sx={{ display: { sm: 'flex', md: 'none', background: "grey"}, height: 70,  alignContent: "center" }}>
-            <Box>
-                
-
-            </Box>
-            <Box sx={{justifyContent: "flex-end"}}>
+            <Box sx={{display: { sm: 'none', md: 'flex', background: "white"}, justifyContent: "flex-end"}}>
             <Profile />
             </Box>
         </Box>
+
+
 
     );
 }

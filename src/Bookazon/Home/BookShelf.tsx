@@ -8,15 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bookState } from "../store";
 import { setBook } from '../BookDetail/BookReducer';
 import * as clientExternal from "../clientExternal";
-import {trendingDaily} from "../clientExternal";
 import no_cover from "../../no_cover.png";
 import {extractOLID} from "../../Search";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
-
-const OPENLIB_API = "https://openlibrary.org/search.json?q=subject:";
-const COVER_API = "https://covers.openlibrary.org/b/olid/";
-
-
 
 
 interface Book {
