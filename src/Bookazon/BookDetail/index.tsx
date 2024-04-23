@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import no_cover from "../../no_cover.png";
 import {bookDetailBookey} from "../clientExternal";
 import Button from "@mui/material/Button";
+import { Container } from "@mui/material";
 
 interface bookDetail {
     description: string
@@ -37,17 +38,26 @@ function BookDetail() {
     return (
         <div>
             {bookDetail && (
-                <>
+                <>  
+                    
                     <h1>{bookDetail.title}</h1>
+                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
                     <h3>{book.author_name}</h3>
+                    </Container>
+                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
                     <img
                         src={`https://covers.openlibrary.org/b/olid/${book.key}-M.jpg?default=false`}
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
+                    </Container>
+                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}> 
+                    <Container maxWidth="sm" sx={{ height: "100vh" }}>
                     <h4>Synopsis</h4>
                     {bookDetail.description ? bookDetail.description : "No synopsis found"}
                     <br/>
+                    </Container>
+                    </Container>
 
 
                     <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
