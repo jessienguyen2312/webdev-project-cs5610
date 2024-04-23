@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {bookState} from "../store";
 import * as clientExternal from "../clientExternal";
@@ -7,6 +7,9 @@ import no_cover from "../../no_cover.png";
 import {bookDetailBookey} from "../clientExternal";
 import Button from "@mui/material/Button";
 import { Container, Grid } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import {setAuthorKey} from "../Profile/OLAuthorReducer";
 
 interface bookDetail {
     description: string
@@ -14,20 +17,27 @@ interface bookDetail {
     cover: string
 }
 
+//TODO: Style the author name so it looks like a link, right now it's clickable and it will
+// redirect to the author's page, but it doesn't look like it's clickable
+
 function BookDetail() {
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
-    // console.log(book)
+    const navigate = useNavigate();
 
     const [bookDetail, setBookDetail] = useState<bookDetail>();
 
     const fetchBookDetail = async (key: string, work_key: string) => {
         const result = await clientExternal.bookDetailBookey(key);
         const synopsis = await clientExternal.bookSynopsis(work_key);
-        console.log(synopsis);
         setBookDetail({...result, description: synopsis.description?.value === undefined? synopsis.description : synopsis.description?.value});
-        console.log(bookDetail);
+        console.log(book);
     }
+
+    const authorDetail = (authorID: any) => {
+        dispatch(setAuthorKey({author_key: authorID}));
+        navigate(`/Bookazon/Profile/OlAuthorProfile`);
+    };
 
     useEffect(()=> {
         // @ts-ignore
@@ -50,7 +60,16 @@ function BookDetail() {
                     <h1>{bookDetail.title}</h1>
                     </Container>
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-                    <h3>{book.author_name}</h3>
+
+
+                        <Box>
+                            {book.author_name?.map((name: string, index: number) => (
+                                <Typography key={index} variant="h3" onClick={() => authorDetail(book.author_key[index])}>
+                                    {name}
+                                </Typography>
+                            ))}
+                        </Box>
+
                     </Container>
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
                     <img
