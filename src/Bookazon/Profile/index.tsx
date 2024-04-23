@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 
 import SearchBar from "../Home/SearchBar";
-import ProfileNav from "../Home/ProfileNav"
+import ProfileNav from "../Home/ProfileNav";
 
 import UserProfileInfo from "./UserInfo";
 import FavoriteBooks from "./FavoriteBooks";
