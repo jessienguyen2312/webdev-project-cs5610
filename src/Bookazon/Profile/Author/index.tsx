@@ -24,13 +24,19 @@ function AuthorProfile() {
     
     useCurrentUser();
     const user = useSelector((state: userState) => state.userReducer.user);
-
-    // handle user == author
-
-    // handle user != author
-
     const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
     console.log(OLAuthor);
+
+    // handle user == author
+    if (user && user.OL_author_key == OLAuthor.author_key) {
+        return (
+            <h1>Private Profile</h1>    // handle view private profile
+        )}
+        else {
+            return <h1>Public Profile</h1>
+        };
+    // handle user != author
+
     const dispatch = useDispatch();
 
 
