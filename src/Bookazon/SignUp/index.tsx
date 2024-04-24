@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,17 +14,46 @@ import Container from '@mui/material/Container';
 import Select from '@mui/material/Select'; 
 import MenuItem from '@mui/material/MenuItem'; // Import the MenuItem component
 import { RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
+import * as client from '../Users/client'; 
+import { useNavigate } from 'react-router';
+import { User } from '../Users/client';
+import * as externalClient from '../clientExternal'; 
 
 
 export default function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
+  const navigate = useNavigate(); 
+  const [user, setUser] = useState<User>({_id: "", username: "", password: "", firstName: "", lastName: "", role: "READER",
+  email: "",
+  dateCreated: new Date(),
+  aboutMe: "",
+  profilePicture: "", // Default empty, set conditionally below
+  follower: [],
+  following: [],
+  favoriteBook: [],
+  OL_author_key: ""
+   });
+
+  const signup = async () => {
+    if (user.role === "AUTHOR") {
+      const authorExists = await externalClient.checkAuthorExists(user.OL_author_key)
+      if (authorExists) {
+        console.log("author exists")
+      } else {
+        setUser({...user, OL_author_key: "", role: "READER"})
+        console.log(user)
+      }
+    }
+      await client.signup(user);
+      navigate(`/Bookazon/Profile/${user._id}`);
+  }
+
+  const authorSignUp = async () => {
+
+  }
 
   return (
     <Container maxWidth="xl" sx={{ backgroundColor: "#F4EEE7", height: "100vh" }}>
@@ -51,6 +80,8 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  value = {user.firstName}
+                  onChange={(event) => setUser({...user, firstName: event.target.value})}
                   autoFocus  sx={{
                     color: '#222C4E',
                     bgcolor: 'white',
@@ -69,7 +100,10 @@ export default function SignUp() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"  sx={{
+                  autoComplete="family-name"
+                  value = {user.lastName}
+                  onChange={(event) => setUser({...user, lastName: event.target.value})} 
+                  sx={{
                     color: '#222C4E',
                     bgcolor: 'white',
                     '& .MuiOutlinedInput-root': {
@@ -84,10 +118,13 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"  sx={{
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  value = {user.username}
+                  onChange={(event) => setUser({...user, username: event.target.value})}
+                    sx={{
                     color: '#222C4E',
                     bgcolor: 'white',
                     '& .MuiOutlinedInput-root': {
@@ -106,7 +143,32 @@ export default function SignUp() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"  sx={{
+                  autoComplete="new-password" 
+                  value = {user.password}
+                  onChange={(event) => setUser({...user, password: event.target.value})}
+                  sx={{
+                    color: '#222C4E',
+                    bgcolor: 'white',
+                    '& .MuiOutlinedInput-root': {
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#222C4E', 
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="OL ID"
+                  label="Open Library ID (authors only)"
+                  type="OL ID"
+                  id="OL ID"
+                  autoComplete="new-olid" 
+                  value = {user.OL_author_key}
+                  onChange={(event) => setUser({...user, OL_author_key: event.target.value})}
+                  sx={{
                     color: '#222C4E',
                     bgcolor: 'white',
                     '& .MuiOutlinedInput-root': {
@@ -128,9 +190,13 @@ export default function SignUp() {
             name="radio-buttons-group"
             sx={{ bgColor: 'FFFFFF' }}
           >
-            <FormControlLabel value="regular" control={<Radio sx={{ backgroundColor: 'FFFFFF' }} />} label="Regular" />
-            <FormControlLabel value="author" control={<Radio />} label="Author" />
-            <FormControlLabel value="admin" control={<Radio />} label="Admin" />
+           <FormControlLabel 
+              value="regular" 
+              control={<Radio onChange={() => setUser({...user, role: "READER"})} />} 
+              label="Reader" 
+            />            
+            <FormControlLabel value="author" control={<Radio onChange={() => setUser({...user, role: "AUTHOR"})} />} label="Author" />
+            <FormControlLabel value="admin" control={<Radio onChange={() => setUser({...user, role: "ADMIN"})} />} label="Admin" />
           </RadioGroup>
         </FormControl>
       </Grid>
@@ -140,6 +206,7 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
+              onClick = {signup}
               sx={{ 
                 mt: 3, 
                 mb: 2,

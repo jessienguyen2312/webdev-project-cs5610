@@ -47,6 +47,7 @@ function SearchBar() {
             case 'Title': {
                 const object = await clientExternal.titleTextBookSearch(query);
                 dispatch(setResult(object?.docs));
+                console.log(result);
                 break;
             }
             // This returns a list of authors
@@ -64,11 +65,13 @@ function SearchBar() {
             case 'ISBN': {
                 // This directs straight to the book detail page
                 const object = await clientExternal.isbnSearch(query);
+                console.log(object);
                 dispatch(setBook({
                     key: extractOLID(object.key),
-                    author_key: object.authors.key,
+                    author_key: object.authors,
+                    work_key: object.works[0].key
                 }));
-                navigate(`/Bookazon/BookDetail${object.key}`);
+                navigate(`/Bookazon/BookDetail/${extractOLID(object.key)}`);
                 break;
             }
             default: {

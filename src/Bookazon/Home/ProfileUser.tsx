@@ -1,19 +1,22 @@
 import Box from "@mui/material/Box";
 import Avatar from '@mui/material/Avatar';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import { Divider, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import React from "react";
-
-
-
+import { useNavigate } from "react-router";
+import * as client from '../Users/client'; 
 
 function ProfileUser({ userName }: { userName: string }) {
     
-
     const [criteria, setCriteria] = React.useState('All');
     const GREETING = "Hi, " + userName;
-    // console.log(GREETING)
+    const navigate = useNavigate(); 
+
+    const signout = async () => {
+        await client.signout();
+        navigate("/Bookazon/Home");
+      };
 
     const handleChange = (event: SelectChangeEvent) => {
         setCriteria(event.target.value as string);
@@ -34,13 +37,13 @@ function ProfileUser({ userName }: { userName: string }) {
                         label= "profileHome"
                         onChange={handleChange}
                     >
-                        <MenuItem >My Profile</MenuItem>
-                        <MenuItem>Favorites List</MenuItem>
-                        <MenuItem>Want to Read</MenuItem>
-                        <MenuItem>Add Friends</MenuItem>
-                        <MenuItem>Reviews</MenuItem>
-                        <MenuItem>Authors</MenuItem>
-                        <MenuItem>Log Out</MenuItem>
+                        <MenuItem><Button>My Profile</Button></MenuItem>
+                        <MenuItem><Button>Favorites List</Button></MenuItem>
+                        <MenuItem><Button>Want to Read</Button></MenuItem>
+                        <MenuItem><Button>Add Friends</Button></MenuItem>
+                        <MenuItem><Button>Reviews</Button></MenuItem>
+                        <MenuItem><Button>Authors</Button></MenuItem>
+                        <MenuItem><Button onClick={signout}>Log Out</Button></MenuItem>
                     </Select>
                 </FormControl>
 

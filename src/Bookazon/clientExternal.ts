@@ -6,6 +6,7 @@ const TITLE_SEARCH_API = "https://openlibrary.org/search.json?title="
 const SUBJECT_SEARCH_API = "https://openlibrary.org/search.json?subject="
 const ISBN_SEARCH_API = "https://openlibrary.org/isbn/"
 const COVER_API = "https://covers.openlibrary.org/b/olid";
+const COVER_API_ID = "https://covers.openlibrary.org/b/id";
 const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
@@ -44,15 +45,15 @@ export const trendingDaily = async () => {
 }
 
 /**
- * Function to fetch book detail by book key with the format "/book/OL#####M".
+ * Function to fetch book detail by book key with the format "/works/OL#####W".
  * Book detail consists of title, author, synopsis
- * A sample book detail can be seen here: https://openlibrary.org/books/OL20930632M.json
- * @param key format "/work/OL#####M"
+ * A sample book detail can be seen here: https://openlibrary.org/works/OL453936W.json
+ * @param key format "/work/OL#####W"
  */
-export const bookDetailBookey = async (key: String) => {
+export const bookDetail = async (key: String) => {
     try {
-        const response = await axios.get(`${BOOK_DETAIL_API}/books/${key}.json`);
-        console.log(response.data);
+        const response = await axios.get(`${BOOK_DETAIL_API}${key}.json`);
+        console.log(`${BOOK_DETAIL_API}${key}.json`)
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -106,7 +107,7 @@ export const isbnSearch = async (isbn: string) => {
 export const subjectTextBookSearch = async (text: string) => {
     const queryString = stringQueryProcess(text);
     try {
-        const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}&fields=key,title,author_name,editions,author_key${LIMIT_PAGE}&language=eng`);
+        const response = await axios.get(`${SUBJECT_SEARCH_API}${queryString}&fields=key,title,author_name,author_key,cover_edition_key${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -123,7 +124,7 @@ export const subjectTextBookSearch = async (text: string) => {
 export const titleTextBookSearch = async (text: string) => {
     const queryString = stringQueryProcess(text);
     try {
-        const response = await axios.get(`${TITLE_SEARCH_API}${queryString}&fields=key,title,author_name,editions,author_key${LIMIT_PAGE}&language=eng`);
+        const response = await axios.get(`${TITLE_SEARCH_API}${queryString}&fields=key,title,author_name,author_key,cover_edition_key${LIMIT_PAGE}&language=eng`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -158,6 +159,21 @@ export const fullTextBookSearch = async (text: string) => {
 export const bookCoverUrl = (book: any) => {
     try {
         return `${COVER_API}/${book}-M.jpg?default=false`;
+    } catch (error: any) {
+        return no_cover;
+    }
+}
+
+/**
+ * Function to fetch the result of book cover from the book search result. If a book
+ * cannot be found, it will return an 404 error.
+ * https://openlibrary.org/dev/docs/api/covers
+ * @param book,
+ * @param size(S, M, L)
+ */
+export const bookCoverUrlId = (book: any, size: string) => {
+    try {
+        return `${COVER_API_ID}/${book}-${size}.jpg?default=false`;
     } catch (error: any) {
         return no_cover;
     }
@@ -211,12 +227,12 @@ export const fetchSpecificAuthorPage = async (authorId: string) => {
 }
 
 /**
- * Fetch the first 20 works from the author (can expand limit but it's gonna be slow).
+ * Helper client to fetch author name for book detail
  */
-export const fetchOLAuthorWorks = async (authorId: string) => {
+export const fetchAuthorName = async (authorId: string) => {
     try {
-        const response = await axios.get(`${AUTHORS_WORK_API}/${authorId}&works=&title=`);
-        return response.data;
+        const response = await axios.get(`${AUTHORS_PAGE_API}/${authorId}.json`);
+        return response.data.name;
     } catch (error: any) {
         console.log(error);
     }
@@ -238,6 +254,22 @@ export const authorPhotoUrl = (authorId: any) => {
         return `${AUTHOR_PHOTO_API}/${authorId}-M.jpg?default=false`
     } catch (error: any) {
         return no_cover;
+    }
+}
+
+export const checkAuthorExists = async (OL_authorID: String) => {
+    try {
+        const response = await axios.get(`https://openlibrary.org/authors/${OL_authorID}.json`);
+        // Check for 200 status code explicitly if needed, otherwise existence of response.data could be sufficient
+        return response.status === 200;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error("Axios error status:", error.response?.status);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+        // console.log("Author not found");
+        return false;
     }
 }
 
