@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
-import { bookDetailBookey } from '../clientExternal'; 
+import { bookDetail } from '../clientExternal'; 
 import {Link, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { setBook } from '../BookDetail/BookReducer';
@@ -27,7 +27,7 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const bookPromises = bookIds.map(bookId => bookDetailBookey(bookId));
+            const bookPromises = bookIds.map(bookId => bookDetail(bookId));
             const bookDetails = await Promise.all(bookPromises);
             console.log("Book details fetched:", bookDetails); // Log to see what the book IDs look like
             const formattedBooks = bookDetails.map(book => ({

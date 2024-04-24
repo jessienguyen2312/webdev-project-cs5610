@@ -75,8 +75,6 @@ function Profile() {
       };
       
       
-      
-
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setEditedProfile({ ...editedProfile, [name]: value });
