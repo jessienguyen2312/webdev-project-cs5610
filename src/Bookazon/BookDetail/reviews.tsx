@@ -1,6 +1,6 @@
-import { Box, Button, Divider, IconButton, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Rating, Slide, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 
@@ -8,22 +8,44 @@ import * as client from "./clientReview";
 
 
 import { Review } from "./clientReview";
-import { User } from "../Users/client";
+import useCurrentUser from "../Users/useCurrentUser";
+import { useSelector } from "react-redux";
+import { userState } from "../store";
+import React from "react";
+import { TransitionProps } from "@mui/material/transitions";
 
 
-function Reviews({ user }: { user: any }) {
-    // console.log(user)
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
-    // const { usernameID = '' } = useParams(useParams<{ username: string | undefined }>(););
+function Reviews() {
+
+
+    const navigate = useNavigate();
+
+    useCurrentUser()
+
+    const user = useSelector((state: userState) => state.userReducer.user);
+
+    const [open, setOpen] = React.useState(false);
+
+
+
+
+
     const { key = '' } = useParams<{ key: string | undefined }>();
     // const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
 
-
-
     const [newReview, setNewReview] = useState<Review>({
         _id: "",
-        username: user.username,
+        username: "",
         bookId: key,
         rating: 0,
         text: "",
@@ -31,7 +53,16 @@ function Reviews({ user }: { user: any }) {
         flagged: false,
         likes: 0
     });
-    console.log(newReview)
+
+
+    useEffect(() => {
+        if (user) {
+            setNewReview(prevReview => ({
+                ...prevReview,
+                username: user.username
+            }));
+        }
+    }, [user]);
 
     const [reviews, setReviews] = useState<Review[]>([]);
 
@@ -68,6 +99,24 @@ function Reviews({ user }: { user: any }) {
 
 
 
+
+
+    const handleDialogOpen = () => {
+        setOpen(true);  // Open the dialog
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);  // Close the dialog
+    };
+
+    // navigate to author sign in page 
+    const signIn = () => {
+        setOpen(false);
+        navigate(`/Bookazon/SignIn`)
+    };
+
+
+
     const style = {
         p: 3,
         width: '100%',
@@ -76,10 +125,7 @@ function Reviews({ user }: { user: any }) {
     };
 
 
-    // useEffect(() => {
-    //     // Filter and set reviews directly
-    //     setReviews(reviewList.filter(review => review.bookId === key));
-    // }, [key]);
+ 
 
     return (
 
@@ -133,7 +179,8 @@ function Reviews({ user }: { user: any }) {
                     width: '100%',
                     mt: 1
                 }}>
-                    <Button variant="contained" onClick={createReview}>Post</Button>
+                    <Button variant="contained" onClick={user ? createReview : handleDialogOpen}>Post</Button>
+
 
                 </Box>
             </Box>
@@ -160,6 +207,25 @@ function Reviews({ user }: { user: any }) {
 
             </List>
 
+
+            <Dialog
+                open={open}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleDialogClose}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Sign in?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Need to be signed in to add books to review a book
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>Close</Button>
+                    <Button onClick={signIn}>Sign in</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

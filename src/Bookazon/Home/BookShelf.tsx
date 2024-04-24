@@ -1,20 +1,22 @@
-import { Box, Card, CardContent, CardMedia, IconButton, Tab, Tabs, Typography, CardActionArea } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, IconButton, Tab, Tabs, Typography, CardActionArea, tabsClasses, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { bookState } from "../store";
+import { bookState, userState } from "../store";
 import { setBook } from '../BookDetail/BookReducer';
 import * as clientExternal from "../clientExternal";
 import no_cover from "../../no_cover.png";
-import {extractOLID} from "../../Search";
-import {setAuthorKey} from "../Profile/OLAuthorReducer";
+import { extractOLID } from "../../Search";
+import { setAuthorKey } from "../Profile/OLAuthorReducer";
+import useCurrentUser from '../Users/useCurrentUser';
+import { TransitionProps } from '@mui/material/transitions';
 
 
 interface Book {
-    editions: { docs: [{key: string}] }
+    editions: { docs: [{ key: string }] }
     // key: string;
     title: string;
     author_name: string[];
@@ -29,16 +31,30 @@ interface bookDetail {
     cover: string
 }
 
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
 
 
 function BookShelf({ genre }: { genre: string }) {
     // console.log(genre)
+
+    useCurrentUser()
+    const user = useSelector((state: userState) => state.userReducer.user);
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
 
+    const [open, setOpen] = React.useState(false);
 
     // navigate to book detail page and pass in key for book
     const bookDetailPage = (bookItem: Book) => {
@@ -69,7 +85,7 @@ function BookShelf({ genre }: { genre: string }) {
 
     // navigate to author profil page and pass in author key
     const authorDetail = (authorID: any) => {
-        dispatch(setAuthorKey({author_key: authorID}));
+        dispatch(setAuthorKey({ author_key: authorID }));
         navigate(`/Bookazon/Profile/OlAuthorProfile`);
     };
 
@@ -89,13 +105,36 @@ function BookShelf({ genre }: { genre: string }) {
     }
 
 
+    const favorits = () => {
+        console.log("test")
+    };
+
+
+    const handleDialogOpen = () => {
+        setOpen(true);  // Open the dialog
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);  // Close the dialog
+    };
+
+    // navigate to author sign in page 
+    const signIn = () => {
+        setOpen(false);
+        navigate(`/Bookazon/SignIn`)
+    };
+
+
+
+
+
     useEffect(() => {
         if (genre.toLowerCase() === 'favorites') {
             // If the genre is 'favorites', skip fetching 
             console.log('Skipping fetch for favorites genre');
             return;
         }
-    
+
         const fetchData = async () => {
             try {
                 // const response = await axios.get(`${OPENLIB_API}${genre}&limit=7`);
@@ -105,10 +144,10 @@ function BookShelf({ genre }: { genre: string }) {
                 console.error('There was an error fetching the books:', error);
             }
         };
-    
+
         fetchData();
     }, [genre]);
-    
+
 
 
     // console.log({ books })
@@ -146,15 +185,20 @@ function BookShelf({ genre }: { genre: string }) {
                     height: 300,
                 }}  >
                     <Tabs
-
+                        value={value}
                         onChange={handleChange}
                         variant="scrollable"
                         scrollButtons="auto"
                         aria-label="scrollable auto tabs example"
+                        sx={{
+                            [`& .${tabsClasses.indicator}`]: {
+                                display: 'none', // This hides the indicator
+                            },
+                        }}
+
                     >
 
                         {books.map((item, index) => (
-
 
                             <Tab label={
                                 <Card sx={{ width: 250, height: '100%' }}>
@@ -168,9 +212,10 @@ function BookShelf({ genre }: { genre: string }) {
                                                 objectFit: 'contain',
                                                 width: '100%'
                                             }}
-                                            src={clientExternal.bookCoverUrl(item.editions === undefined? item.cover_edition_key : extractOLID(item.editions.docs[0].key))}
+                                            src={clientExternal.bookCoverUrl(item.editions === undefined ? item.cover_edition_key : extractOLID(item.editions.docs[0].key))}
                                             onError={(e) => {
-                                                (e.target as HTMLImageElement).src = no_cover}
+                                                (e.target as HTMLImageElement).src = no_cover
+                                            }
                                             }
 
                                             title={item.title}
@@ -185,7 +230,6 @@ function BookShelf({ genre }: { genre: string }) {
                                                 <Typography variant='subtitle1' display="block" sx={{
 
                                                     whiteSpace: 'nowrap',
-                                                    // overflow: 'hidden',      
                                                     textOverflow: 'ellipsis',
                                                     width: 190,
                                                 }}>
@@ -209,9 +253,18 @@ function BookShelf({ genre }: { genre: string }) {
 
                                     </CardContent>
 
-                                    <IconButton>
-                                        <FavoriteBorderIcon />
-                                    </IconButton>
+                                    {!user ? (
+                                        <IconButton onClick={handleDialogOpen}>
+                                            <FavoriteBorderIcon />
+                                        </IconButton>
+                                    ) : (
+                                        <IconButton onClick={favorits}>
+                                            {user.favoriteBook.includes(item.editions) ?
+                                                <FavoriteIcon sx={{ color: 'red' }} /> :
+                                                <FavoriteBorderIcon />
+                                            }
+                                        </IconButton>
+                                    )}
 
 
 
@@ -223,6 +276,25 @@ function BookShelf({ genre }: { genre: string }) {
                         ))}
                     </Tabs>
                 </Box>
+
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleDialogClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle>{"Sign in?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                            Need to be signed in to add books to favorits
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose}>Close</Button>
+                        <Button onClick={signIn}>Sign in</Button>
+                    </DialogActions>
+                </Dialog>
 
             </Box>
 

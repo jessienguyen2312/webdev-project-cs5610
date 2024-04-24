@@ -7,6 +7,7 @@ import { userState } from "../store";
 import useCurrentUser from "../Users/useCurrentUser";
 
 
+
 function ReviewsIndex() {
 
     // this function is used to check if there is a current session and save it to a reducer
@@ -22,11 +23,12 @@ function ReviewsIndex() {
             switch (user.role) {
                 case 'ADMIN':
                     return <ReviewsAdmin />;
+                
                 default:
-                    return <Reviews user={user} />;
+                    return <Reviews />;
             }
         } else {
-            return <h1>No user...</h1>; // need to add page for anon
+            return <Reviews />;
         }
     };
 

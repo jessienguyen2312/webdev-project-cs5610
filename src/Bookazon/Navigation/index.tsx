@@ -6,16 +6,17 @@ import SearchBar from "../Home/SearchBar";
 import React from "react";
 import {useSelector} from "react-redux";
 import {userState} from "../store";
+import { Box } from "@mui/material";
 
 function Navigation() {
     const user = useSelector((state: userState) => state.userReducer.user);
 
     return (
-        <div>
-            <TitleBar />
+        <Box sx={{mt: 2 }}>
+            {/* <TitleBar /> */}
             {user === null ? (<ProfileAnon />) : (<ProfileUser userName={user.username} />)}
             <SearchBar />
-        </div>
+        </Box>
 
     )
 }

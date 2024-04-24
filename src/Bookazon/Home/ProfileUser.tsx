@@ -18,6 +18,13 @@ function ProfileUser({ userName }: { userName: string }) {
         navigate("/Bookazon/Home");
       };
 
+
+      const favorits = () => {
+        navigate("/Bookazon/Profile");
+      };
+
+      
+
     const handleChange = (event: SelectChangeEvent) => {
         setCriteria(event.target.value as string);
     };
@@ -52,7 +59,7 @@ function ProfileUser({ userName }: { userName: string }) {
             <Divider sx={{ borderColor: "black" }} orientation="vertical" flexItem />
 
             <Box>
-                <IconButton aria-label="wishlist">
+                <IconButton aria-label="wishlist" onClick={favorits}>
                     <FavoriteBorderIcon />
                     <Typography variant="button" >
                         Favorits
