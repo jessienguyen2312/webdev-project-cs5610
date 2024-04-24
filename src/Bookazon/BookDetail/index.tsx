@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
 import {setBook} from "./BookReducer";
-import {bookCoverUrl} from "../clientExternal";
+import {bookCoverUrl, bookCoverUrUniversal} from "../clientExternal";
 
 
 interface bookDetail {
@@ -28,9 +28,9 @@ function BookDetail() {
 
     const fetchBookDetail = async (key: string) => {
         const synopsis = await clientExternal.bookDetail(key);
+        const cover_image = await clientExternal.bookCoverUrUniversal(book.cover_edition_key, "M");
 
         if (synopsis) {
-            const cover_image = await clientExternal.bookCoverUrl(book.cover_edition_key);
 
             dispatch(setBook({
                 ...book,
