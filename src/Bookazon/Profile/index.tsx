@@ -6,8 +6,10 @@ import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
 import { Box, Button, TextField } from '@mui/material';
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserFollows from "./ShowUserFollows";
+import { stringify } from 'querystring';
 
 interface UserProfile {
+    _id: string;
     username: string;
     aboutMe: string;
     favoriteBook: string[];
@@ -25,6 +27,7 @@ function Profile() {
     const loggedInUser = useSelector((state: any) => state.userReducer.user);
     const [editMode, setEditMode] = useState(false);
     const [editedProfile, setEditedProfile] = useState<UserProfile>({
+        _id: '',
         username: '',
         aboutMe: '',
         favoriteBook: [],
@@ -35,8 +38,11 @@ function Profile() {
         password: '',
         email: ''
     });  
-    // wtf is going on
+
     const handleEditClick = () => {
+        if (profile) {
+            setEditedProfile(profile);
+        }
         setEditMode(true);
     };
 
@@ -49,11 +55,17 @@ function Profile() {
 
     const handleSaveClick = async () => {
         try {
-          // might want to add more robust validation here
           if (editedProfile.firstName && editedProfile.lastName && editedProfile.email) {
-            const updatedUser = await updateUser(editedProfile);
-            setProfile(updatedUser);
-            setEditMode(false); 
+            if (profile && profile._id) {
+                editedProfile._id = profile._id; 
+              }
+                          const updatedUser = await updateUser(editedProfile);
+            if (updatedUser) {
+              setProfile(updatedUser);
+              setEditMode(false);
+            } else {
+              throw new Error("Update was not successful.");
+            }
           } else {
             console.error('Validation failed');
           }
@@ -61,6 +73,8 @@ function Profile() {
           console.error('Failed to update user:', error);
         }
       };
+      
+      
       
 
     const handleInputChange = (event: any) => {
@@ -91,6 +105,9 @@ function Profile() {
         <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2, minWidth: '250px'  }}>
             {editMode ? (
                 <>
+                    {/* Stringify the current user object */}
+                    <p>{JSON.stringify(profile)}</p>
+                    <p>{JSON.stringify(editedProfile)}</p>
                     <TextField name='firstName' label='First Name' value={editedProfile.firstName} onChange={handleInputChange} /> <br />
                     <TextField name='lastName' label='Last Name' sx={{ mt: 1}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
                     <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
@@ -107,6 +124,8 @@ function Profile() {
                 <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
                 <h2>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</h2>
                 <h3>About Me: </h3>
+                {/* Stringify the current user object */}
+                <p>{JSON.stringify(profile)}</p>
                 <p>{profile.aboutMe}</p>
                 <FavoriteBooks bookIds={profile.favoriteBook} />
                 <ShowUserFollows follower={profile.follower} following={profile.following} />
