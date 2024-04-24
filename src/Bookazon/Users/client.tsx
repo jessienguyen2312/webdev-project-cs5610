@@ -28,9 +28,6 @@ export interface User {
     OL_author_key: String
 };
 
-//TODO: Where's sign up?
-
-
 export const findUserByUserName = async (username: any) => {
     const response = await request.get(`${API_USERS}/find/${username}`, { withCredentials: true })
     return response.data;
@@ -91,5 +88,4 @@ export const session = async () => {
 export const signup = async (user: any) => {
     const response = await request.post(`${API_USERS}/signup`, user, { withCredentials: true });
     return response.data;
-
 }

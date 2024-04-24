@@ -17,6 +17,7 @@ import { RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
 import * as client from '../Users/client'; 
 import { useNavigate } from 'react-router';
 import { User } from '../Users/client';
+import * as externalClient from '../clientExternal'; 
 
 
 export default function SignUp() {
@@ -36,11 +37,22 @@ export default function SignUp() {
   OL_author_key: ""
    });
 
-
   const signup = async () => {
+    if (user.role === "AUTHOR") {
+      const authorExists = await externalClient.checkAuthorExists(user.OL_author_key)
+      if (authorExists) {
+        console.log("author exists")
+      } else {
+        setUser({...user, OL_author_key: "", role: "READER"})
+        console.log(user)
+      }
+    }
       await client.signup(user);
-      console.log(user);
-      navigate(`Bookazon/Profile/${user._id}`);
+      navigate(`/Bookazon/Profile/${user._id}`);
+  }
+
+  const authorSignUp = async () => {
+
   }
 
   return (
@@ -134,6 +146,28 @@ export default function SignUp() {
                   autoComplete="new-password" 
                   value = {user.password}
                   onChange={(event) => setUser({...user, password: event.target.value})}
+                  sx={{
+                    color: '#222C4E',
+                    bgcolor: 'white',
+                    '& .MuiOutlinedInput-root': {
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#222C4E', 
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="OL ID"
+                  label="Open Library ID (authors only)"
+                  type="OL ID"
+                  id="OL ID"
+                  autoComplete="new-olid" 
+                  value = {user.OL_author_key}
+                  onChange={(event) => setUser({...user, OL_author_key: event.target.value})}
                   sx={{
                     color: '#222C4E',
                     bgcolor: 'white',

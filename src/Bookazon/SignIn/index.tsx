@@ -36,7 +36,7 @@ export default function SignIn() {
 
     const signin = async () => {
       const userLogIn = await client.signin(user);
-      navigate(`Bookazon/Profile/${user._id}`);
+      navigate(`/Bookazon/Profile/${user._id}`);
     };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
