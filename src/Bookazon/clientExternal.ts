@@ -180,6 +180,28 @@ export const bookCoverUrlId = (book: any, size: string) => {
 }
 
 /**
+ * Function to fetch the result of book cover, accepts both OL###M and #### format. If a book
+ * cannot be found, it will return an 404 error.
+ * https://openlibrary.org/dev/docs/api/covers
+ * @param book,
+ * @param size(S, M, L)
+ */
+export const bookCoverUrUniversal = async (book: any, size: string) => {
+    try {
+        const olFormatRegex = /^OL\d+M$/;
+        const numericFormatRegex = /^\d+$/;
+        if (olFormatRegex.test(book)) {
+            return `${COVER_API}/${book}-${size}.jpg?default=false`;
+        } else if (numericFormatRegex.test(book)) {
+            return `${COVER_API_ID}/${book}-${size}.jpg?default=false`;
+        }
+
+    } catch (error: any) {
+        return no_cover;
+    }
+}
+
+/**
  * Function to fetch a list of authors by name (will return multiple authors)
  * https://openlibrary.org/dev/docs/api/authors
  * @param name: name of author, separated by space
