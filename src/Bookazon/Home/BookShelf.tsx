@@ -44,25 +44,27 @@ function BookShelf({ genre }: { genre: string }) {
     const bookDetailPage = (bookItem: Book) => {
         if (genre === 'Daily Trending') {
             dispatch(setBook({
-                key: bookItem.cover_edition_key,
-                author_name: bookItem.author_name,
+                ...book,
                 author_key: bookItem.author_key,
-                cover: bookItem.cover_edition_key,
-                work_key: bookItem.key
+                author_name: bookItem.author_name,
+                cover_edition_key: bookItem.cover_edition_key,
+                key: bookItem.key,
+                title: bookItem.title
             }));
 
-            navigate(`/Bookazon/BookDetail/${bookItem.cover_edition_key}`);
+            navigate(`/Bookazon/BookDetail/${extractOLID(bookItem.key)}`);
 
         } else {
             dispatch(setBook({
-                key: extractOLID(bookItem.editions.docs[0].key),
-                author_name: bookItem.author_name,
+                ...book,
                 author_key: bookItem.author_key,
-                cover: bookItem.cover_edition_key,
-                work_key: bookItem.key
+                author_name: bookItem.author_name,
+                cover_edition_key: bookItem.cover_edition_key,
+                key: bookItem.key,
+                title: bookItem.title
             }))
 
-            navigate(`/Bookazon/BookDetail/${extractOLID(bookItem.editions.docs[0].key)}`)
+            navigate(`/Bookazon/BookDetail/${extractOLID(bookItem.key)}`)
         }
 
     };
@@ -168,7 +170,7 @@ function BookShelf({ genre }: { genre: string }) {
                                                 objectFit: 'contain',
                                                 width: '100%'
                                             }}
-                                            src={clientExternal.bookCoverUrl(item.editions === undefined? item.cover_edition_key : extractOLID(item.editions.docs[0].key))}
+                                            src={clientExternal.bookCoverUrl(item.cover_edition_key)}
                                             onError={(e) => {
                                                 (e.target as HTMLImageElement).src = no_cover}
                                             }

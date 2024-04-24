@@ -77,9 +77,6 @@ function Search() {
                                         Work count: {object.work_count}
                                     </Typography>
                                 </CardContent>
-                                <CardActions>
-                                    <Button size="small">View Bookazon Profile</Button>
-                                </CardActions>
                             </Card>
                         </Grid>
                     ))}
@@ -93,7 +90,7 @@ function Search() {
                             <Card sx={{ width: 400, maxHeight: 500 }} key={object.key}>
                                 <CardMedia
                                     sx={{height: 300}}
-                                    src={clientExternal.bookCoverUrl(extractOLID(object.editions.docs[0].key))}
+                                    src={clientExternal.bookCoverUrl(object.cover_edition_key)}
                                     component="img"
                                     onError={(e) => {
                                         (e.target as HTMLImageElement).src = no_cover}
@@ -101,22 +98,24 @@ function Search() {
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        <Link style={{textDecoration: "none", color: "#222C4E"}} to={`/Bookazon/BookDetail/${extractOLID(object.editions.docs[0].key)}`} onClick={()=> dispatch(setBook({
-                                            key: extractOLID(object.editions.docs[0].key),
+                                        <Link style={{textDecoration: "none", color: "#222C4E"}} to={`/Bookazon/BookDetail/${extractOLID(object.key)}`} onClick={()=> dispatch(setBook({...book,
+                                            key: object.key,
                                             author_name: object.author_name,
                                             author_key: object.author_key,
-                                            cover: object.cover_edition_key,
-                                            work_key: object.key
+                                            cover_edition_key: object.cover_edition_key,
+                                            title: object.title
                                         }))}>
                                             {object.title}
                                         </Link>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        {object.author_name[0]}
+                                        {object.author_name.map((name: string) => (
+                                            <h6>{name}</h6>
+                                        ))}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
+                                    <Link to={`/Bookazon/BookDetail/${extractOLID(object.key)}/reviews`}>
                                         <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>Reviews</Button>
                                     </Link>
                                 </CardActions>
