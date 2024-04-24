@@ -53,7 +53,8 @@ function OLAuthorProfile() {
             key: work.key,
             author_key: authorsKeys,
             author_name: authorsNames,
-            cover_id: work.covers? work.covers[0] : "",
+            // cover_id: work.covers? work.covers[0] : "",
+            cover_edition_key: work.covers? work.covers[0] : "",
         }))
 
         console.log(book)
