@@ -5,7 +5,7 @@ import * as clientExternal from "../clientExternal";
 import {useEffect, useState} from "react";
 import no_cover from "../../no_cover.png";
 import Button from "@mui/material/Button";
-import { Container } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
@@ -54,11 +54,20 @@ function BookDetail() {
     }, [book.key, dispatch])
 
     return (
-        <div>
-            {book && (
-                <>
 
-                    <Typography variant="h2">{book.title}</Typography>
+        <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
+        <Grid container spacing={0}>
+            <Grid item xl={2}>
+                <Container maxWidth={false} sx={{height: "100%", backgroundColor: '#5D6BA0 '}}>
+                </Container>
+            </Grid>
+            <Grid item xl={8}>
+               
+            {book && (
+                <>  
+                    <Container  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
+                    <h1>{book.title}</h1>
+                    </Container>
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
 
 
@@ -78,25 +87,30 @@ function BookDetail() {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
                     </Container>
-                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}> 
-                    <Container maxWidth="sm" sx={{ height: "100vh" }}>
+                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
+                    <Container maxWidth="sm">
                     <h4>Synopsis</h4>
                     {book.description}
                     <br/>
                     </Container>
                     </Container>
-
-
+                    <Container  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
                         <Button variant="contained">
                             Reviews
                         </Button>
                     </Link>
-
-
+                    </Container>
                 </>
                 )}
-        </div>
+               
+            </Grid>
+            <Grid item xl={2}>
+            <Container maxWidth={false} sx={{height: "100%", backgroundColor: '#5D6BA0 '}}>
+                </Container>
+            </Grid>
+        </Grid>
+        </Container>
     )
 }
 

@@ -257,5 +257,21 @@ export const authorPhotoUrl = (authorId: any) => {
     }
 }
 
+export const checkAuthorExists = async (OL_authorID: String) => {
+    try {
+        const response = await axios.get(`https://openlibrary.org/authors/${OL_authorID}.json`);
+        // Check for 200 status code explicitly if needed, otherwise existence of response.data could be sufficient
+        return response.status === 200;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error("Axios error status:", error.response?.status);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+        // console.log("Author not found");
+        return false;
+    }
+}
+
 
 
