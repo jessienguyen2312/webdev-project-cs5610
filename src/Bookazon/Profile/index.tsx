@@ -73,7 +73,8 @@ function Profile() {
             if (profile && profile._id) {
                 editedProfile._id = profile._id; 
               }
-                          const updatedUser = await updateUser(editedProfile);
+              console.log("Sending update request for user: ", editedProfile);
+              const updatedUser = await updateUser(editedProfile);
             if (updatedUser) {
               setProfile(updatedUser);
               setEditMode(false);
