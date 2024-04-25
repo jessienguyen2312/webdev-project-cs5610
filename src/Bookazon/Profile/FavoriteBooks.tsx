@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
 import * as clientExternal from '../clientExternal'; 
 import {Link, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +6,8 @@ import { resetBook, setBook } from '../BookDetail/BookReducer';
 import { bookState } from '../store';
 import { extractOLID } from '../../Search';
 import no_cover from "../../no_cover.png";
+import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemAvatar, Avatar } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 
 
 interface BookDetail {
@@ -91,24 +92,26 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
     // if (loading) return <div>Loading favorite books...</div>;
 
     return (
-        <Box sx={{ mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>
-            <h3>Favorite Books</h3>
-            <ul>
-                {Object.entries(books).map(([title, cover_id], index) => (
-                    <li key={title} onClick={() => fetchInfoForBookDetail(bookIds[index])}>
-                        <Box
-                            sx={{height: 50}}
-                            src={clientExternal.bookCoverUrlId(cover_id, "S")}
-                            component="img"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = no_cover}}
-                        />
-                        {title}
-                    </li>
-                ))}
-
-            </ul>
-        </Box>
+        <Accordion sx={{ mt: 2, width: '100%', bgcolor: 'background.paper' }}>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+                <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Favorite Books</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <List>
+                    {Object.entries(books).map(([title, coverId], index) => (
+                        <ListItem key={index} component={Link} to={`/BookDetail/${bookIds[index]}`} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <ListItemAvatar>
+                                <Avatar variant="square" src={coverId ? clientExternal.bookCoverUrlId(coverId, "S") : no_cover} alt={title} sx={{ width: 56, height: 56, marginRight: 2 }} onError={(e) => {
+                                    const imageElement = e.currentTarget as HTMLImageElement;
+                                    imageElement.src = no_cover;
+                                }} />
+                            </ListItemAvatar>
+                            <Typography style={{ color: '#222C4E' }}>{title}</Typography>
+                        </ListItem>
+                    ))}
+                </List>
+            </AccordionDetails>
+        </Accordion>
     );
 }
 

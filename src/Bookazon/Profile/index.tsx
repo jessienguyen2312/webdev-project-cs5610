@@ -139,7 +139,8 @@ function Profile() {
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${profile.username}`;
 
     return (
-        <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            {editMode ? (
+        <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            
+            {editMode ? (
                 <>
                     {/* Stringify the current user object */}
                     {/*<p>{JSON.stringify(profile)}</p>
@@ -156,12 +157,22 @@ function Profile() {
                 </>
             ) : (
             <>
-                <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
-                <Typography variant="h3" style={{ color: '#222C4E' }}>
-                    {profile.username}
-                    {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />}
-                    {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}
-                </Typography>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center', // Centers text for smaller components
+                    width: '100%', // Takes full width of the parent container
+                    my: 2 // Margin for top and bottom for spacing
+                }}>
+                    <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
+                    <Typography variant="h3" sx={{ color: '#222C4E', mt: 2 }}>
+                        {profile.username}
+                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />}
+                        {isCurrentUser && (<Button onClick={handleEditClick} sx={{ mt: 1 }}>Edit My Profile</Button>)}
+                    </Typography>
+                </Box>
                 <Typography variant="h4" style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </Typography>
                 
                 {/* Stringify the current user object */}
@@ -177,55 +188,53 @@ function Profile() {
                               backgroundColor: '#EF8D40', // Normal state background color
                               '&:hover': {
                                   backgroundColor: '#F1A467', // Hover state background color
-                              },
+                                },
                               color: 'white', // Text color for better contrast
                               mt: 2 // Adds margin top for spacing
-                          }}
-                      >
+                          }}>
                           View Catalog
                       </Button>
                   </Link>
-
                 )}
-                 <FavoriteBooks bookIds={profile.favoriteBook} />
+                <FavoriteBooks bookIds={profile.favoriteBook} />
 
-            {/* Followers */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMore />}>
-                    <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Followers</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <List>
-                        {profile.follower.map((follower, index) => (
-                            <ListItem key={index}>
-                                <Avatar src={`${avatarUrl}${follower}`} />
-                                <ListItemText primary={<Link to={`/profile/${follower}`} style={{ color: '#222C4E', textDecoration: 'none' }}>{follower}</Link>} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </AccordionDetails>
-            </Accordion>
+                {/* Followers */}
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                        <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Followers: {profile.follower.length}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <List>
+                            {profile.follower.map((follower, index) => (
+                                <ListItem key={index}>
+                                    <Avatar src={`${avatarUrl}${follower}`} sx={{ marginRight: 2 }} />
+                                    <ListItemText primary={<Link to={`/Bookazon/profile/${follower}`} style={{ color: '#222C4E', textDecoration: 'none' }}>{follower}</Link>} />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </AccordionDetails>
+                </Accordion>
 
-            {/* Following */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMore />}>
-                <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Following</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <List>
-                        {profile.following.map((following, index) => (
-                            <ListItem key={index} secondaryAction={isCurrentUser && (
-                                <Button onClick={() => handleUnfollow(following)} size="small" color="primary">
-                                    Unfollow
-                                </Button>
-                            )}>
-                                <Avatar src={`${avatarUrl}${following}`} />
-                                <ListItemText primary={<Link to={`/profile/${following}`} style={{ color: '#222C4E', textDecoration: 'none' }} >{following}</Link>} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </AccordionDetails>
-            </Accordion>
+                {/* Following */}
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                    <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Following: {profile.following.length}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <List>
+                            {profile.following.map((following, index) => (
+                                <ListItem key={index} secondaryAction={isCurrentUser && (
+                                    <Button onClick={() => handleUnfollow(following)} size="small" color="primary">
+                                        Unfollow
+                                    </Button>
+                                )}>
+                                    <Avatar src={`${avatarUrl}${following}`} sx={{ marginRight: 2 }} />
+                                    <ListItemText primary={<Link to={`/Bookazon/profile/${following}`} style={{ color: '#222C4E', textDecoration: 'none' }} >{following}</Link>} />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </AccordionDetails>
+                </Accordion>
             </>
             )}
         </Paper>
