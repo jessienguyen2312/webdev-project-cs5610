@@ -35,7 +35,6 @@ const stringQueryProcess = (text: string) => {
 export const trendingDaily = async () => {
     try {
         const response = await axios.get(`${DAILY_TRENDING_API}${LIMIT_PAGE}`);
-        console.log(response.data);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -51,7 +50,6 @@ export const trendingDaily = async () => {
 export const bookDetail = async (key: String) => {
     try {
         const response = await axios.get(`${BOOK_DETAIL_API}${key}.json`);
-        console.log(`${BOOK_DETAIL_API}${key}.json`)
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -173,7 +171,6 @@ export const searchAuthorsByName = async (name: string) => {
     const queryString = queryList.join("+");
     try {
         const response = await axios.get(`${AUTHOR_SEARCH_API}/${queryString}&fields=key,name,top_work,work_count,type${LIMIT_PAGE_AUTHOR}`);
-        console.log(`${AUTHOR_SEARCH_API}/${queryString}&fields=key,name,top_work,work_count${LIMIT_PAGE_AUTHOR}`)
         return response.data;
     } catch (error: any) {
         console.log(error);

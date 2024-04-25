@@ -28,7 +28,6 @@ function SearchBar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
-    console.log(searchQuery);
     const result = useSelector((state: bookState) => state.resultReducer.result);
     const book = useSelector((state: bookState) => state.bookReducer.book);
 
@@ -40,7 +39,6 @@ function SearchBar() {
     const handleChange = (event: SelectChangeEvent) => {
         dispatch(setSearch({...searchQuery, criteria: event.target.value}));
         dispatch(resetResult(result));
-        console.log(searchQuery);
     };
 
     const OpenLibrarySearch = async (query: string) => {
@@ -49,7 +47,6 @@ function SearchBar() {
             case 'Title': {
                 const object = await clientExternal.titleTextBookSearch(query);
                 dispatch(setResult(object?.docs));
-                console.log(result);
                 break;
             }
             // This returns a list of authors

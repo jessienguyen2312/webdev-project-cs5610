@@ -57,7 +57,6 @@ function OLAuthorProfile() {
             cover_edition_key: work.covers? work.covers[0] : "",
         }))
 
-        console.log(book)
 
     }
 

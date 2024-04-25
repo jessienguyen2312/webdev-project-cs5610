@@ -67,7 +67,6 @@ function Search() {
                     authorsDictionary[OL_author_key] = username;
                 }
                 dispatch(setAuthors(authorsDictionary));
-                console.log(authorsDictionary);
             }
 
         }
@@ -97,7 +96,6 @@ function Search() {
                                     <Typography gutterBottom variant="h5" component="div" sx={{textDecoration: 'none'}}>
                                         <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
                                             dispatch(setAuthorKey({author_key: object.key}));
-                                            console.log(OLAuthor);
                                         }}>
                                             {object.name}
                                         </Link>

@@ -57,7 +57,6 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
     const fetchInfoForBookDetail = async (work: string) => {
         // fetch work info
         const result = await clientExternal.bookDetail('/works/' + work);
-        console.log(result);
         //reset book state
         dispatch(resetBook(book));
         // fetch author keys

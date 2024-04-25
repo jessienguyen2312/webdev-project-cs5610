@@ -124,7 +124,6 @@ function Profile() {
             if (username) {
                 const userData = await findUserByUserName(username);
                 setProfile(userData);
-                console.log(userData);
             }
         }
         fetchData();

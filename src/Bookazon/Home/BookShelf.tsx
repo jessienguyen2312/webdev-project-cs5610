@@ -85,7 +85,6 @@ function BookShelf({ genre }: { genre: string }) {
 
         } else {
             const response = await clientExternal.subjectTextBookSearch(genre);
-            console.log(response.docs);
             setBooks(response.docs || []);
         }
     }
@@ -93,8 +92,7 @@ function BookShelf({ genre }: { genre: string }) {
 
     useEffect(() => {
         if (genre.toLowerCase() === 'favorites') {
-            // If the genre is 'favorites', skip fetching 
-            console.log('Skipping fetch for favorites genre');
+            // If the genre is 'favorites', skip fetching
             return;
         }
     
