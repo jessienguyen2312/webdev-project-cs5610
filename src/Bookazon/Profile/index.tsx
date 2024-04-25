@@ -7,14 +7,10 @@ import { setUser } from '../Users/userReducer';
 import { Paper, Button, TextField, Typography, List, ListItem, Avatar, ListItemText, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import FavoriteBooks from "./FavoriteBooks";
-import ShowUserFollows from "./ShowUserFollows";
-import { stringify } from 'querystring';
-import { unfollowUser } from '../Users/client';
+import { unfollowUser, followUser } from '../Users/client';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import {setAuthorKey} from "./OLAuthorReducer";
-import {useNavigate} from "react-router";
-import {bookState} from "../store";
-
+import useCurrentUser from '../Users/useCurrentUser';
 
 
 interface UserProfile {
@@ -34,10 +30,12 @@ interface UserProfile {
 
 function Profile() {
     const { username } = useParams<{ username: string }>();
+    useCurrentUser();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const dispatch = useDispatch();
     const loggedInUser = useSelector((state: any) => state.userReducer.user);
     const [editMode, setEditMode] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
     const [editedProfile, setEditedProfile] = useState<UserProfile>({
         _id: '',
         username: '',
@@ -53,6 +51,15 @@ function Profile() {
         OL_author_key: ''
     });
 
+    useEffect(() => {
+        async function fetchProfileData() {
+            const data = await findUserByUserName(username);
+            setProfile(data);
+            setIsFollowing(loggedInUser?.following?.includes(data.username));
+        }
+        console.log('PROFILE LOG: The loggedInUser is: ', loggedInUser);
+        fetchProfileData();
+    }, [username, loggedInUser]);
 
     const handleEditClick = () => {
         if (profile) {
@@ -68,14 +75,28 @@ function Profile() {
         setEditMode(false);
     }
 
+    const handleFollow = async () => {
+        if (profile && !loggedInUser) {
+            // display an alert that says user must be logged in to follow
+            alert('You must be logged in to follow a user.');
+            return;
+        }
+        if (profile && loggedInUser) {
+            const updatedUser = await followUser(loggedInUser._id, profile.username);
+            console.log("UPDATED USER IS: ", updatedUser);
+            setIsFollowing(true);
+            setProfile({...profile, follower: profile.follower.concat(loggedInUser.username)})
+            console.log(profile);
+        }
+    };
     
     const handleUnfollow = async (usernameToUnfollow: string) => {
         if (profile) {
-            const updatedUser = await unfollowUser(profile._id, usernameToUnfollow);
+            const updatedUser = await unfollowUser(loggedInUser._id, usernameToUnfollow);
             if (updatedUser) {
+                setIsFollowing(false);
                 setProfile(updatedUser);
                 if (loggedInUser && loggedInUser.username === profile.username) { // not sure if this check is necessary, but seemed safe
-                    dispatch(setUser(updatedUser)); // Update global state if the current user is viewing their own profile
                     // filter out usernameToUnfollow
                     setProfile({ ...profile, following: profile.following.filter((username: string) => username !== usernameToUnfollow) });
                 }
@@ -117,14 +138,13 @@ function Profile() {
         setEditedProfile({ ...editedProfile, [name]: value });
     }
 
-
-
     useEffect(() => {
         async function fetchData() {
             if (username) {
                 const userData = await findUserByUserName(username);
                 setProfile(userData);
                 console.log(userData);
+                setIsFollowing(loggedInUser?.following.includes(userData.username));
             }
         }
         fetchData();
@@ -134,6 +154,7 @@ function Profile() {
         return <h1>Loading profile...</h1>;
     }
 
+    // check if the logged in user is viewing their own profile
     const isCurrentUser = loggedInUser && profile && loggedInUser.username === profile.username;
 
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${profile.username}`;
@@ -169,8 +190,10 @@ function Profile() {
                     <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
                     <Typography variant="h3" sx={{ color: '#222C4E', mt: 2 }}>
                         {profile.username}
-                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />}
+                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
                         {isCurrentUser && (<Button onClick={handleEditClick} sx={{ mt: 1 }}>Edit My Profile</Button>)}
+                        {!isCurrentUser && !isFollowing && (<Button onClick={handleFollow} sx={{ mt: 1 }}>Follow</Button>)}
+                        {/* {!isCurrentUser && isFollowing && (<Button onClick={() => handleUnfollow(profile.username)} sx={{ mt: 1 }}> Unfollow</Button>)} */}
                     </Typography>
                 </Box>
                 <Typography variant="h4" style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </Typography>

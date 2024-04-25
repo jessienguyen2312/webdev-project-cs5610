@@ -119,3 +119,19 @@ export const unfollowUser = async (userId: string, usernameToUnfollow: string) =
     }
 };
 
+export const followUser = async (userId: string, usernameToFollow: string) => {
+    try {
+        const response = await request.put(`${API_USERS}/${userId}/follow`, { usernameToFollow });
+        console.log("CLIENT LOG: attempting to follow user: ", usernameToFollow)
+        if (response.status === 200) {
+            console.log('Follow successful:', response.data);
+            return response.data;
+        } else {
+            throw new Error(`Failed to follow: Status ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error while following user:', error);
+        throw error;
+    }
+};
+
