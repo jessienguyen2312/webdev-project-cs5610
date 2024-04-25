@@ -66,7 +66,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Navigate to="Bookazon/Home/"/>} />
                     <Route path="Bookazon/Home" element={<Home/>}/>
-                    <Route path="Bookazon/Profile/*" element={<Profile/>}/>
+                    <Route path="Bookazon/Profile/:username" element={<Profile/>}/>
                     <Route path="Bookazon/SignIn" element={<SignIn/>}/>
                     <Route path="Bookazon/SignUp" element={<SignUp/>}/>
                     <Route path="Bookazon/Search" element={<Search/>}/>             

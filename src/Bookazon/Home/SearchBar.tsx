@@ -47,6 +47,7 @@ function SearchBar() {
             case 'Title': {
                 const object = await clientExternal.titleTextBookSearch(query);
                 dispatch(setResult(object?.docs));
+                console.log(result);
                 break;
             }
             // This returns a list of authors
