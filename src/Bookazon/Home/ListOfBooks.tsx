@@ -3,23 +3,34 @@ import BookShelf from './BookShelf';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { userState } from '../store';
+import useCurrentUser from '../Users/useCurrentUser';
 
 function ListOfBooks() {
     // / might want to have this as a database
 
     // console.log("entering the list of books user is being rest")
+    useCurrentUser()
 
     const user = useSelector((state: userState) => state.userReducer.user);
-    console.log("entering the list of books user is being rest to ", user)
+    // console.log("current user is (LIST OF BOOKS) ", user)
+
+
+
 
     const [display, setDisplay] = useState(["Daily Trending", "History", "Fiction", "Fantasy", "Academic"])
 
 
-        useEffect(() => {
-            if (user) {
-                setDisplay(["Daily Trending", "Favorites", "History", "Fiction", "Fantasy", "Academic"]);
-            }
-        }, [user]);
+        // useEffect(() => {
+        //     if (user) {
+        //         setDisplay(["Daily Trending", "Favorites", "History", "Fiction", "Fantasy", "Academic"]);
+        //     }
+        // }, []);
+
+       
+
+
+
+        
   
 
     return (
@@ -29,7 +40,7 @@ function ListOfBooks() {
                     <Typography variant="h4" gutterBottom>
                         {item}
                     </Typography>
-                    <BookShelf genre={item} />
+                    <BookShelf genre={item}/>
                 </Box>
             ))}
         </Box>

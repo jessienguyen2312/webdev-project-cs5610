@@ -7,14 +7,33 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {userState} from "../store";
 import { Box } from "@mui/material";
+import ProfileAdmin from "../Home/ProfileAdmin";
 
 function Navigation() {
     const user = useSelector((state: userState) => state.userReducer.user);
 
+
+    const getComponentBasedOnRole = () => {
+        if (user) {
+            switch (user.role) {
+                case 'ADMIN':
+                    return <ProfileAdmin userName={user.username} />;
+                
+                default:
+                    return <ProfileUser userName={user.username} />;
+            }
+        } else {
+            return <ProfileAnon />;
+        }
+    };
+
+
+ 
+
     return (
         <Box sx={{mt: 2 }}>
             {/* <TitleBar /> */}
-            {user === null ? (<ProfileAnon />) : (<ProfileUser userName={user.username} />)}
+            {getComponentBasedOnRole()}
             <SearchBar />
         </Box>
 

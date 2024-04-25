@@ -11,10 +11,10 @@ import * as clientExternal from "../clientExternal";
 import no_cover from "../../no_cover.png";
 import { extractOLID } from "../../Search";
 import { setAuthorKey } from "../Profile/OLAuthorReducer";
-import useCurrentUser from '../Users/useCurrentUser';
 import { TransitionProps } from '@mui/material/transitions';
 import { addFavorite, removeFavorite } from '../Users/userReducer';
 import * as userClient from "../Users/client"
+import { User } from "../Users/client"
 
 
 interface Book {
@@ -47,21 +47,18 @@ const Transition = React.forwardRef(function Transition(
 function BookShelf({ genre }: { genre: string }) {
     // console.log(genre)
 
-    
+
     const user = useSelector((state: userState) => state.userReducer.user);
+
     // useCurrentUser()
-    const [localUser, setLocalUser] = useState(user);
-
-
-
-    // console.log("user as soon as homepage is loaded",user)
+    console.log("we start here")
+    // console.log("user parma", user)
+    // console.log("user BOOKSHELF", Currentuser)
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
-    
-
 
     const [open, setOpen] = React.useState(false);
 
@@ -108,10 +105,9 @@ function BookShelf({ genre }: { genre: string }) {
         if (genre === 'Daily Trending') {
             const response = await clientExternal.trendingDaily();
             setBooks(response.works || []);
-
         } else {
             const response = await clientExternal.subjectTextBookSearch(genre);
-            console.log(response.docs);
+            // console.log(response.docs);
             setBooks(response.docs || []);
         }
     }
@@ -119,25 +115,50 @@ function BookShelf({ genre }: { genre: string }) {
 
 
 
-    const handleFavoriteClick = async (book: any) => {
+
+    // const handleFavoriteClick = async (book: any) => {
+    //     const olid = extractOLID(book);
+
+    //     if (user && olid) {
+    //         console.log(user)
+
+    //         dispatch(addFavorite(olid));
+    //         setUser({ ...user, favoriteBook: [...user.favoriteBook, olid] });  // Optimistic updat
+
+    //         try {
+    //             console.log("the following user is being passed: ", user)
+    //             // const status = await userClient.updateUser(user); // Perform the async update
+    //             console.log('User updated successfully:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    //             console.log('THIS COMES AFTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    //         } catch (error) {
+    //             console.error('Failed to update user:', error);
+    //         }
+    //     } else {
+    //         console.error("Invalid book key, unable to extract OLID.");
+    //     }
+
+
+    // };
+
+    const handleTest = (book: any) => {
         const olid = extractOLID(book);
+
         if (user && olid) {
-            dispatch(addFavorite(olid)); 
-            try {
+
+
+            dispatch(addFavorite(olid));
+            console.log(user)
+            const handleUodate = async () => {
                 console.log("the following user is being passed: ", user)
-                // const status = await userClient.updateUser(user); // Perform the async update
+                const status = await userClient.updateUser(user); // Perform the async update
                 console.log('User updated successfully:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-            } catch (error) {
-                console.error('Failed to update user:', error);
+                console.log('THIS COMES AFTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
             }
-        } else {
-            console.error("Invalid book key, unable to extract OLID.");
         }
-
-
     };
 
-    
+
 
     const handleRemoveFavorite = async (book: any) => {
         const olid = extractOLID(book);
@@ -153,7 +174,6 @@ function BookShelf({ genre }: { genre: string }) {
             console.error("Invalid book key, unable to extract OLID.");
         }
     };
-    
 
 
 
@@ -181,7 +201,7 @@ function BookShelf({ genre }: { genre: string }) {
 
 
     useEffect(() => {
-        if (genre.toLowerCase() === 'favorites') {
+        if (genre === 'Favorites') {
             // If the genre is 'favorites', skip fetching 
             console.log('Skipping fetch for favorites genre');
             return;
@@ -198,7 +218,7 @@ function BookShelf({ genre }: { genre: string }) {
         };
 
         fetchData();
-    }, [genre]);
+    }, []);
 
 
 
@@ -209,6 +229,10 @@ function BookShelf({ genre }: { genre: string }) {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    if (books.length === 0) {
+        return <div>Loading</div>;
+    }
 
 
     return (
@@ -295,7 +319,7 @@ function BookShelf({ genre }: { genre: string }) {
                                             <IconButton >
                                                 {user.favoriteBook.includes(extractOLID(item.key)) ?
                                                     <FavoriteIcon sx={{ color: 'red' }} onClick={() => handleRemoveFavorite(item.key)} /> :
-                                                    <FavoriteBorderIcon onClick={() => handleFavoriteClick(item.key)} />
+                                                    <FavoriteBorderIcon onClick={() => handleTest(item.key)} />
                                                 }
                                             </IconButton>
                                         )}

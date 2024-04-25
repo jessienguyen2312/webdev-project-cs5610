@@ -19,7 +19,7 @@ function Home() {
     
 
     // this tests if there is a logged in user (reducer will set it to null if no one is logged in)
-    useCurrentUser();
+    // useCurrentUser();
 
 
 

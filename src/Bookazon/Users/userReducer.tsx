@@ -29,7 +29,7 @@ const userSlice = createSlice({
                 if (!state.user.favoriteBook.includes(action.payload)) {
                     // Create a new array with all old favorite books plus the new one
                     state.user.favoriteBook = [...state.user.favoriteBook, action.payload];
-                    console.log("REDUCER STATE", current(state.user.favoriteBook))
+                    // console.log("REDUCER STATE", current(state.user.favoriteBook))
                 }
             }
         },

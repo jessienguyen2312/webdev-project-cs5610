@@ -32,7 +32,7 @@ function ProfileAnon() {
 
     // navigate to author sign in page 
     const signIn = () => {
-        setOpen(false); 
+        setOpen(false);
         navigate(`/Bookazon/SignIn`)
     };
 
@@ -83,7 +83,7 @@ function ProfileAnon() {
                 <IconButton onClick={() => handleDialogOpen()} aria-label="wishlist" >
                     <FavoriteBorderIcon />
                     <Typography variant="button" >
-                        FAVORITS
+                        Favorites
                     </Typography>
                 </IconButton>
             </Box>
@@ -99,7 +99,7 @@ function ProfileAnon() {
                 <DialogTitle>{"Sign in?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                       Need to be signed in to add books to favorits 
+                        Need to be signed in to add books to favorits
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
