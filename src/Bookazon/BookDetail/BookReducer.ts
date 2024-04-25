@@ -2,11 +2,14 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     book: {
+        author_key: [],
+        author_name: [],
+        cover_edition_key: "",
+        cover_image_url: "",
+        cover_id: "",
         key: "",
-        author_name: "",
-        author_key: "",
-        cover: "",
-        work_key: ""
+        title: "",
+        description: ""
     }
 };
 

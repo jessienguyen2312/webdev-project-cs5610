@@ -4,12 +4,14 @@ import {bookState} from "../store";
 import * as clientExternal from "../clientExternal";
 import {useEffect, useState} from "react";
 import no_cover from "../../no_cover.png";
-import {bookDetailBookey} from "../clientExternal";
 import Button from "@mui/material/Button";
 import { Container, Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
+import {setBook} from "./BookReducer";
+import {bookCoverUrl, bookCoverUrUniversal} from "../clientExternal";
+
 
 interface bookDetail {
     description: string
@@ -17,21 +19,28 @@ interface bookDetail {
     cover: string
 }
 
-//TODO: Style the author name so it looks like a link, right now it's clickable and it will
-// redirect to the author's page, but it doesn't look like it's clickable
-
 function BookDetail() {
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
+
     const navigate = useNavigate();
 
-    const [bookDetail, setBookDetail] = useState<bookDetail>();
 
-    const fetchBookDetail = async (key: string, work_key: string) => {
-        const result = await clientExternal.bookDetailBookey(key);
-        const synopsis = await clientExternal.bookSynopsis(work_key);
-        setBookDetail({...result, description: synopsis.description?.value === undefined? synopsis.description : synopsis.description?.value});
-        console.log(book);
+    const fetchBookDetail = async (key: string) => {
+        const synopsis = await clientExternal.bookDetail(key);
+        const cover_image = await clientExternal.bookCoverUrUniversal(book.cover_edition_key, "M");
+
+        if (synopsis) {
+
+            dispatch(setBook({
+                ...book,
+                description: synopsis.description ? (typeof synopsis.description === "string" ? synopsis.description : synopsis.description.value) : "No synopsis found",
+                cover_image_url: cover_image || no_cover
+            }))
+
+            console.log(book);
+        }
+
     }
 
     const authorDetail = (authorID: any) => {
@@ -41,11 +50,11 @@ function BookDetail() {
 
     useEffect(()=> {
         // @ts-ignore
-        fetchBookDetail(book.key, book.work_key);
-        console.log(bookDetail);
-    }, [book.cover])
+        fetchBookDetail(book.key);
+    }, [book.key, dispatch])
 
     return (
+
         <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
         <Grid container spacing={0}>
             <Grid item xl={2}>
@@ -54,10 +63,10 @@ function BookDetail() {
             </Grid>
             <Grid item xl={8}>
                
-            {bookDetail && (
+            {book && (
                 <>  
                     <Container  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-                    <h1>{bookDetail.title}</h1>
+                    <h1>{book.title}</h1>
                     </Container>
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
 
@@ -73,7 +82,7 @@ function BookDetail() {
                     </Container>
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
                     <img
-                        src={`https://covers.openlibrary.org/b/olid/${book.key}-M.jpg?default=false`}
+                        src={book.cover_image_url}
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = no_cover}}
                     />
@@ -81,7 +90,7 @@ function BookDetail() {
                     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
                     <Container maxWidth="sm">
                     <h4>Synopsis</h4>
-                    {bookDetail.description ? bookDetail.description : "No synopsis found"}
+                    {book.description}
                     <br/>
                     </Container>
                     </Container>

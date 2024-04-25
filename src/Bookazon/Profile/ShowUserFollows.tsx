@@ -1,25 +1,33 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-function ShowUserFollows({ followers, following }: { followers: any[], following: any[]}) {
+interface ShowUserFollowsProps {
+    follower: string[];
+    following: string[];
+}
+
+const ShowUserFollows: React.FC<ShowUserFollowsProps> = ({ follower, following }) => {
     return (
-        <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>
+        <Box sx={{ mt: '1rem', border: 1, borderColor: 'grey.500', p: 2 }}>
             <h2>Followers</h2>
             <ul>
-                {followers.map((follower) => (
-                    <li key={follower.id}>{follower.username}</li>
+                {follower.map((username, index) => (
+                    <li key={index}>
+                        <Link to={`/Bookazon/Profile/${username}`}>{username}</Link>
+                    </li>
                 ))}
             </ul>
             <h2>Following</h2>
             <ul>
-                {following.map((follow) => (
-                    <li key={follow.id}>{follow.username}</li>
+                {following.map((username, index) => (
+                    <li key={index}>
+                        <Link to={`/Bookazon/Profile/${username}`}>{username}</Link>
+                    </li>
                 ))}
             </ul>
         </Box>
-
-  );
-}
-
+    );
+};
 
 export default ShowUserFollows;

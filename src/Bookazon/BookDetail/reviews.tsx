@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 import * as client from "./clientReview";
+import * as userClient from "../Users/client";
 
 
 import { Review } from "./clientReview";
@@ -27,6 +29,7 @@ const Transition = React.forwardRef(function Transition(
 
 function Reviews() {
 
+    const { key = '' } = useParams<{ key: string | undefined }>();
 
     const navigate = useNavigate();
 
@@ -37,12 +40,25 @@ function Reviews() {
     const [open, setOpen] = React.useState(false);
 
 
+    const [authors, setAuthors] = useState<String[]>([]);
+
+    const fetchUsersByRole = async (role: string) => {
+        try {
+            const fetchedAuthors = await userClient.findUsersByRole(role);
+            console.log(fetchedAuthors);
+            setAuthors(fetchedAuthors.map((author: any) => author.username));
+        } catch (error) {
+            console.error('Failed to fetch authors:', error);
+        }
+    };
+
+    useEffect(() => {
+        const role = "AUTHOR";
+        fetchUsersByRole(role);
+    }, []);
 
 
-
-    const { key = '' } = useParams<{ key: string | undefined }>();
-    // const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
-
+    // For creating new reviews
     const [newReview, setNewReview] = useState<Review>({
         _id: "",
         username: "",
@@ -64,10 +80,12 @@ function Reviews() {
         }
     }, [user]);
 
+
+
+    // for displaying reviews in database
     const [reviews, setReviews] = useState<Review[]>([]);
 
     const fetchReviews = async () => {
-        console.log(key)
         const bookReviews = await client.findReviewByBook(key);
         setReviews(bookReviews)
     };
@@ -98,6 +116,25 @@ function Reviews() {
     }
 
 
+    const handleFlag = (index: any) => {
+        const updatedReviews = [...reviews];
+        updatedReviews[index].flagged = true;
+        setReviews(updatedReviews);
+        updateReview(updatedReviews[index]);
+    };
+
+
+    const updateReview = async (flaggedReview: any) => {
+        try {
+            const status = await client.updateReview(flaggedReview);
+            setReviews(reviews.map((r) =>
+                (r._id === flaggedReview._id ? flaggedReview : r)));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
 
 
 
@@ -125,7 +162,7 @@ function Reviews() {
     };
 
 
- 
+
 
     return (
 
@@ -192,12 +229,23 @@ function Reviews() {
                 {reviews.map((item, index) => (
                     <Box key={index}  >
                         <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                            <IconButton >
-                                <FlagOutlinedIcon />
-                            </IconButton>
-                            <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                By {item.username}
-                            </Link>} />
+                            {user && (
+                                <IconButton onClick={() => handleFlag(index)}>
+                                    <FlagOutlinedIcon />
+                                </IconButton>
+                            )}
+                            <ListItemText primary={item.text}
+                                secondary={
+                                    <>
+                                        <Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            By {item.username}
+                                        </Link>
+                                        {authors.includes(item.username) && (
+                                            <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                        )}
+                                    </>
+                                }
+                            />
                             <Rating name="read-only" value={item.rating} readOnly />
 
                         </ListItem>

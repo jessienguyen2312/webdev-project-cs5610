@@ -41,17 +41,6 @@ function AuthorProfile() {
 
 
 
-
-    return (
-        <div>
-            <ProfileUser userName={user.username} />
-            <SearchBar />
-            <UserProfileInfo user={user} />
-            <FavoriteBooks books={user.favoriteBooks} />
-            <ShowUserReviews reviews={user.reviews} />
-            <ShowUserFollows followers={user.followers} following={user.following} />
-        </div>
-    )
 }
 
 export default AuthorProfile;

@@ -89,3 +89,10 @@ export const signup = async (user: any) => {
     const response = await request.post(`${API_USERS}/signup`, user, { withCredentials: true });
     return response.data;
 }
+
+
+export const findUsersByRole = async (role: string) => {
+    const response = await
+        request.get(`${API_USERS}?role=${role}`);
+    return response.data;
+};
