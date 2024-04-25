@@ -51,7 +51,6 @@ function Profile() {
         OL_author_key: ''
     });
 
-    const dispatch = useDispatch();
     const [searchUser, setSearchUser] = useState<String>("") 
     const navigate = useNavigate(); 
     const [error, setError] = useState<String>("")
