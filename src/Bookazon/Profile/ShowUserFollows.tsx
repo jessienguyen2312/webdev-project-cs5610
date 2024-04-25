@@ -2,20 +2,27 @@ import React from 'react';
 import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { unfollowUser } from '../Users/client';
 
 interface ShowUserFollowsProps {
     follower: string[];
     following: string[];
     isCurrentUser: boolean;
+    unfollowUser: typeof unfollowUser;
+    setProfile: (profile: any) => void;
+    profileId: string;
 }
 
-const ShowUserFollows: React.FC<ShowUserFollowsProps> = ({ follower, following, isCurrentUser }) => {
+const ShowUserFollows: React.FC<ShowUserFollowsProps> = ({ follower, following, unfollowUser, setProfile, profileId, isCurrentUser }) => {
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=`;
 
-    const handleUnfollow = (username: string) => {
-        console.log("Unfollow user:", username);
-        // Implement unfollow logic here
+    const handleUnfollow = async (usernameToUnfollow: string) => {
+        const updatedUser = await unfollowUser(profileId, usernameToUnfollow);
+        if (updatedUser) {
+            setProfile(updatedUser);
+        }
     };
+
 
 
     return (

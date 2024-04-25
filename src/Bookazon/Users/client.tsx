@@ -89,3 +89,19 @@ export const signup = async (user: any) => {
     const response = await request.post(`${API_USERS}/signup`, user, { withCredentials: true });
     return response.data;
 }
+
+// Assuming you have an axios setup or similar HTTP client setup
+export const unfollowUser = async (userId: string, usernameToUnfollow: string) => {
+    try {
+        const response = await axios.put(`/api/users/${userId}/unfollow`, { unfollowUsername: usernameToUnfollow });
+        if (response.status === 200) {
+            console.log('Unfollow successful');
+            return response.data;
+        } else {
+            throw new Error('Failed to unfollow');
+        }
+    } catch (error) {
+        console.error('Error while unfollowing user:', error);
+        return null;
+    }
+};

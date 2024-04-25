@@ -7,6 +7,8 @@ import { Box, Paper, Button, TextField, Typography } from '@mui/material';
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserFollows from "./ShowUserFollows";
 import { stringify } from 'querystring';
+import { unfollowUser } from '../Users/client';
+
 
 interface UserProfile {
     _id: string;
@@ -52,6 +54,18 @@ function Profile() {
         }
         setEditMode(false);
     }
+
+    // passing this as a prop
+    const handleUnfollow = async (usernameToUnfollow: string) => {
+        if (profile && profile._id) {
+            const updatedUser = await unfollowUser(profile._id, usernameToUnfollow);
+            if (updatedUser) {
+                setProfile(updatedUser);
+            } else {
+                console.error("Failed to unfollow user.");
+            }
+        }
+    };
 
     const handleSaveClick = async () => {
         try {
@@ -103,7 +117,7 @@ function Profile() {
         <Paper elevation={3} sx={{ mx: 'auto', mt: '1rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            {editMode ? (
                 <>
                     {/* Stringify the current user object */}
-  {/*                   <p>{JSON.stringify(profile)}</p>
+                    {/*<p>{JSON.stringify(profile)}</p>
                     <p>{JSON.stringify(editedProfile)}</p> */}
                     <TextField name='firstName' label='First Name' value={editedProfile.firstName} onChange={handleInputChange} /> <br />
                     <TextField name='lastName' label='Last Name' sx={{ mt: 1}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
@@ -114,7 +128,14 @@ function Profile() {
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
                     
                     {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
-                    <ShowUserFollows follower={profile.follower} following={profile.following} isCurrentUser={isCurrentUser} />
+                    <ShowUserFollows
+                        follower={profile.follower}
+                        following={profile.following}
+                        unfollowUser={unfollowUser}
+                        setProfile={setProfile}
+                        profileId={profile._id}
+                        isCurrentUser={isCurrentUser}
+                    />               
                 </>
             ) : (
             <>
@@ -122,10 +143,17 @@ function Profile() {
                 <Typography variant="h3" style={{ color: '#222C4E' }}>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</Typography>
                 <h3 style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </h3>
                 {/* Stringify the current user object */}
-{/*                 <p>{JSON.stringify(profile)}</p>
- */}                <p>{profile.aboutMe}</p>
+                {/*<p>{JSON.stringify(profile)}</p> */}  
+              <p>{profile.aboutMe}</p>
                 {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
-                <ShowUserFollows follower={profile.follower} following={profile.following} isCurrentUser={isCurrentUser}/>
+                <ShowUserFollows
+                    follower={profile.follower}
+                    following={profile.following}
+                    unfollowUser={unfollowUser}
+                    setProfile={setProfile}
+                    profileId={profile._id}
+                    isCurrentUser={isCurrentUser}
+                />
             </>
             )}
         </Paper>
