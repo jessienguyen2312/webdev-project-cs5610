@@ -25,7 +25,7 @@ function OLAuthorProfile() {
             {...OLAuthor,
                 author_name: authorProfile.name,
                 author_dob: authorProfile.birth_date,
-                author_bio: authorProfile.bio,
+                author_bio: authorProfile.bio ? (typeof authorProfile.bio === "string"? authorProfile.bio : authorProfile.bio.value) : "No bio found",
                 author_works: authorWorks.entries}));
 
         console.log(OLAuthor)
