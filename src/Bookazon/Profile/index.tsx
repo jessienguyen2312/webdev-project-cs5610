@@ -192,7 +192,7 @@ function Profile() {
                   </Link>
 
                 )}
-                {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
+                 <FavoriteBooks bookIds={profile.favoriteBook} />
                 <ShowUserFollows
                     follower={profile.follower}
                     following={profile.following}
