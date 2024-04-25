@@ -42,6 +42,17 @@ export const findAllUsers = async () => {
     return response.data;
 };
 
+export const findAllAuthors = async () => {
+    try {
+        const response = await request.get(`${API_USERS}?role=AUTHOR`, {withCredentials: true});
+        console.log(response.data);
+        return response.data;
+
+    } catch (error: any) {
+        console.log(error);
+    }
+}
+
 export const findUserById = async (id: string) => {
     const response = await request.get(`${API_USERS}/${id}`, { withCredentials: true });
     return response.data;

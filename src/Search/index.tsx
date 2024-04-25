@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import no_cover from "../no_cover.png"
 import * as clientExternal from "../../src/Bookazon/clientExternal";
+import * as userClient from "../Bookazon/Users/client";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {setBook, resetBook} from "../Bookazon/BookDetail/BookReducer";
@@ -16,6 +17,7 @@ import {setResult, resetResult} from "./ResultReducer";
 import {bookState} from "../Bookazon/store";
 import SearchBar from "../Bookazon/Home/SearchBar";
 import {setAuthorKey} from "../Bookazon/Profile/OLAuthorReducer";
+import {setAuthors} from "./authorListReducer";
 
 
 export const extractOLID = (input: string) => {
@@ -36,6 +38,7 @@ function Search() {
     const book = useSelector((state: bookState) => state.bookReducer.book);
     const result = useSelector((state: bookState) => state.resultReducer.result)
     const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
+    const authorsList = useSelector((state: bookState) => state.authorListReducer.authors);
 
     const extractOLID = (input: string) => {
         const result = input.match(/OL.*$/);
@@ -43,6 +46,26 @@ function Search() {
             return result[0];
         }
     }
+
+    // load all authors here into a dictionary, if an author id is in the dictionary, display result
+
+
+    useEffect(() => {
+        const loadAllAuthors = async () => {
+            const authorsList = await userClient.findAllAuthors();
+            if (authorsList) {
+                const authorsDictionary: {[key: string] : string} = {};
+                for (const author of authorsList) {
+                    const {username, OL_author_key} = author;
+                    authorsDictionary[OL_author_key] = username;
+                }
+                dispatch(setAuthors(authorsDictionary));
+                console.log(authorsDictionary);
+            }
+
+        }
+        loadAllAuthors();
+    }, [dispatch])
 
 
     return(
@@ -77,6 +100,13 @@ function Search() {
                                         Work count: {object.work_count}
                                     </Typography>
                                 </CardContent>
+                                {object.key in authorsList && (
+                                    <CardActions>
+                                        <Link to={`/Bookazon/Profile/${authorsList[object.key]}`}>
+                                            <Button size="small" variant="contained" style={{backgroundColor: "#EF8D40"}}>View Author's Bookazon Profile</Button>
+                                        </Link>
+                                    </CardActions>
+                                )}
                             </Card>
                         </Grid>
                     ))}

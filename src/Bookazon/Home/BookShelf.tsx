@@ -152,14 +152,15 @@ function BookShelf({ genre }: { genre: string }) {
                         onChange={handleChange}
                         variant="scrollable"
                         scrollButtons="auto"
-                        aria-label="scrollable auto tabs example"
+                        aria-label="tab"
+                        value = {value}
                     >
 
                         {books.map((item, index) => (
 
 
                             <Tab label={
-                                <Card sx={{ width: 250, height: '100%' }}>
+                                <Card sx={{ width: 250, height: '100%' }} key={index}>
                                     <CardActionArea onClick={() => bookDetailPage(item)} >
                                         <CardMedia
                                             component="img"
@@ -220,6 +221,7 @@ function BookShelf({ genre }: { genre: string }) {
 
                                 </Card>
                             }
+
                             />
 
                         ))}

@@ -19,6 +19,7 @@ function Home() {
     const user = useSelector((state: userState) => state.userReducer.user);
 
 
+
     const fakeUser = {
         "_id": { "$oid": "6622b1a306e1d4495ab452d7" },
         "username": "WilliamShakespeare",
@@ -35,7 +36,7 @@ function Home() {
         "favoriteBook": ["OL20930632M", "OL1216826M"]
     };
 
-  
+
 
     // UNCOMMENT THIS TO DO A FAKE LOG IN
 
