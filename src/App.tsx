@@ -76,7 +76,6 @@ function App() {
                     <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsIndex />}/>
                     {/* <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews/>}/> */}
                     <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/>
-                    <Route path="Bookazon/Profile/:userId/UsersFollowing" element={<UserFollowing/>}/>
                 </Routes>
             </HashRouter>
         </Provider>
