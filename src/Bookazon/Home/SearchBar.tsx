@@ -31,7 +31,7 @@ function SearchBar() {
     const result = useSelector((state: bookState) => state.resultReducer.result);
     const book = useSelector((state: bookState) => state.bookReducer.book);
 
-    // search criteria by title, author, subject, isbn
+    // search criteria by title, author, subject
     const searchCriteria = [
         "Title", "Author", "Subject"
     ]
