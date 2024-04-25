@@ -12,6 +12,7 @@ import {Button, Card, CardActions, CardContent, CardMedia, Grid} from "@mui/mate
 import {Link} from "react-router-dom";
 import {extractOLID} from "../../Search";
 import {resetBook, setBook} from "../BookDetail/BookReducer";
+import Container from "@mui/material/Container";
 function OLAuthorProfile() {
     const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
     const book = useSelector((state: bookState) => state.bookReducer.book);
@@ -25,7 +26,7 @@ function OLAuthorProfile() {
             {...OLAuthor,
                 author_name: authorProfile.name,
                 author_dob: authorProfile.birth_date,
-                author_bio: authorProfile.bio,
+                author_bio: authorProfile.bio ? (typeof authorProfile.bio === "string"? authorProfile.bio : authorProfile.bio.value) : "No bio found",
                 author_works: authorWorks.entries}));
 
         console.log(OLAuthor)
@@ -69,7 +70,7 @@ function OLAuthorProfile() {
 
 
     return(
-        <div>
+        <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
             <Typography variant="h1">{OLAuthor.author_name}</Typography>
             <Box
                 sx={{height: 300}}
@@ -101,7 +102,7 @@ function OLAuthorProfile() {
 
 
 
-        </div>
+        </Container>
     )
 
 }

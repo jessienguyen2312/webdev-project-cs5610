@@ -9,6 +9,12 @@ const request = axios.create({
     withCredentials: true
 });
 
+/* THIS MIGHT HELP WITH ON RENDER DEPLOYMENT
+const request = axios.create({
+    baseURL: API_BASE,
+    withCredentials: true
+}); */
+
 export interface User {
     _id: String,
     username: String,
@@ -35,6 +41,17 @@ export const findAllUsers = async () => {
     const response = await request.get(`${API_USERS}`, { withCredentials: true });
     return response.data;
 };
+
+export const findAllAuthors = async () => {
+    try {
+        const response = await request.get(`${API_USERS}?role=AUTHOR`, {withCredentials: true});
+        console.log(response.data);
+        return response.data;
+
+    } catch (error: any) {
+        console.log(error);
+    }
+}
 
 export const findUserById = async (id: string) => {
     const response = await request.get(`${API_USERS}/${id}`, { withCredentials: true });
