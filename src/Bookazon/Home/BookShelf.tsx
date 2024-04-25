@@ -47,18 +47,24 @@ const Transition = React.forwardRef(function Transition(
 function BookShelf({ genre }: { genre: string }) {
     // console.log(genre)
 
-    useCurrentUser()
+    
     const user = useSelector((state: userState) => state.userReducer.user);
-    // console.log(user)
+    // useCurrentUser()
+    const [localUser, setLocalUser] = useState(user);
+
+
+
+    // console.log("user as soon as homepage is loaded",user)
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
+    
 
 
     const [open, setOpen] = React.useState(false);
-    const [favoriteBookKey, setFavoriteBookKey] = useState(String);
+
 
     // navigate to book detail page and pass in key for book
     const bookDetailPage = (bookItem: Book) => {
@@ -115,37 +121,43 @@ function BookShelf({ genre }: { genre: string }) {
 
     const handleFavoriteClick = async (book: any) => {
         const olid = extractOLID(book);
-        if (olid) {  // Check if 'olid' is not undefined
-            setFavoriteBookKey(olid);
-            console.log(favoriteBookKey)
+        if (user && olid) {
+            dispatch(addFavorite(olid)); 
+            try {
+                console.log("the following user is being passed: ", user)
+                // const status = await userClient.updateUser(user); // Perform the async update
+                console.log('User updated successfully:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            } catch (error) {
+                console.error('Failed to update user:', error);
+            }
         } else {
             console.error("Invalid book key, unable to extract OLID.");
         }
-       
+
 
     };
 
-    useEffect(() => {
+    
 
-        if (favoriteBookKey && user) {
-            // Dispatch the Redux action to update the state
-            dispatch(addFavorite(favoriteBookKey));
-            console.log(user)
-
-           const status =   userClient.updateUser(user)
-           console.log(user)
-
-        }
-    }, [favoriteBookKey, dispatch, user]);
-
-
-    const handleRemoveFavorit = async (book: any) => {
+    const handleRemoveFavorite = async (book: any) => {
         const olid = extractOLID(book);
-        // if (user && olid) {
-        //     dispatch(removeFavorite(olid))
-        //     const status = await userClient.updateUser(user)
-        // }
-    }
+        if (user && olid) {
+            dispatch(removeFavorite(olid)); // Dispatch Redux action immediately
+            try {
+                const status = await userClient.updateUser(user); // Perform the async update
+                console.log('User updated successfully:', status);
+            } catch (error) {
+                console.error('Failed to update user:', error);
+            }
+        } else {
+            console.error("Invalid book key, unable to extract OLID.");
+        }
+    };
+    
+
+
+
+
 
 
 
@@ -282,7 +294,7 @@ function BookShelf({ genre }: { genre: string }) {
                                         ) : (
                                             <IconButton >
                                                 {user.favoriteBook.includes(extractOLID(item.key)) ?
-                                                    <FavoriteIcon sx={{ color: 'red' }} onClick={() => handleRemoveFavorit(item.key)} /> :
+                                                    <FavoriteIcon sx={{ color: 'red' }} onClick={() => handleRemoveFavorite(item.key)} /> :
                                                     <FavoriteBorderIcon onClick={() => handleFavoriteClick(item.key)} />
                                                 }
                                             </IconButton>

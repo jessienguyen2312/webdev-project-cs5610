@@ -16,7 +16,7 @@ import { resetUser, setUser } from "../Users/userReducer";
 
 
 function Home() {
-    const user = useSelector((state: userState) => state.userReducer.user);
+    
 
     // this tests if there is a logged in user (reducer will set it to null if no one is logged in)
     useCurrentUser();
@@ -28,7 +28,7 @@ function Home() {
 
         
         <div>
-            <ListOfBooks user={user}/>
+            <ListOfBooks />
         </div>
     )
 }

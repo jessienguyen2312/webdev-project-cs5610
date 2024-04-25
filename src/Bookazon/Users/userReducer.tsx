@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
 import { User } from "../Users/client";
 
 interface UserState {
@@ -21,14 +21,32 @@ const userSlice = createSlice({
         },
 
         addFavorite: (state, action: PayloadAction<string>) => {
+            
         
             if (state.user) {
-                state.user.favoriteBook = state.user.favoriteBook;
+                
+                // Check if the book is already in the favorites
                 if (!state.user.favoriteBook.includes(action.payload)) {
-                    state.user.favoriteBook.push(action.payload);
+                    // Create a new array with all old favorite books plus the new one
+                    state.user.favoriteBook = [...state.user.favoriteBook, action.payload];
+                    console.log("REDUCER STATE", current(state.user.favoriteBook))
                 }
             }
         },
+        // addFavorite: (state, action: PayloadAction<string>) => {
+        //     if (state.user) {
+        //         // Ensure `state.user.favoriteBook` exists and is an array.
+        //         if (!state.user.favoriteBook) {
+        //             state.user.favoriteBook = [];
+        //         }
+        
+        //         // Check if the favorite book already exists in the list
+        //         if (!state.user.favoriteBook.includes(action.payload)) {
+        //             // Directly push to the array since immer handles immutability
+        //             state.user.favoriteBook.push(action.payload);
+        //         }
+        //     }
+        // },
 
         removeFavorite: (state, action: PayloadAction<string>) => {
             if (state.user && state.user.favoriteBook) {
