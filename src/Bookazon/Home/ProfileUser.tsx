@@ -29,6 +29,12 @@ function ProfileUser({ userName }: { userName: string }) {
         setCriteria(event.target.value as string);
     };
 
+    const handleProfileNav = () => {
+        navigate(`/Bookazon/Profile/${userName}`);
+    };
+
+
+
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${userName}.svg`;
 
     return (
@@ -44,12 +50,10 @@ function ProfileUser({ userName }: { userName: string }) {
                         label= "profileHome"
                         onChange={handleChange}
                     >
-                        <MenuItem><Button>My Profile</Button></MenuItem>
-                        <MenuItem><Button>Favorites List</Button></MenuItem>
-                        <MenuItem><Button>Want to Read</Button></MenuItem>
-                        <MenuItem><Button>Add Friends</Button></MenuItem>
-                        <MenuItem><Button>Reviews</Button></MenuItem>
-                        <MenuItem><Button>Authors</Button></MenuItem>
+                        <MenuItem><Button onClick={handleProfileNav}>My Profile</Button></MenuItem>
+                        <MenuItem><Button onClick={handleProfileNav}>Favorites List</Button></MenuItem>
+                        <MenuItem><Button onClick={handleProfileNav}>Add Friends</Button></MenuItem>
+                        <MenuItem><Button onClick={handleProfileNav}>Reviews</Button></MenuItem>
                         <MenuItem><Button onClick={signout}>Log Out</Button></MenuItem>
                     </Select>
                 </FormControl>

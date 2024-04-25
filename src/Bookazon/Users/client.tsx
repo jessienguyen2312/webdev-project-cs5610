@@ -22,9 +22,9 @@ export interface User {
     dateCreated: Date,
     aboutMe: String,
     profilePicture: String, // Default empty, set conditionally below
-    follower: [],
-    following: [],
-    favoriteBook: [],
+    follower: String [],
+    following: String[],
+    favoriteBook: string[],
     OL_author_key: String
 };
 

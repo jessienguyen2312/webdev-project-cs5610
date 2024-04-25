@@ -13,10 +13,11 @@ import { extractOLID } from "../../Search";
 import { setAuthorKey } from "../Profile/OLAuthorReducer";
 import useCurrentUser from '../Users/useCurrentUser';
 import { TransitionProps } from '@mui/material/transitions';
+import { addFavorite, removeFavorite } from '../Users/userReducer';
+import * as userClient from "../Users/client"
 
 
 interface Book {
-    editions: { docs: [{ key: string }] }
     // key: string;
     title: string;
     author_name: string[];
@@ -48,13 +49,16 @@ function BookShelf({ genre }: { genre: string }) {
 
     useCurrentUser()
     const user = useSelector((state: userState) => state.userReducer.user);
+    // console.log(user)
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
 
+
     const [open, setOpen] = React.useState(false);
+    const [favoriteBookKey, setFavoriteBookKey] = useState(String);
 
     // navigate to book detail page and pass in key for book
     const bookDetailPage = (bookItem: Book) => {
@@ -107,9 +111,43 @@ function BookShelf({ genre }: { genre: string }) {
     }
 
 
-    const favorits = () => {
-        console.log("test")
+
+
+    const handleFavoriteClick = async (book: any) => {
+        const olid = extractOLID(book);
+        if (olid) {  // Check if 'olid' is not undefined
+            setFavoriteBookKey(olid);
+            console.log(favoriteBookKey)
+        } else {
+            console.error("Invalid book key, unable to extract OLID.");
+        }
+       
+
     };
+
+    useEffect(() => {
+
+        if (favoriteBookKey && user) {
+            // Dispatch the Redux action to update the state
+            dispatch(addFavorite(favoriteBookKey));
+            console.log(user)
+
+           const status =   userClient.updateUser(user)
+           console.log(user)
+
+        }
+    }, [favoriteBookKey, dispatch, user]);
+
+
+    const handleRemoveFavorit = async (book: any) => {
+        const olid = extractOLID(book);
+        // if (user && olid) {
+        //     dispatch(removeFavorite(olid))
+        //     const status = await userClient.updateUser(user)
+        // }
+    }
+
+
 
 
     const handleDialogOpen = () => {
@@ -152,16 +190,6 @@ function BookShelf({ genre }: { genre: string }) {
 
 
 
-    // console.log({ books })
-
-    // making sure I can get the info USED FOR checking
-    // useEffect(() => {
-    //     if (books.length > 1) {
-    //         // console.log(books[0].cover_edition_key);
-    //         // console.log(typeof books[0].author_name);
-    //         // console.log(books);
-    //     }
-    // }, [books]);
 
 
     // used for the arrow clicks on the shelf
@@ -200,82 +228,70 @@ function BookShelf({ genre }: { genre: string }) {
 
                     >
 
-                        {books.map((item, index) => (
+                        {books.map((item, index) => {
+                            // Log each item to the console
+                            // console.log("Book Item:", item);
 
-                            <Tab label={
-                                <Card sx={{ width: 250, height: '100%' }}>
-                                    <CardActionArea onClick={() => bookDetailPage(item)} >
-                                        <CardMedia
-                                            component="img"
-                                            sx={{
-                                                maxHeight: 100,
+                            return (
+                                <Tab label={
+                                    <Card sx={{ width: 250, height: '100%' }}>
+                                        <CardActionArea onClick={() => bookDetailPage(item)} >
+                                            <CardMedia
+                                                component="img"
+                                                sx={{
+                                                    maxHeight: 100,
+                                                    objectFit: 'contain',
+                                                    width: '100%'
+                                                }}
+                                                src={clientExternal.bookCoverUrl(item.cover_edition_key)}
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = no_cover
+                                                }}
+                                                title={item.title}
+                                            />
+                                        </CardActionArea>
 
-                                                // minHeight: 50,
-                                                objectFit: 'contain',
-                                                width: '100%'
-                                            }}
-                                            src={clientExternal.bookCoverUrl(item.cover_edition_key)}
-                                            onError={(e) => {
-                                                (e.target as HTMLImageElement).src = no_cover
-                                            }
-                                            }
+                                        <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: "center" }}>
+                                            <Box>
+                                                <CardActionArea onClick={() => bookDetailPage(item)}>
+                                                    <Typography variant='subtitle1' display="block" sx={{
+                                                        whiteSpace: 'nowrap',
+                                                        textOverflow: 'ellipsis',
+                                                        width: 190,
+                                                    }}>
+                                                        {item.title}
+                                                    </Typography>
+                                                </CardActionArea>
 
-                                            title={item.title}
-
-                                        />
-                                    </CardActionArea>
-
-                                    <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: "center" }}>
-
-                                        <Box>
-                                            <CardActionArea onClick={() => bookDetailPage(item)}>
-                                                <Typography variant='subtitle1' display="block" sx={{
-
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis',
-                                                    width: 190,
-                                                }}>
-                                                    {item.title}
-                                                </Typography>
-                                            </CardActionArea>
-
-                                            <Box sx={{ display: 'flex' }}>
-                                                {item.author_name.map((author, index) => (
-                                                    <CardActionArea onClick={() => authorDetail(item.author_key[index])}>
-                                                        <Typography key={index} variant='caption'>
-                                                            {author}
-                                                        </Typography>
-                                                    </CardActionArea>
-                                                ))}
+                                                <Box sx={{ display: 'flex' }}>
+                                                    {item.author_name.map((author, index) => (
+                                                        <CardActionArea onClick={() => authorDetail(item.author_key[index])}>
+                                                            <Typography key={index} variant='caption'>
+                                                                {author}
+                                                            </Typography>
+                                                        </CardActionArea>
+                                                    ))}
+                                                </Box>
                                             </Box>
+                                        </CardContent>
 
-
-                                        </Box>
-
-
-                                    </CardContent>
-
-                                    {!user ? (
-                                        <IconButton onClick={handleDialogOpen}>
-                                            <FavoriteBorderIcon />
-                                        </IconButton>
-                                    ) : (
-                                        <IconButton onClick={favorits}>
-                                            {user.favoriteBook.includes(item.editions) ?
-                                                <FavoriteIcon sx={{ color: 'red' }} /> :
+                                        {!user ? (
+                                            <IconButton onClick={handleDialogOpen}>
                                                 <FavoriteBorderIcon />
-                                            }
-                                        </IconButton>
-                                    )}
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton >
+                                                {user.favoriteBook.includes(extractOLID(item.key)) ?
+                                                    <FavoriteIcon sx={{ color: 'red' }} onClick={() => handleRemoveFavorit(item.key)} /> :
+                                                    <FavoriteBorderIcon onClick={() => handleFavoriteClick(item.key)} />
+                                                }
+                                            </IconButton>
+                                        )}
+                                    </Card>
+                                } />
+                            );
+                        })}
 
-
-
-
-                                </Card>
-                            }
-                            />
-
-                        ))}
                     </Tabs>
                 </Box>
 

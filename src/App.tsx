@@ -15,8 +15,6 @@ import store from '../src/Bookazon/store'
 import {Provider} from "react-redux";
 
 import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
-import Reviews from './Bookazon/BookDetail/reviews';
-import ReviewsAdmin from './Bookazon/BookDetail/reviewsAdmin';
 import OLAuthorProfile from "./Bookazon/Profile/OLAuthorProfile";
 import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
 
