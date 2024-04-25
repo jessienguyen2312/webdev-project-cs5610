@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
-import { bookDetail } from '../clientExternal'; 
+import * as clientExternal from '../clientExternal'; 
 import {Link, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { setBook } from '../BookDetail/BookReducer';
+import { resetBook, setBook } from '../BookDetail/BookReducer';
+import { bookState } from '../store';
+import { extractOLID } from '../../Search';
 
 
 interface BookDetail {
@@ -19,6 +21,8 @@ interface FavoriteBooksProps {
 }
 
 function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
+
+
     const [books, setBooks] = useState<BookDetail[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,11 +31,11 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const bookPromises = bookIds.map(bookId => bookDetail(bookId));
+            const bookPromises = bookIds.map(bookId => clientExternal.bookDetail(bookId));
             const bookDetails = await Promise.all(bookPromises);
             console.log("Book details fetched:", bookDetails); // Log to see what the book IDs look like
             const formattedBooks = bookDetails.map(book => ({
-                id: book.key.replace('/books/', ''), // Strip the '/books/' prefix
+                id: book.key.replace('/works/', ''), // Strip the '/books/' prefix
                 title: book.title,
                 author_name: book.author_name,
                 cover: book.cover_edition_key,
@@ -44,15 +48,39 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
         fetchData();
     }, [bookIds]);
 
-    const bookDetailPage = (bookItem: BookDetail) => {
+    const book = useSelector((state: bookState) => state.bookReducer.book);
+
+
+    const fetchInfoForBookDetail = async (work: any) => {
+        //reset book state
+        dispatch(resetBook(book));
+        // fetch author keys
+        const authorsKeys: string[] = [];
+        work.authors.forEach((author: any) => {
+            // @ts-ignore
+            authorsKeys.push(extractOLID(author.author.key));
+        });
+        // fetch author names from author keys
+        const authorsNames: string[] = [];
+        for (const author of authorsKeys) {
+            authorsNames.push(await clientExternal.fetchAuthorName(author));
+        }
+    
         dispatch(setBook({
-            key: bookItem.id,
-            author_name: bookItem.author_name,
-            cover: bookItem.cover,
-            work_key: bookItem.work_key
-        }));
-        navigate(`/Bookazon/BookDetail/${bookItem.id}`);
-    };
+            ...book,
+            title: work.title,
+            key: work.key,
+            author_key: authorsKeys,
+            author_name: authorsNames,
+            // cover_id: work.covers? work.covers[0] : "",
+            cover_edition_key: work.covers? work.covers[0] : "",
+        }))
+    
+        console.log(book)
+
+        navigate(`/Bookazon/BookDetail/${extractOLID(work.key)}`)
+    
+    }
 
     if (loading) return <div>Loading favorite books...</div>;
 
@@ -61,7 +89,7 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
             <h3>Favorite Books</h3>
             <ul>
                 {books.map(book => (
-                    <li key={book.id} onClick={() => bookDetailPage(book)} >
+                    <li key={book.id} onClick={() => fetchInfoForBookDetail(book)} >
                         {book.title}
                     </li>
                 ))}

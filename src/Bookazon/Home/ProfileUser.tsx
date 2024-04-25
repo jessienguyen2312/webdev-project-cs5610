@@ -29,12 +29,12 @@ function ProfileUser({ userName }: { userName: string }) {
         setCriteria(event.target.value as string);
     };
 
+    const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${userName}.svg`;
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mr: 2 }}>
             <Box sx={{display: "flex",  alignItems: 'center', mr: 1}}>
-                <Avatar sx={{ mr: 1 }}>
-                    <PersonOutlinedIcon />
-                </Avatar>
+                <Avatar sx={{ mr: 1}} src={`${avatarUrl}`} />
 
                 <FormControl sx={{minWidth: 100}}>
                     <InputLabel id="profileHome">{GREETING}</InputLabel>
