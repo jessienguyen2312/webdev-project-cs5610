@@ -11,6 +11,12 @@ const request = axios.create({
 
 });
 
+/* THIS MIGHT HELP WITH ON RENDER DEPLOYMENT
+const request = axios.create({
+    baseURL: API_BASE,
+    withCredentials: true
+}); */
+
 export interface User {
     _id: String,
     username: String,
