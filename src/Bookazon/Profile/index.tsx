@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
 
@@ -39,7 +39,9 @@ function Profile() {
         lastName: '',
         password: '',
         email: ''
-    });  
+    }); 
+    const [searchUser, setSearchUser] = useState<String>("") 
+    const navigate = useNavigate(); 
 
     const handleEditClick = () => {
         if (profile) {
@@ -135,6 +137,28 @@ function Profile() {
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
                     
                     {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
+                    <br></br>
+                    <br></br>
+                    <TextField
+                        margin="normal"
+                        id="username"
+                        label="Search for User"
+                        name="username"
+                        autoComplete="username"
+                        value = {searchUser}
+                        onChange={() => setSearchUser(searchUser)}
+                        autoFocus
+                        sx={{
+                            color: '#222C4E',
+                            bgcolor: 'white',
+                            '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#222C4E', 
+                            },
+                            },
+                        }}
+                        />
+                        <Button>Add</Button>
                     <ShowUserFollows
                         follower={profile.follower}
                         following={profile.following}
@@ -142,7 +166,10 @@ function Profile() {
                         setProfile={setProfile}
                         profileId={profile._id}
                         isCurrentUser={isCurrentUser}
-                    />               
+                    />      
+                    <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
+                        Navigate to Reviews
+                    </Button>         
                 </>
             ) : (
             <>
