@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useParams, Link} from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
 import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
+import { setUser } from '../Users/userReducer';
 
-import { Box, Paper, Button, TextField, Typography } from '@mui/material';
+import { Paper, Button, TextField, Typography, List, ListItem, Avatar, ListItemText, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserFollows from "./ShowUserFollows";
 import { stringify } from 'querystring';
@@ -29,7 +31,7 @@ interface UserProfile {
 function Profile() {
     const { username } = useParams<{ username: string }>();
     const [profile, setProfile] = useState<UserProfile | null>(null);
-
+    const dispatch = useDispatch();
     const loggedInUser = useSelector((state: any) => state.userReducer.user);
     const [editMode, setEditMode] = useState(false);
     const [editedProfile, setEditedProfile] = useState<UserProfile>({
@@ -60,14 +62,17 @@ function Profile() {
         setEditMode(false);
     }
 
-    // passing this as a prop
+    
     const handleUnfollow = async (usernameToUnfollow: string) => {
-        if (profile && profile._id) {
+        if (profile) {
             const updatedUser = await unfollowUser(profile._id, usernameToUnfollow);
             if (updatedUser) {
                 setProfile(updatedUser);
-            } else {
-                console.error("Failed to unfollow user.");
+                if (loggedInUser && loggedInUser.username === profile.username) { // not sure if this check is necessary, but seemed safe
+                    dispatch(setUser(updatedUser)); // Update global state if the current user is viewing their own profile
+                    // filter out usernameToUnfollow
+                    setProfile({ ...profile, following: profile.following.filter((username: string) => username !== usernameToUnfollow) });
+                }
             }
         }
     };
@@ -139,15 +144,7 @@ function Profile() {
                     <Button sx={{ mt: 1}} onClick={handleSaveClick}>Save</Button>
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
                     
-                    {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
-                    <ShowUserFollows
-                        follower={profile.follower}
-                        following={profile.following}
-                        unfollowUser={unfollowUser}
-                        setProfile={setProfile}
-                        profileId={profile._id}
-                        isCurrentUser={isCurrentUser}
-                    />               
+                    {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}           
                 </>
             ) : (
             <>
@@ -170,22 +167,52 @@ function Profile() {
                             '&:hover': {
                                 backgroundColor: '#F1A467', // Hover state background color
                             },
-                            color: 'white', // Text color for better contrast
-                            mt: 2 // Adds margin top for spacing
+                            color: 'white', 
+                            mt: 2 
                         }}
                     >
                         View Catalog
                     </Button>
                 )}
                 {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
-                <ShowUserFollows
-                    follower={profile.follower}
-                    following={profile.following}
-                    unfollowUser={unfollowUser}
-                    setProfile={setProfile}
-                    profileId={profile._id}
-                    isCurrentUser={isCurrentUser}
-                />
+
+            {/* Followers */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Followers</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        {profile.follower.map((follower, index) => (
+                            <ListItem key={index}>
+                                <Avatar src={`${avatarUrl}${follower}`} />
+                                <ListItemText primary={<Link to={`/profile/${follower}`} style={{ color: '#222C4E', textDecoration: 'none' }}>{follower}</Link>} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </AccordionDetails>
+            </Accordion>
+
+            {/* Following */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                <Typography variant="h5" style={{ fontWeight: 'bold', color: '#222C4E' }}>Following</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        {profile.following.map((following, index) => (
+                            <ListItem key={index} secondaryAction={isCurrentUser && (
+                                <Button onClick={() => handleUnfollow(following)} size="small" color="primary">
+                                    Unfollow
+                                </Button>
+                            )}>
+                                <Avatar src={`${avatarUrl}${following}`} />
+                                <ListItemText primary={<Link to={`/profile/${following}`} style={{ color: '#222C4E', textDecoration: 'none' }} >{following}</Link>} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </AccordionDetails>
+            </Accordion>
             </>
             )}
         </Paper>
