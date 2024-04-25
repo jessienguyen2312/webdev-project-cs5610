@@ -31,12 +31,23 @@ export default function SignIn() {
     following: [],
     favoriteBook: [],
     OL_author_key: ""});
-
+    const [error, setError] = useState("");
     const navigate = useNavigate(); 
 
     const signin = async () => {
-      const userLogIn = await client.signin(user);
-      navigate(`/Bookazon/Profile/${user._id}`);
+      try {
+        const userLogIn = await client.signin(user);
+        navigate(`/Bookazon/Profile/${user.username}`);
+      }
+      catch (err: any) {
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          // Handle other types of errors
+          console.error(err);
+        }
+      }
+
     };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,6 +74,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5" sx={{ color: '#222C4E' }}>
             Sign In
           </Typography>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -124,9 +136,9 @@ export default function SignIn() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item paddingTop={0.25} paddingBottom={2}>
-                <Link href="#" variant="body2" sx={{ color: '#222C4E' }}>
-                  {"Don't have an account? Sign Up"}
-                </Link>
+              <Button onClick={() => navigate("/Bookazon/SignUp")} sx={{ color: '#222C4E', textDecoration: 'underline', textTransform: 'none' }}>
+                Don't have an account? Click here to sign up
+              </Button>
               </Grid>
             </Grid>
           </Box>
