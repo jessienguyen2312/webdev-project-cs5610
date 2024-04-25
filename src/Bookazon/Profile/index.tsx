@@ -11,6 +11,7 @@ import { unfollowUser, followUser } from '../Users/client';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import {setAuthorKey} from "./OLAuthorReducer";
 import useCurrentUser from '../Users/useCurrentUser';
+import {useNavigate} from "react-router-dom";
 
 
 interface UserProfile {
