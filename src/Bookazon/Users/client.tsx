@@ -102,18 +102,35 @@ export const signup = async (user: any) => {
     return response.data;
 }
 
-// Assuming you have an axios setup or similar HTTP client setup
 export const unfollowUser = async (userId: string, usernameToUnfollow: string) => {
     try {
-        const response = await axios.put(`/api/users/${userId}/unfollow`, { unfollowUsername: usernameToUnfollow });
+        const response = await request.put(`${API_USERS}/${userId}/unfollow`, { usernameToUnfollow });
+        console.log("CLIENT LOG: attempting to unfollow user: ", usernameToUnfollow)
         if (response.status === 200) {
-            console.log('Unfollow successful');
+            console.log('Unfollow successful:', response.data);
             return response.data;
         } else {
-            throw new Error('Failed to unfollow');
+            throw new Error(`Failed to unfollow: Status ${response.status}`);
         }
     } catch (error) {
         console.error('Error while unfollowing user:', error);
-        return null;
+        throw error;
     }
 };
+
+export const followUser = async (userId: string, usernameToFollow: string) => {
+    try {
+        const response = await request.put(`${API_USERS}/${userId}/follow`, { usernameToFollow });
+        console.log("CLIENT LOG: attempting to follow user: ", usernameToFollow)
+        if (response.status === 200) {
+            console.log('Follow successful:', response.data);
+            return response.data;
+        } else {
+            throw new Error(`Failed to follow: Status ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error while following user:', error);
+        throw error;
+    }
+};
+
