@@ -67,27 +67,33 @@ function Profile() {
         }
     };
 
+    /**
+     * Handles the click event when the save button is clicked.
+     * Updates the user profile with the edited profile data.
+     * If the update is successful, sets the updated user profile and exits edit mode.
+     * If the update fails, throws an error.
+     */
     const handleSaveClick = async () => {
         try {
-          if (editedProfile.firstName && editedProfile.lastName && editedProfile.email) {
-            if (profile && profile._id) {
-                editedProfile._id = profile._id; 
-              }
-              console.log("Sending update request for user: ", editedProfile);
-              const updatedUser = await updateUser(editedProfile);
-            if (updatedUser) {
-              setProfile(updatedUser);
-              setEditMode(false);
+            if (editedProfile.firstName && editedProfile.lastName && editedProfile.email) { // a half-assed validation
+                if (profile && profile._id) { // need to check if profile is not null, won't work otherwise
+                    editedProfile._id = profile._id; 
+                }
+                console.log("Sending update request for user: ", editedProfile);
+                const updatedUser = await updateUser(editedProfile);
+                if (updatedUser) { // making sure the update was successful
+                    setProfile(updatedUser);
+                    setEditMode(false);
+                } else {
+                    throw new Error("Update was not successful.");
+                }
             } else {
-              throw new Error("Update was not successful.");
+                console.error('Validation failed');
             }
-          } else {
-            console.error('Validation failed');
-          }
         } catch (error) {
-          console.error('Failed to update user:', error);
+            console.error('Failed to update user:', error);
         }
-      };
+    };
       
       
     const handleInputChange = (event: any) => {
