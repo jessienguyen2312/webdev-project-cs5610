@@ -15,7 +15,7 @@ const BOOK_DETAIL_API = "https://openlibrary.org"
 
 
 // CONST FOR DEBUGGING PURPOSE
-const LIMIT_PAGE = "&limit=10"
+const LIMIT_PAGE = "&limit=30"
 const LIMIT_PAGE_AUTHOR = "&limit=20"
 
 //TODO: search by ISBN, author, search for authors

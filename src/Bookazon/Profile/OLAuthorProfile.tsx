@@ -8,15 +8,16 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Box from "@mui/material/Box";
 import no_cover from "../../no_cover.png";
-import {Button, Card, CardActions, CardContent, CardMedia, Grid} from "@mui/material";
+import {Button, Card, CardActions, CardContent, CardMedia, Grid, Paper} from "@mui/material";
 import {Link} from "react-router-dom";
 import {extractOLID} from "../../Search";
 import {resetBook, setBook} from "../BookDetail/BookReducer";
 import Container from "@mui/material/Container";
+import Divider from '@mui/material/Divider';
+
 function OLAuthorProfile() {
     const OLAuthor = useSelector((state: bookState) => state.OLAuthorReducer.OLAuthor);
     const book = useSelector((state: bookState) => state.bookReducer.book);
-    console.log(OLAuthor);
     const dispatch = useDispatch();
 
     const fetchAuthorDetail = async (authorId: string) => {
@@ -28,8 +29,6 @@ function OLAuthorProfile() {
                 author_dob: authorProfile.birth_date,
                 author_bio: authorProfile.bio ? (typeof authorProfile.bio === "string"? authorProfile.bio : authorProfile.bio.value) : "No bio found",
                 author_works: authorWorks.entries}));
-
-        console.log(OLAuthor)
     }
 
     // function to fetch book details for the book detail page
@@ -70,35 +69,49 @@ function OLAuthorProfile() {
 
 
     return(
-        <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-            <Typography variant="h1">{OLAuthor.author_name}</Typography>
-            <Box
-                sx={{height: 300}}
-                src={clientExternal.authorPhotoUrl(OLAuthor.author_key)}
-                component="img"
-                onError={(e) => {
-                    (e.target as HTMLImageElement).src = no_cover}}
-            />
-            <Typography variant="h4">{OLAuthor.author_dob}</Typography>
-            <Typography variant="body1">{OLAuthor.author_bio}</Typography>
-            <Typography variant="h3">Works by {OLAuthor.author_name}</Typography>
-            <List>
-                {OLAuthor.author_works?.map((work: any) => (
-                    <ListItem>
-                        <Box
-                            sx={{height: 50}}
-                            src={clientExternal.bookCoverUrlId(work.covers?.[0], "S")}
-                            component="img"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = no_cover}}
-                        />
-                        <Link to={`/Bookazon/BookDetail/${extractOLID(work.key)}`} onClick={() => fetchInfoForBookDetail(work)}>
-                            {work.title}
-                        </Link>
+        <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
+            <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
+                <Typography variant="h1" sx={{color: "#222C4E"}}>{OLAuthor.author_name}</Typography>
+                <Divider component={"h1"} sx={{background: "#222C4E", borderBottomWidth: "2px"}}/>
+                <Box
+                    sx={{height: 300, m: 1, mt: 2}}
+                    src={clientExternal.authorPhotoUrl(OLAuthor.author_key)}
+                    component="img"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = no_cover}}
+                />
+                <Typography variant="h4" sx={{color: "#222C4E"}}>{OLAuthor.author_dob}</Typography>
+                <Typography variant="body1" sx={{color: "#222C4E"}}>{OLAuthor.author_bio}</Typography>
+            </Paper>
 
-                    </ListItem>
-                ))}
-            </List>
+            <Paper elevation={3} sx={{m : 4, p: 4}}>
+                <Typography variant="h3">Works by {OLAuthor.author_name}</Typography>
+                {/*<Divider component={"h1"} sx={{background: "gray", borderBottomWidth: "2px"}}/>*/}
+                <List>
+                    {OLAuthor.author_works?.map((work: any) => (
+                        <ListItem sx={{backgroundColor: "#d8dced"}}>
+                            <Paper elevation={3} sx={{m : 1, p: 1, width: '100%', display: 'flex', color: "#222C4E", textDecoration: "none"}} component={Link} to={`/Bookazon/BookDetail/${extractOLID(work.key)}`} onClick={() => fetchInfoForBookDetail(work)}>
+                                <Box
+                                    sx={{height: 50}}
+                                    src={clientExternal.bookCoverUrlId(work.covers?.[0], "S")}
+                                    component="img"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = no_cover}}
+                                />
+                                <Grid sx={{ml: 2}}>
+                                    {work.title}
+                                </Grid>
+                            </Paper>
+                        </ListItem>
+                    ))}
+                </List>
+
+            </Paper>
+
+
+
+
+
 
 
 

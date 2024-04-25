@@ -5,12 +5,13 @@ import * as clientExternal from "../clientExternal";
 import {useEffect, useState} from "react";
 import no_cover from "../../no_cover.png";
 import Button from "@mui/material/Button";
-import { Container, Grid } from "@mui/material";
+import {Container, Divider, Grid, Paper} from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
 import {setBook} from "./BookReducer";
 import {bookCoverUrl, bookCoverUrUniversal} from "../clientExternal";
+
 
 
 interface bookDetail {
@@ -20,6 +21,7 @@ interface bookDetail {
 }
 
 function BookDetail() {
+
     const dispatch = useDispatch();
     const book = useSelector((state: bookState) => state.bookReducer.book);
 
@@ -54,63 +56,46 @@ function BookDetail() {
     }, [book.key, dispatch])
 
     return (
-
-        <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-        <Grid container spacing={0}>
-            <Grid item xl={2}>
-                <Container maxWidth={false} sx={{height: "100%", backgroundColor: '#5D6BA0 '}}>
-                </Container>
-            </Grid>
-            <Grid item xl={8}>
-               
+        <>
             {book && (
-                <>  
-                    <Container  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-                    <h1>{book.title}</h1>
-                    </Container>
-                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
+                <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
+                    <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
+                        <Typography variant="h3">{book.title}</Typography>
+                        <Typography display='inline' variant="subtitle2">By   </Typography>
+                        {book.author_name?.map((name: string, index: number) => (
+                            <Typography display='inline' key={index} variant="subtitle2"
+                                        onClick={() => authorDetail(book.author_key[index])}
+                                        sx={{"&:hover": {color: "#F1A467"}}}>
+                                | {name} |
+                            </Typography>
+                        ))}
+                        <br/>
+                        <Box
+                            component="img"
+                            src={book.cover_image_url}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = no_cover}}
+                            display = 'block'
+                        />
+                        <Link to={`/Bookazon/BookDetail/${book.key}/reviews`} >
+                            <Button variant="contained" sx={{m:1}}>
+                                Reviews
+                            </Button>
+                        </Link>
+                    </Paper>
 
+                    <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
+                        <Typography variant="h4">Synopsis:</Typography>
+                        <Divider component={"h1"} sx={{background: "#222C4E", borderBottomWidth: "2px"}}/>
+                        <Typography variant="subtitle2" sx={{mt: 2}}>{book.description}</Typography>
 
-                        <Box>
-                            {book.author_name?.map((name: string, index: number) => (
-                                <Typography key={index} variant="h3" onClick={() => authorDetail(book.author_key[index])}>
-                                    {name}
-                                </Typography>
-                            ))}
-                        </Box>
-
-                    </Container>
-                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10vh' }}>
-                    <img
-                        src={book.cover_image_url}
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = no_cover}}
-                    />
-                    </Container>
-                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
-                    <Container maxWidth="sm">
-                    <h4>Synopsis</h4>
-                    {book.description}
-                    <br/>
-                    </Container>
-                    </Container>
-                    <Container  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Link to={`/Bookazon/BookDetail/${book.key}/reviews`}>
-                        <Button variant="contained">
-                            Reviews
-                        </Button>
-                    </Link>
-                    </Container>
-                </>
-                )}
-               
-            </Grid>
-            <Grid item xl={2}>
-            <Container maxWidth={false} sx={{height: "100%", backgroundColor: '#5D6BA0 '}}>
+                    </Paper>
                 </Container>
-            </Grid>
-        </Grid>
-        </Container>
+            )}
+        </>
+
+
+
     )
 }
 
