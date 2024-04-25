@@ -6,4 +6,4 @@ Toolbar background color: #F4EEE7
 Text Areas/Search Bar: White (FFFFFF) 
 Background of most pages (aside from sign-in and sign-up): White or off-white? 
 Text: #222C4E
-Important buttons or main toolbar buttons(??): #5D6BA0 
+Side-columns: #5D6BA0 

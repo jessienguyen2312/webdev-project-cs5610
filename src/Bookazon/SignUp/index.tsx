@@ -36,24 +36,29 @@ export default function SignUp() {
   favoriteBook: [],
   OL_author_key: ""
    });
+  const [tempOL, setTempOL] = useState(""); 
+  const [error, setError] = useState("");
 
   const signup = async () => {
-    if (user.role === "AUTHOR") {
-      const authorExists = await externalClient.checkAuthorExists(user.OL_author_key)
-      if (authorExists) {
-        console.log("author exists")
+    try {
+    await client.signup(user);
+    navigate(`/Bookazon/Profile/${user.username}`);} 
+    catch (err: any) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
       } else {
-        setUser({...user, OL_author_key: "", role: "READER"})
-        console.log(user)
+        console.error(err);
       }
     }
-      await client.signup(user);
-      navigate(`/Bookazon/Profile/${user._id}`);
   }
 
-  const authorSignUp = async () => {
-
+  const verifyOL = async () => {
+    const authorExists = await externalClient.checkAuthorExists(tempOL);
+    return authorExists 
   }
+
+
+
 
   return (
     <Container maxWidth="xl" sx={{ backgroundColor: "#F4EEE7", height: "100vh" }}>
@@ -70,6 +75,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5" sx={{ color: '#222C4E' }}>
             Sign Up
           </Typography>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -158,26 +164,43 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="OL ID"
-                  label="Open Library ID (authors only)"
-                  type="OL ID"
-                  id="OL ID"
-                  autoComplete="new-olid" 
-                  value = {user.OL_author_key}
-                  onChange={(event) => setUser({...user, OL_author_key: event.target.value})}
-                  sx={{
-                    color: '#222C4E',
-                    bgcolor: 'white',
-                    '& .MuiOutlinedInput-root': {
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#222C4E', 
-                      },
+              <TextField
+                fullWidth
+                name="OL ID"
+                label="Open Library ID (authors only)"
+                type="OL ID"
+                id="OL ID"
+                autoComplete="new-olid" 
+                value={tempOL}
+                onChange={(event) => setTempOL(event.target.value)}
+                sx={{
+                  color: '#222C4E',
+                  bgcolor: 'white',
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#222C4E', 
                     },
-                  }}
-                />
+                  },
+                }}
+              />
+                 <Button
+              type="submit" 
+              variant="contained"
+              onClick = {async () => {
+                const authorExists = verifyOL();
+                if (await authorExists !== false) {
+                  setUser({...user, role: "AUTHOR", OL_author_key: tempOL })
+                } else {
+                  setError("Open Library ID does not exist")
+                }
+              }}
+              sx={{ 
+                backgroundColor: '#EF8D40',
+                '&:hover': {
+                  backgroundColor: '#F1A467'
+                }
+              }}
+            >Verify OL ID</Button>
               </Grid>
               <br/>
       <Grid container justifyContent="center" alignItems="center">
@@ -195,8 +218,13 @@ export default function SignUp() {
               control={<Radio onChange={() => setUser({...user, role: "READER"})} />} 
               label="Reader" 
             />            
-            <FormControlLabel value="author" control={<Radio onChange={() => setUser({...user, role: "AUTHOR"})} />} label="Author" />
-            <FormControlLabel value="admin" control={<Radio onChange={() => setUser({...user, role: "ADMIN"})} />} label="Admin" />
+            <FormControlLabel value="admin" control={<Radio
+              onChange={() => {
+                if (user.role !== "AUTHOR") {
+                  setUser({ ...user, role: "ADMIN" });
+                }
+              }}
+            />} label="Admin" />
           </RadioGroup>
         </FormControl>
       </Grid>
@@ -220,9 +248,9 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item paddingTop={0.25} paddingBottom={2}>
-                <Link href="#" variant="body2" sx={{ color: '#222C4E' }}>
-                  Already have an account? Sign in
-                </Link>
+              <Button onClick={() => navigate("/Bookazon/SignIn")} sx={{ color: '#222C4E', textDecoration: 'underline', textTransform: 'none' }}>
+                Already have an account? Sign in
+              </Button>
               </Grid>
             </Grid>
           </Box>

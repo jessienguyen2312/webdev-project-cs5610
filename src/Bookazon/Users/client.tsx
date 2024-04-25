@@ -6,9 +6,7 @@ const API_USERS = `http://localhost:4000/api/users`
 const API_SESSION = `http://localhost:4000/api/session`
 
 const request = axios.create({
-
     withCredentials: true
-
 });
 
 /* THIS MIGHT HELP WITH ON RENDER DEPLOYMENT
@@ -79,7 +77,6 @@ export const profile = async () => {
     return response.data;
 };
 
-
 export const session = async () => {
     try {
         const response = await request.get(`${API_SESSION}`, { withCredentials: true });
@@ -89,7 +86,6 @@ export const session = async () => {
            return null
     }
 };
-
 
 export const signup = async (user: any) => {
     const response = await request.post(`${API_USERS}/signup`, user, { withCredentials: true });
