@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
 
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Paper, Button, TextField, Typography } from '@mui/material';
 import FavoriteBooks from "./FavoriteBooks";
 import ShowUserFollows from "./ShowUserFollows";
 import { stringify } from 'querystring';
@@ -100,12 +100,11 @@ function Profile() {
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${profile.username}`;
 
     return (
-        <Box sx={{ mx: '25rem', mt: '1rem', border: 1, borderColor: 'grey.500', p: 2, minWidth: '250px'  }}>
-            {editMode ? (
+        <Paper elevation={3} sx={{ mx: 'auto', mt: '1rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            {editMode ? (
                 <>
                     {/* Stringify the current user object */}
-                    <p>{JSON.stringify(profile)}</p>
-                    <p>{JSON.stringify(editedProfile)}</p>
+  {/*                   <p>{JSON.stringify(profile)}</p>
+                    <p>{JSON.stringify(editedProfile)}</p> */}
                     <TextField name='firstName' label='First Name' value={editedProfile.firstName} onChange={handleInputChange} /> <br />
                     <TextField name='lastName' label='Last Name' sx={{ mt: 1}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
                     <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
@@ -114,22 +113,22 @@ function Profile() {
                     <Button sx={{ mt: 1}} onClick={handleSaveClick}>Save</Button>
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
                     
-                    <FavoriteBooks bookIds={profile.favoriteBook} />
-                    <ShowUserFollows follower={profile.follower} following={profile.following} />
+                    {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
+                    <ShowUserFollows follower={profile.follower} following={profile.following} isCurrentUser={isCurrentUser} />
                 </>
             ) : (
             <>
                 <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
-                <h2>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</h2>
-                <h3>About Me: </h3>
+                <Typography variant="h3" style={{ color: '#222C4E' }}>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</Typography>
+                <h3 style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </h3>
                 {/* Stringify the current user object */}
-                <p>{JSON.stringify(profile)}</p>
-                <p>{profile.aboutMe}</p>
-                <FavoriteBooks bookIds={profile.favoriteBook} />
-                <ShowUserFollows follower={profile.follower} following={profile.following} />
+{/*                 <p>{JSON.stringify(profile)}</p>
+ */}                <p>{profile.aboutMe}</p>
+                {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
+                <ShowUserFollows follower={profile.follower} following={profile.following} isCurrentUser={isCurrentUser}/>
             </>
             )}
-        </Box>
+        </Paper>
     );
 }
 
