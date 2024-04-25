@@ -1,6 +1,6 @@
 import axios from "axios";
 const API_BASE = process.env.REACT_APP_API_BASE;
-const MEL_API = "http://localhost:4000/api/reviews"
+// const MEL_API = "http://localhost:4000/api/reviews"
 // const API_BASE = `https://bookazon-node-server.onrender.com`
 const REVIEWS_API = `${API_BASE}/api/reviews`;
 
@@ -26,7 +26,7 @@ export interface Review {
 
 
 export const updateReview = async (review: any) => {
-    const response = await axios.put(`${MEL_API}/${review._id}`, review);
+    const response = await axios.put(`${API_BASE}/${review._id}`, review);
     return response.data;
 };
 
@@ -43,7 +43,7 @@ export const createReview = async (review: any) => {
 
 export const deleteReview = async (review: any) => {
     const response = await axios.delete(
-        `${MEL_API}/${review._id}`);
+        `${API_BASE}/${review._id}`);
     return response.data;
 };
 
@@ -56,7 +56,7 @@ export const findReviewByBook = async (bookId: any) => {
 };
 
 export const findReviewsByUsername = async (username: any) => {
-    const response = await axios.get(`${MEL_API}/user/${username}`);
+    const response = await axios.get(`${API_BASE}/user/${username}`);
     return response.data; 
 };
 

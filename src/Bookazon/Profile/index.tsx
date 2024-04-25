@@ -54,6 +54,7 @@ function Profile() {
     const dispatch = useDispatch();
     const [searchUser, setSearchUser] = useState<String>("") 
     const navigate = useNavigate(); 
+    const [error, setError] = useState<String>("")
 
 
     const handleEditClick = () => {
@@ -116,7 +117,15 @@ function Profile() {
         setEditedProfile({ ...editedProfile, [name]: value });
     }
 
-
+    const handleFindUser = async (username: string) => {
+        try {
+            await findUserByUserName(username);
+            navigate(`/Bookazon/Profile/${username}`)
+        } catch (err: any) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);}
+        }
+    } 
 
     useEffect(() => {
         async function fetchData() {
@@ -173,7 +182,7 @@ function Profile() {
                             },
                         }}
                         />
-                        <Button>Add</Button>
+                        <Button onClick={() => handleFindUser}>Add</Button>
                     <ShowUserFollows
                         follower={profile.follower}
                         following={profile.following}
