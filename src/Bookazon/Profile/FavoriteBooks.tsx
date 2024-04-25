@@ -55,7 +55,6 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
 
 
     const fetchInfoForBookDetail = async (work: string) => {
-        console.log(work);
         // fetch work info
         const result = await clientExternal.bookDetail('/works/' + work);
         console.log(result);
