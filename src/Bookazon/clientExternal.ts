@@ -4,13 +4,11 @@ import no_cover from "../no_cover.png"
 const OPENLIB_API = "https://openlibrary.org/search.json?q=";
 const TITLE_SEARCH_API = "https://openlibrary.org/search.json?title="
 const SUBJECT_SEARCH_API = "https://openlibrary.org/search.json?subject="
-const ISBN_SEARCH_API = "https://openlibrary.org/isbn/"
 const COVER_API = "https://covers.openlibrary.org/b/olid";
 const COVER_API_ID = "https://covers.openlibrary.org/b/id";
 const AUTHOR_SEARCH_API = "https://openlibrary.org/search/authors.json?q="
 const AUTHORS_PAGE_API = "https://openlibrary.org/authors"
 const AUTHOR_PHOTO_API = "https://covers.openlibrary.org/a/olid"
-const AUTHORS_WORK_API = "https://openlibrary.org/query.json?type=/type/edition&authors=/authors"
 const DAILY_TRENDING_API = "https://openlibrary.org/trending/daily.json?"
 
 const BOOK_DETAIL_API = "https://openlibrary.org"
@@ -60,42 +58,6 @@ export const bookDetail = async (key: String) => {
     }
 }
 
-
-/**
- * Function to fetch book synopsis by work key with the format "/work/OL#####W".
- * Book detail consists of title, author, synopsis
- * A sample book detail can be seen here: https://openlibrary.org/works/OL45804W.json
- * @param key format "/work/OL#####W"
- */
-export const bookSynopsis = async (key: String) => {
-    try {
-        const response = await axios.get(`${BOOK_DETAIL_API}${key}.json`);
-        console.log(response.data);
-        return response.data;
-    } catch (error: any) {
-        console.log(error);
-    }
-}
-
-/**
- * Function to fetch result of a specific book by ISBN. The search result will
- * redirect to the book detail API with the following
- * URL format https://openlibrary.org/books/OL7353617M.json
- * OL7353617M is an example of the primary key for all books.
- * @param isbn can be 10 or 13 digit format.
- */
-export const isbnSearch = async (isbn: string) => {
-    if (isbn.length === 10 || isbn.length === 13) {
-        try {
-            const response = await axios.get(`${ISBN_SEARCH_API}${isbn}.json`);
-            return response.data;
-        } catch (error: any) {
-            console.log(error);
-        }
-    } else {
-        throw new Error("isbn has to be 10 or 13 digits format");
-    }
-}
 
 
 /**

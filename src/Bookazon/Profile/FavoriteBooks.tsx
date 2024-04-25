@@ -20,6 +20,8 @@ interface FavoriteBooksProps {
     bookIds: string[]; // Adjusting the prop type here
 }
 
+//TODO: Sign in routing is still a bit off though - it's going to /Bookazon/Profile but needs to go to /Bookazon/Profile/userId -Leo
+
 function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
 
 

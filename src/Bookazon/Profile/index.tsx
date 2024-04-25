@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
 
@@ -9,6 +9,10 @@ import ShowUserFollows from "./ShowUserFollows";
 import { stringify } from 'querystring';
 import { unfollowUser } from '../Users/client';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import {setAuthorKey} from "./OLAuthorReducer";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router";
+import {bookState} from "../store";
 
 
 
@@ -24,6 +28,7 @@ interface UserProfile {
     password: string;
     email: string;
     role: string;
+    OL_author_key: string;
 }
 
 function Profile() {
@@ -43,8 +48,11 @@ function Profile() {
         lastName: '',
         password: '',
         email: '',
-        role: ''
-    });  
+        role: '',
+        OL_author_key: ''
+    });
+    const dispatch = useDispatch();
+
 
     const handleEditClick = () => {
         if (profile) {
@@ -107,11 +115,13 @@ function Profile() {
     }
 
 
+
     useEffect(() => {
         async function fetchData() {
             if (username) {
                 const userData = await findUserByUserName(username);
                 setProfile(userData);
+                console.log(userData);
             }
         }
         fetchData();
@@ -163,19 +173,24 @@ function Profile() {
                 {/*<p>{JSON.stringify(profile)}</p> */}  
               <Typography>{profile.aboutMe}</Typography>
               {profile.role === "AUTHOR" && (
-                    <Button
-                        onClick={() => { /* Logic to view author's catalog */ }}
-                        sx={{
-                            backgroundColor: '#EF8D40', // Normal state background color
-                            '&:hover': {
-                                backgroundColor: '#F1A467', // Hover state background color
-                            },
-                            color: 'white', // Text color for better contrast
-                            mt: 2 // Adds margin top for spacing
-                        }}
-                    >
-                        View Catalog
-                    </Button>
+                  <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
+                      dispatch(setAuthorKey({author_key: profile.OL_author_key}));
+                  }}>
+                      <Button
+                          // onClick={() => navigateToOLAuthorProfile}
+                          sx={{
+                              backgroundColor: '#EF8D40', // Normal state background color
+                              '&:hover': {
+                                  backgroundColor: '#F1A467', // Hover state background color
+                              },
+                              color: 'white', // Text color for better contrast
+                              mt: 2 // Adds margin top for spacing
+                          }}
+                      >
+                          View Catalog
+                      </Button>
+                  </Link>
+
                 )}
                 {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
                 <ShowUserFollows
