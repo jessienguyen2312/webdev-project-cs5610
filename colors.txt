@@ -5,3 +5,10 @@ secondary nav color - complementary shades of each other
 buttons color
 card colors
 
+Buttons: #EF8D40 
+Button: hover: #F1A467 
+Toolbar background color: #F4EEE7
+Text Areas/Search Bar: White (FFFFFF) 
+Background of most pages (aside from sign-in and sign-up): White or off-white? 
+Text: #222C4E
+Side-columns: #5D6BA0 

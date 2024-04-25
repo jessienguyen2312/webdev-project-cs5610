@@ -8,6 +8,8 @@ import FavoriteBooks from "./FavoriteBooks";
 import ShowUserFollows from "./ShowUserFollows";
 import { stringify } from 'querystring';
 import { unfollowUser } from '../Users/client';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+
 
 
 interface UserProfile {
@@ -21,11 +23,13 @@ interface UserProfile {
     lastName: string;
     password: string;
     email: string;
+    role: string;
 }
 
 function Profile() {
     const { username } = useParams<{ username: string }>();
     const [profile, setProfile] = useState<UserProfile | null>(null);
+
     const loggedInUser = useSelector((state: any) => state.userReducer.user);
     const [editMode, setEditMode] = useState(false);
     const [editedProfile, setEditedProfile] = useState<UserProfile>({
@@ -38,7 +42,8 @@ function Profile() {
         firstName: '', 
         lastName: '',
         password: '',
-        email: ''
+        email: '',
+        role: ''
     });  
 
     const handleEditClick = () => {
@@ -121,7 +126,7 @@ function Profile() {
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${profile.username}`;
 
     return (
-        <Paper elevation={3} sx={{ mx: 'auto', mt: '1rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            {editMode ? (
+        <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            {editMode ? (
                 <>
                     {/* Stringify the current user object */}
                     {/*<p>{JSON.stringify(profile)}</p>
@@ -147,11 +152,31 @@ function Profile() {
             ) : (
             <>
                 <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
-                <Typography variant="h3" style={{ color: '#222C4E' }}>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</Typography>
-                <h3 style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </h3>
+                <Typography variant="h3" style={{ color: '#222C4E' }}>
+                    {profile.username}
+                    {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />}
+                    {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}
+                </Typography>
+                <Typography variant="h4" style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </Typography>
+                
                 {/* Stringify the current user object */}
                 {/*<p>{JSON.stringify(profile)}</p> */}  
-              <p>{profile.aboutMe}</p>
+              <Typography>{profile.aboutMe}</Typography>
+              {profile.role === "AUTHOR" && (
+                    <Button
+                        onClick={() => { /* Logic to view author's catalog */ }}
+                        sx={{
+                            backgroundColor: '#EF8D40', // Normal state background color
+                            '&:hover': {
+                                backgroundColor: '#F1A467', // Hover state background color
+                            },
+                            color: 'white', // Text color for better contrast
+                            mt: 2 // Adds margin top for spacing
+                        }}
+                    >
+                        View Catalog
+                    </Button>
+                )}
                 {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}
                 <ShowUserFollows
                     follower={profile.follower}
