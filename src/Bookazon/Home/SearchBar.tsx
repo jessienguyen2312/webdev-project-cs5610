@@ -20,6 +20,7 @@ import {resetResult, setResult} from "../../Search/ResultReducer";
 import {setBook} from "../BookDetail/BookReducer";
 import {extractOLID} from "../../Search";
 import {titleTextBookSearch} from "../clientExternal";
+import bookworm_logo from "../../bookworm_logo.png"
 
 
 
@@ -29,10 +30,11 @@ function SearchBar() {
     const searchQuery = useSelector((state: bookState) => state.searchReducer.search);
     console.log(searchQuery);
     const result = useSelector((state: bookState) => state.resultReducer.result);
+    const book = useSelector((state: bookState) => state.bookReducer.book);
 
-    // search criteria by title, author, subject, isbn
+    // search criteria by title, author, subject
     const searchCriteria = [
-        "Title", "Author", "Subject", "ISBN"
+        "Title", "Author", "Subject"
     ]
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -62,18 +64,6 @@ function SearchBar() {
                 dispatch(setResult(object?.docs));
                 break;
             }
-            case 'ISBN': {
-                // This directs straight to the book detail page
-                const object = await clientExternal.isbnSearch(query);
-                console.log(object);
-                dispatch(setBook({
-                    key: extractOLID(object.key),
-                    author_key: object.authors,
-                    work_key: object.works[0].key
-                }));
-                navigate(`/Bookazon/BookDetail/${extractOLID(object.key)}`);
-                break;
-            }
             default: {
                 const object = await clientExternal.titleTextBookSearch(query);
                 dispatch(setResult(object?.docs));
@@ -92,9 +82,10 @@ function SearchBar() {
     return (
         <Box sx={{ flexGrow: 1, ml: 1 }}>
             <Grid container alignItems="center" sx={{ mt: 2 }}>
-                <Grid item sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'block' } }}>
+                <Grid item sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
                     <Link to="/Bookazon/Home"  style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Typography variant="h3">Bookazon</Typography>
+                        <Box src={bookworm_logo} sx={{height : 50, width: 50}} component="img"/>
+                        <Typography variant="h3">Bookworm</Typography>
                     </Link>
                 </Grid>
                 {/* Drop Down Menu */}
@@ -119,7 +110,7 @@ function SearchBar() {
                 <Grid item md={8} xs={10}>
                     <TextField
                         fullWidth
-                        label="Search by Title, Author, Subject, ISBN"
+                        label="Search by Title, Author, Subject"
                         variant="outlined"
                         value={searchQuery.query}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => dispatch(setSearch({...searchQuery, query: event.target.value}))}

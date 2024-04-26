@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import * as client from "./clientReview";
-
 import { Review } from "./clientReview";
+
+import * as userClient from "../Users/client";
+
+
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import red from "@mui/material/colors/red";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 
 function ReviewsAdmin() {
@@ -16,8 +20,25 @@ function ReviewsAdmin() {
 
     const { key } = useParams();
 
-
+    // get all reviews from DB
     const [reviews, setReviews] = useState<Review[]>([]);
+
+    const [authors, setAuthors] =  useState<String[]>([]);
+
+    const fetchUsersByRole = async (role: string) => {
+        try {
+            const fetchedAuthors = await userClient.findUsersByRole(role);
+            console.log(fetchedAuthors);
+            setAuthors(fetchedAuthors.map((author: any) => author.username));
+        } catch (error) {
+            console.error('Failed to fetch authors:', error);
+        }
+    };
+
+    useEffect(() => {
+        const role = "AUTHOR";
+        fetchUsersByRole(role);
+    }, []);
 
     const fetchReviews = async () => {
         console.log(key)
@@ -25,7 +46,10 @@ function ReviewsAdmin() {
         console.log(bookReviews)
         setReviews(bookReviews)
     };
+
     useEffect(() => { fetchReviews(); }, []);
+
+
     const style = {
         p: 3,
         width: '100%',
@@ -34,17 +58,31 @@ function ReviewsAdmin() {
     };
 
 
-    // useEffect(() => {
-    //     // Filter and set reviews directly
-    //     setReviews(reviews.filter(review => review.bookId === key));
-    // }, [key]);
-
 
     const deleteReview = async (review: any) => {
         await client.deleteReview(review);
-        setReviews(currentReviews => 
+        setReviews(currentReviews =>
             currentReviews.filter(r => r._id !== review._id))
 
+    };
+
+
+    const handleFlag = (index: any) => {
+        const updatedReviews = [...reviews];
+        updatedReviews[index].flagged = false;
+        setReviews(updatedReviews);
+        updateReview(updatedReviews[index]);
+    };
+
+
+    const updateReview = async (flaggedReview: any) => {
+        try {
+            const status = await client.updateReview(flaggedReview);
+            setReviews(reviews.map((r) =>
+                (r._id === flaggedReview._id ? flaggedReview : r)));
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -55,19 +93,34 @@ function ReviewsAdmin() {
                         <Box key={index}>
                             <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}
                                 secondaryAction={
-                                    <IconButton aria-label="delete" onClick={() => deleteReview(item)}>
-                                        <DeleteIcon />
-                                    </IconButton>
+                                    <Box>
+                                        <IconButton aria-label="delete" onClick={() => deleteReview(item)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                        <IconButton sx={{ color: 'green' }} aria-label="unflag" onClick={() => handleFlag(index)}>
+                                            <CheckCircleOutlineIcon />
+                                        </IconButton>
+                                    </Box>
+
                                 }>
                                 {item.flagged && (
                                     <ListItemIcon sx={{ color: 'red' }} >
                                         <PriorityHighIcon />
                                     </ListItemIcon>
                                 )}
-                                <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    By {item.username}
-                                </Link>} />
-                                <Rating name="read-only" value={item.rating} readOnly />
+                                <ListItemText primary={item.text}
+                                    secondary={
+                                        <>
+                                            <Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                By {item.username}
+                                            </Link>
+                                            {authors.includes(item.username) &&  (
+                                                <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                            )}
+                                        </>
+                                    }
+                                />
+                                <Rating sx={{ mr: 6 }} name="read-only" value={item.rating} readOnly />
                             </ListItem>
                             <Divider component="li" />
                         </Box>

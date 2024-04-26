@@ -1,29 +1,67 @@
-import { Box, Button, Divider, IconButton, List, ListItem, ListItemText, Rating, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Rating, Slide, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 import * as client from "./clientReview";
+import * as userClient from "../Users/client";
 
 
 import { Review } from "./clientReview";
-import { User } from "../Users/client";
+import useCurrentUser from "../Users/useCurrentUser";
+import { useSelector } from "react-redux";
+import { userState } from "../store";
+import React from "react";
+import { TransitionProps } from "@mui/material/transitions";
 
 
-function Reviews({ user }: { user: any }) {
-    // console.log(user)
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
-    // const { usernameID = '' } = useParams(useParams<{ username: string | undefined }>(););
+function Reviews() {
+
     const { key = '' } = useParams<{ key: string | undefined }>();
-    // const { usernameId = '' } = useParams<{ usernameId: string | undefined }>();
+
+    const navigate = useNavigate();
+
+    useCurrentUser()
+
+    const user = useSelector((state: userState) => state.userReducer.user);
+
+    const [open, setOpen] = React.useState(false);
 
 
+    const [authors, setAuthors] = useState<String[]>([]);
 
+    const fetchUsersByRole = async (role: string) => {
+        try {
+            const fetchedAuthors = await userClient.findUsersByRole(role);
+            console.log(fetchedAuthors);
+            setAuthors(fetchedAuthors.map((author: any) => author.username));
+        } catch (error) {
+            console.error('Failed to fetch authors:', error);
+        }
+    };
+
+    useEffect(() => {
+        const role = "AUTHOR";
+        fetchUsersByRole(role);
+    }, []);
+
+
+    // For creating new reviews
     const [newReview, setNewReview] = useState<Review>({
         _id: "",
-        username: user.username,
+        username: "",
         bookId: key,
         rating: 0,
         text: "",
@@ -31,12 +69,23 @@ function Reviews({ user }: { user: any }) {
         flagged: false,
         likes: 0
     });
-    console.log(newReview)
 
+
+    useEffect(() => {
+        if (user) {
+            setNewReview(prevReview => ({
+                ...prevReview,
+                username: user.username
+            }));
+        }
+    }, [user]);
+
+
+
+    // for displaying reviews in database
     const [reviews, setReviews] = useState<Review[]>([]);
 
     const fetchReviews = async () => {
-        console.log(key)
         const bookReviews = await client.findReviewByBook(key);
         setReviews(bookReviews)
     };
@@ -67,6 +116,43 @@ function Reviews({ user }: { user: any }) {
     }
 
 
+    const handleFlag = (index: any) => {
+        const updatedReviews = [...reviews];
+        updatedReviews[index].flagged = true;
+        setReviews(updatedReviews);
+        updateReview(updatedReviews[index]);
+    };
+
+
+    const updateReview = async (flaggedReview: any) => {
+        try {
+            const status = await client.updateReview(flaggedReview);
+            setReviews(reviews.map((r) =>
+                (r._id === flaggedReview._id ? flaggedReview : r)));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
+
+
+
+    const handleDialogOpen = () => {
+        setOpen(true);  // Open the dialog
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);  // Close the dialog
+    };
+
+    // navigate to author sign in page 
+    const signIn = () => {
+        setOpen(false);
+        navigate(`/Bookazon/SignIn`)
+    };
+
+
 
     const style = {
         p: 3,
@@ -76,10 +162,7 @@ function Reviews({ user }: { user: any }) {
     };
 
 
-    // useEffect(() => {
-    //     // Filter and set reviews directly
-    //     setReviews(reviewList.filter(review => review.bookId === key));
-    // }, [key]);
+
 
     return (
 
@@ -133,7 +216,8 @@ function Reviews({ user }: { user: any }) {
                     width: '100%',
                     mt: 1
                 }}>
-                    <Button variant="contained" onClick={createReview}>Post</Button>
+                    <Button variant="contained" onClick={user ? createReview : handleDialogOpen}>Post</Button>
+
 
                 </Box>
             </Box>
@@ -145,12 +229,23 @@ function Reviews({ user }: { user: any }) {
                 {reviews.map((item, index) => (
                     <Box key={index}  >
                         <ListItem sx={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                            <IconButton >
-                                <FlagOutlinedIcon />
-                            </IconButton>
-                            <ListItemText primary={item.text} secondary={<Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                By {item.username}
-                            </Link>} />
+                            {user && (
+                                <IconButton onClick={() => handleFlag(index)}>
+                                    <FlagOutlinedIcon />
+                                </IconButton>
+                            )}
+                            <ListItemText primary={item.text}
+                                secondary={
+                                    <>
+                                        <Link to={`/Bookazon/Profile/${item.username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            By {item.username}
+                                        </Link>
+                                        {authors.includes(item.username) && (
+                                            <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                        )}
+                                    </>
+                                }
+                            />
                             <Rating name="read-only" value={item.rating} readOnly />
 
                         </ListItem>
@@ -160,6 +255,25 @@ function Reviews({ user }: { user: any }) {
 
             </List>
 
+
+            <Dialog
+                open={open}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleDialogClose}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Sign in?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Need to be signed in to add books to review a book
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>Close</Button>
+                    <Button onClick={signIn}>Sign in</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

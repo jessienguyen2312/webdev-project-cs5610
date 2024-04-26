@@ -11,9 +11,9 @@ interface Review {
     likes: Number; 
   }
 
-const API_BASE = process.env.REACT_APP_API_BASE;
-const REVIEWS_API = `http://localhost:4000/api/reviews`;
-
+// const API_BASE = process.env.REACT_APP_API_BASE;
+// const REVIEWS_API = `http://localhost:4000/api/reviews`;
+const REVIEWS_API = `https://bookazon-node-server.onrender.com/api/reviews`
 
 export const deleteReview = async (review: any) => {
     const response = await axios

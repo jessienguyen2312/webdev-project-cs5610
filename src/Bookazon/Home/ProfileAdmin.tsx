@@ -5,25 +5,25 @@ import { Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Select,
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import React from "react";
 import { useNavigate } from "react-router";
-import * as client from '../Users/client'; 
+import * as client from '../Users/client';
 
-function ProfileUser({ userName }: { userName: string }) {
-    
+function ProfileAdmin({ userName }: { userName: string }) {
+
     const [criteria, setCriteria] = React.useState('All');
     const GREETING = "Hi, " + userName;
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const signout = async () => {
         await client.signout();
         navigate("/Bookazon/Home");
-      };
+    };
 
 
-      const favorits = () => {
+    const favorits = () => {
         navigate("/Bookazon/Profile");
-      };
+    };
 
-      
+
 
     const handleChange = (event: SelectChangeEvent) => {
         setCriteria(event.target.value as string);
@@ -33,27 +33,29 @@ function ProfileUser({ userName }: { userName: string }) {
         navigate(`/Bookazon/Profile/${userName}`);
     };
 
+    const handleReviewNav = () => {
+        navigate(`/Bookazon/reviews/moderation`);
+    };
+
 
 
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${userName}.svg`;
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mr: 2 }}>
-            <Box sx={{display: "flex",  alignItems: 'center', mr: 1}}>
-                <Avatar sx={{ mr: 1}} src={`${avatarUrl}`} />
+            <Box sx={{ display: "flex", alignItems: 'center', mr: 1 }}>
+                <Avatar sx={{ mr: 1 }} src={`${avatarUrl}`} />
 
-                <FormControl sx={{minWidth: 100}}>
+                <FormControl sx={{ minWidth: 100 }}>
                     <InputLabel id="profileHome">{GREETING}</InputLabel>
                     <Select
                         labelId="profileHome"
                         id="profilSelect"
-                        label= "profileHome"
+                        label="profileHome"
                         onChange={handleChange}
                     >
                         <MenuItem><Button onClick={handleProfileNav}>My Profile</Button></MenuItem>
-                        <MenuItem><Button onClick={handleProfileNav}>Favorites List</Button></MenuItem>
-                        <MenuItem><Button onClick={handleProfileNav}>Add Friends</Button></MenuItem>
-                        <MenuItem><Button onClick={handleProfileNav}>Reviews</Button></MenuItem>
+                        <MenuItem><Button onClick={handleReviewNav}>Review Moderation</Button></MenuItem>
                         <MenuItem><Button onClick={signout}>Log Out</Button></MenuItem>
                     </Select>
                 </FormControl>
@@ -76,4 +78,4 @@ function ProfileUser({ userName }: { userName: string }) {
 
 }
 
-export default ProfileUser
+export default ProfileAdmin

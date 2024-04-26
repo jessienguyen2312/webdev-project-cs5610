@@ -26,7 +26,7 @@ function useCurrentUser() {
         };
 
         fetchProfile();
-    }, [dispatch]);
+    }, []);
 
 
 }

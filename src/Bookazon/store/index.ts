@@ -4,6 +4,7 @@ import resultReducer from "../../Search/ResultReducer";
 import searchReducer from "../../Search/SearchReducer";
 import OLAuthorReducer from "../Profile/OLAuthorReducer";
 import userReducer from "../Users/userReducer";
+import authorListReducer from "../../Search/authorListReducer";
 
 export interface bookState {
     bookReducer: {
@@ -23,6 +24,10 @@ export interface bookState {
         OLAuthor: any;
     }
 
+    authorListReducer: {
+        authors: any;
+    }
+
 
 }
 
@@ -39,7 +44,8 @@ const store = configureStore({
         resultReducer,
         searchReducer,
         userReducer,
-        OLAuthorReducer
+        OLAuthorReducer,
+        authorListReducer
     }
 });
 
