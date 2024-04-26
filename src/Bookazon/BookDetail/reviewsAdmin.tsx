@@ -12,7 +12,7 @@ import * as userClient from "../Users/client";
 
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 
 function ReviewsAdmin() {
@@ -60,6 +60,7 @@ function ReviewsAdmin() {
 
 
     const deleteReview = async (review: any) => {
+        console.log(review._id)
         await client.deleteReview(review);
         setReviews(currentReviews =>
             currentReviews.filter(r => r._id !== review._id))
@@ -86,7 +87,7 @@ function ReviewsAdmin() {
     };
 
     return (
-        <Box>
+        <Box >
             {reviews.length > 0 ? (
                 <List sx={style} aria-label="review list">
                     {reviews.map((item, index) => (
@@ -115,7 +116,7 @@ function ReviewsAdmin() {
                                                 By {item.username}
                                             </Link>
                                             {authors.includes(item.username) &&  (
-                                                <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                                <HistoryEduIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue " }} />
                                             )}
                                         </>
                                     }

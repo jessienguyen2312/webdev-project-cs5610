@@ -12,9 +12,21 @@ import no_cover from "../../no_cover.png";
 import { extractOLID } from "../../Search";
 import { setAuthorKey } from "../Profile/OLAuthorReducer";
 import { TransitionProps } from '@mui/material/transitions';
-import { addFavorite, removeFavorite } from '../Users/userReducer';
+import { addFavorite, removeFavorite, setUser } from '../Users/userReducer';
 import * as userClient from "../Users/client"
 import { User } from "../Users/client"
+import useCurrentUser from '../Users/useCurrentUser';
+
+
+function extractWork(inputString: string) {
+    // This regex matches the pattern "OL" followed by one or more digits and ending with "W"
+    const regex = /OL\d+W/g;
+    const match = inputString.match(regex);
+
+    // If a match is found, return the first match (assuming only one OLID per string)
+    return match ? match[0] : "";
+}
+
 
 
 interface Book {
@@ -44,16 +56,8 @@ const Transition = React.forwardRef(function Transition(
 
 
 
-function BookShelf({ genre }: { genre: string }) {
-    // console.log(genre)
+function BookShelf({ genre, user }: { genre: string, user: User }) {
 
-
-    const user = useSelector((state: userState) => state.userReducer.user);
-
-    // useCurrentUser()
-    console.log("we start here")
-    // console.log("user parma", user)
-    // console.log("user BOOKSHELF", Currentuser)
 
     const navigate = useNavigate();
 
@@ -114,71 +118,27 @@ function BookShelf({ genre }: { genre: string }) {
 
 
 
+    const handleAddFavorite = async (book: any) => {
 
-
-    // const handleFavoriteClick = async (book: any) => {
-    //     const olid = extractOLID(book);
-
-    //     if (user && olid) {
-    //         console.log(user)
-
-    //         dispatch(addFavorite(olid));
-    //         setUser({ ...user, favoriteBook: [...user.favoriteBook, olid] });  // Optimistic updat
-
-    //         try {
-    //             console.log("the following user is being passed: ", user)
-    //             // const status = await userClient.updateUser(user); // Perform the async update
-    //             console.log('User updated successfully:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    //             console.log('THIS COMES AFTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    //         } catch (error) {
-    //             console.error('Failed to update user:', error);
-    //         }
-    //     } else {
-    //         console.error("Invalid book key, unable to extract OLID.");
-    //     }
-
-
-    // };
-
-    const handleTest = (book: any) => {
-        const olid = extractOLID(book);
-
-        if (user && olid) {
-
-
-            dispatch(addFavorite(olid));
-            console.log(user)
-            const handleUodate = async () => {
-                console.log("the following user is being passed: ", user)
-                const status = await userClient.updateUser(user); // Perform the async update
-                console.log('User updated successfully:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                console.log('THIS COMES AFTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-
-            }
+        try {
+            const updatedUser = await userClient.addFavoriteBook(user._id, book);
+            dispatch(setUser(updatedUser))
+        } catch (error) {
+            alert('Failed to add book to favorites.');
         }
-    };
+    }
 
 
 
     const handleRemoveFavorite = async (book: any) => {
-        const olid = extractOLID(book);
-        if (user && olid) {
-            dispatch(removeFavorite(olid)); // Dispatch Redux action immediately
-            try {
-                const status = await userClient.updateUser(user); // Perform the async update
-                console.log('User updated successfully:', status);
-            } catch (error) {
-                console.error('Failed to update user:', error);
-            }
-        } else {
-            console.error("Invalid book key, unable to extract OLID.");
+        try {
+            const updatedUser = await userClient.removeFavoriteBook(user._id, book);
+            console.log(updatedUser)
+            dispatch(setUser(updatedUser))
+        } catch (error) {
+            alert('Failed to add book to favorites.');
         }
     };
-
-
-
-
-
 
 
 
@@ -230,13 +190,18 @@ function BookShelf({ genre }: { genre: string }) {
         setValue(newValue);
     };
 
+
+
+
     if (books.length === 0) {
         return <div>Loading</div>;
     }
 
 
+
+
     return (
-        <div >
+        <Box >
 
 
             < Box sx={{
@@ -264,18 +229,20 @@ function BookShelf({ genre }: { genre: string }) {
 
                     >
 
+
                         {books.map((item, index) => {
                             // Log each item to the console
                             // console.log("Book Item:", item);
 
                             return (
                                 <Tab label={
-                                    <Card sx={{ width: 250, height: '100%' }}>
+                                    <Card sx={{ width: 250, height: 270 }}>
                                         <CardActionArea onClick={() => bookDetailPage(item)} >
                                             <CardMedia
                                                 component="img"
                                                 sx={{
-                                                    maxHeight: 100,
+                                                    mt: 1,
+                                                    maxHeight: 80,
                                                     objectFit: 'contain',
                                                     width: '100%'
                                                 }}
@@ -292,6 +259,7 @@ function BookShelf({ genre }: { genre: string }) {
                                                 <CardActionArea onClick={() => bookDetailPage(item)}>
                                                     <Typography variant='subtitle1' display="block" sx={{
                                                         whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
                                                         textOverflow: 'ellipsis',
                                                         width: 190,
                                                     }}>
@@ -302,8 +270,16 @@ function BookShelf({ genre }: { genre: string }) {
                                                 <Box sx={{ display: 'flex' }}>
                                                     {item.author_name.map((author, index) => (
                                                         <CardActionArea onClick={() => authorDetail(item.author_key[index])}>
-                                                            <Typography key={index} variant='caption'>
-                                                                {author}
+                                                            <Typography key={index} variant='caption'
+                                                                sx={{
+                                                                    whiteSpace: 'nowrap',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    width: 190,
+                                                                   
+                                                                }}
+                                                            >
+                                                                |{author}|
                                                             </Typography>
                                                         </CardActionArea>
                                                     ))}
@@ -317,9 +293,9 @@ function BookShelf({ genre }: { genre: string }) {
                                             </IconButton>
                                         ) : (
                                             <IconButton >
-                                                {user.favoriteBook.includes(extractOLID(item.key)) ?
-                                                    <FavoriteIcon sx={{ color: 'red' }} onClick={() => handleRemoveFavorite(item.key)} /> :
-                                                    <FavoriteBorderIcon onClick={() => handleTest(item.key)} />
+                                                {user.favoriteBook && user.favoriteBook.includes(extractWork(item.key)) ?
+                                                    <FavoriteIcon sx={{ color: '#EF8D40 ' }} onClick={() => handleRemoveFavorite(extractWork(item.key))} /> :
+                                                    <FavoriteBorderIcon onClick={() => handleAddFavorite(extractWork(item.key))} />
                                                 }
                                             </IconButton>
                                         )}
@@ -352,9 +328,10 @@ function BookShelf({ genre }: { genre: string }) {
 
             </Box>
 
-        </div >
+        </Box >
     );
-
 }
+
+
 
 export default BookShelf;

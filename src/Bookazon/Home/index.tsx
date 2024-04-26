@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import *  as userClient from "../Users/client";
 import { userState } from "../store";
 import { resetUser, setUser } from "../Users/userReducer";
+import { Box } from "@mui/material";
 // import * as userClient from "./client";
 
 
@@ -27,9 +28,9 @@ function Home() {
     return (
 
         
-        <div>
+        <Box sx={{bgcolor: "#F4EEE7"}}>
             <ListOfBooks />
-        </div>
+        </Box>
     )
 }
 

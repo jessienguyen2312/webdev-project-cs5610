@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_BASE = process.env.REACT_APP_API_BASE;
+const API_BASE = "http://localhost:4000"
 // const MEL_API = "http://localhost:4000/api/reviews"
 // const API_BASE = `https://bookazon-node-server.onrender.com`
 const REVIEWS_API = `${API_BASE}/api/reviews`;
@@ -43,7 +43,7 @@ export const createReview = async (review: any) => {
 
 export const deleteReview = async (review: any) => {
     const response = await axios.delete(
-        `${API_BASE}/${review._id}`);
+        `${REVIEWS_API}/${review._id}`);
     return response.data;
 };
 

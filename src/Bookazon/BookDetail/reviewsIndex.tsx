@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userState } from "../store";
 import useCurrentUser from "../Users/useCurrentUser";
+import { Box } from "@mui/material";
 
 
 
@@ -23,7 +24,7 @@ function ReviewsIndex() {
             switch (user.role) {
                 case 'ADMIN':
                     return <ReviewsAdmin />;
-                
+
                 default:
                     return <Reviews />;
             }
@@ -33,8 +34,14 @@ function ReviewsIndex() {
     };
 
 
-    return getComponentBasedOnRole();
+    return (
+        <Box >
 
+
+            {getComponentBasedOnRole()}
+
+        </Box>
+    );
 
 
 

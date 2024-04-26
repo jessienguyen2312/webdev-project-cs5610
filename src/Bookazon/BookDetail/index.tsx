@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import {setAuthorKey} from "../Profile/OLAuthorReducer";
 import {setBook} from "./BookReducer";
 import {bookCoverUrl, bookCoverUrUniversal} from "../clientExternal";
+import { extractOLID } from "../../Search";
 
 
 
@@ -77,7 +78,7 @@ function BookDetail() {
                                 (e.target as HTMLImageElement).src = no_cover}}
                             display = 'block'
                         />
-                        <Link to={`/Bookazon/BookDetail/${book.key}/reviews`} >
+                        <Link to={`/Bookazon/BookDetail/${extractOLID(book.key)}/reviews`} >
                             <Button variant="contained" sx={{m:1}}>
                                 Reviews
                             </Button>
