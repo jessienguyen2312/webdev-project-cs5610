@@ -34,13 +34,13 @@ function ListOfBooks() {
   
 
     return (
-        <Box sx={{ ml: 5, mr: 5, mt: 2 }}>
+        <Box sx={{ ml: 5, mr: 5, mt: 2,}}>
             {display.map((item, index) => (
                 <Box key={index}>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography variant="h4"  gutterBottom  sx={{ color: "#222C4E" }}>
                         {item}
                     </Typography>
-                    <BookShelf genre={item}/>
+                    <BookShelf genre={item} user = {user}/>
                 </Box>
             ))}
         </Box>

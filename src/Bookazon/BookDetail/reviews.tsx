@@ -1,9 +1,9 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Rating, Slide, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Rating, Slide, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 import * as client from "./clientReview";
 import * as userClient from "../Users/client";
@@ -84,6 +84,7 @@ function Reviews() {
 
     // for displaying reviews in database
     const [reviews, setReviews] = useState<Review[]>([]);
+    const [error, setError] = useState("");
 
     const fetchReviews = async () => {
         const bookReviews = await client.findReviewByBook(key);
@@ -97,6 +98,7 @@ function Reviews() {
             const userReview = await client.createReview(newReview);
             setReviews(prevReviews => [userReview, ...prevReviews]);
 
+            setError("");
             // reset newReview
             setNewReview({
                 _id: "",
@@ -110,7 +112,7 @@ function Reviews() {
             });
 
         } catch (err) {
-            console.log(err);
+            setError("Missing Fields");
         }
 
     }
@@ -167,7 +169,9 @@ function Reviews() {
     return (
 
 
-        <Box>
+        <Box  >
+              {error && <Alert severity="warning">{error}</Alert>}
+              
             <Box sx={{
                 m: 2,
                 mt: 4,
@@ -189,7 +193,7 @@ function Reviews() {
                         onChange={(event, newValue) => {
                             setNewReview(prevReview => ({
                                 ...prevReview,
-                                rating: newValue || 0 // Ensures a number is always set
+                                rating: newValue || 1 // Ensures a number is always set
                             }));
                         }}
                     />
@@ -216,7 +220,11 @@ function Reviews() {
                     width: '100%',
                     mt: 1
                 }}>
-                    <Button variant="contained" onClick={user ? createReview : handleDialogOpen}>Post</Button>
+                    <Button sx={{
+                        bgcolor: "#EF8D40 ", '&:hover': {
+                            backgroundColor: '#F1A467 ',
+                        }
+                    }} variant="contained" onClick={user ? createReview : handleDialogOpen}>Post</Button>
 
 
                 </Box>
@@ -241,7 +249,7 @@ function Reviews() {
                                             By {item.username}
                                         </Link>
                                         {authors.includes(item.username) && (
-                                            <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                            <HistoryEduIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
                                         )}
                                     </>
                                 }

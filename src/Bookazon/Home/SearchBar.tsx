@@ -90,7 +90,7 @@ function SearchBar() {
                 </Grid>
                 {/* Drop Down Menu */}
                 <Grid item xs={1}>
-                    <FormControl fullWidth>
+                    <FormControl  sx={{bgcolor: "#F4EEE7"}} fullWidth>
                         <InputLabel id="search-criteria-label">Category</InputLabel>
                         <Select variant='filled'
                             labelId="search-criteria-label"

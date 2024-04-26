@@ -12,7 +12,7 @@ import * as userClient from "../Users/client";
 
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import useCurrentUser from "../Users/useCurrentUser";
 import { useSelector } from "react-redux";
 import { bookState, userState } from "../store";
@@ -177,7 +177,7 @@ function ReviewModeration() {
                                                         By {item.username}
                                                     </Link>
                                                     {authors.includes(item.username) && (
-                                                        <VerifiedIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
+                                                        <HistoryEduIcon style={{ marginLeft: 4, fontSize: 'small', color: "blue" }} />
                                                     )}
                                                     <Button onClick={() => fetchInfoForBookDetail(item.bookId)} style={{
                                                         backgroundColor: 'transparent',
