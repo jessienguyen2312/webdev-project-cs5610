@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 // const API_BASE = `https://bookazon-node-server.onrender.com`
-const API_USERS = `http://localhost:4000/api/users`
-const API_SESSION = `http://localhost:4000/api/session`
+const API_USERS = `${API_BASE}/api/users`
+const API_SESSION = `${API_BASE}/api/session`
 
 const request = axios.create({
     withCredentials: true
@@ -58,7 +58,6 @@ export const findUserById = async (id: string) => {
     return response.data;
 };
 
-// are we gonna use id or username?
 export const updateUser = async (user: any) => {
     const response = await request.put(`${API_USERS}/${user._id}`, user, { withCredentials: true });
     return response.data;

@@ -98,7 +98,7 @@ function FavoriteBooks({ bookIds }: FavoriteBooksProps) {
             <AccordionDetails>
                 <List>
                     {Object.entries(books).map(([title, coverId], index) => (
-                        <ListItem key={index} component={Link} to={`/BookDetail/${bookIds[index]}`} sx={{ display: 'flex', alignItems: 'center' }}>
+                        <ListItem key={index} component={Link} to={`/BookDetail/${bookIds[index]}`} sx={{ display: 'flex', alignItems: 'center' }} onClick={() => fetchInfoForBookDetail(bookIds[index])}>
                             <ListItemAvatar>
                                 <Avatar variant="square" src={coverId ? clientExternal.bookCoverUrlId(coverId, "S") : no_cover} alt={title} sx={{ width: 56, height: 56, marginRight: 2 }} onError={(e) => {
                                     const imageElement = e.currentTarget as HTMLImageElement;

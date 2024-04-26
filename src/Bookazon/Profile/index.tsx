@@ -11,6 +11,7 @@ import { unfollowUser, followUser } from '../Users/client';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import {setAuthorKey} from "./OLAuthorReducer";
 import useCurrentUser from '../Users/useCurrentUser';
+import {useNavigate} from "react-router-dom";
 
 
 interface UserProfile {
@@ -50,6 +51,10 @@ function Profile() {
         role: '',
         OL_author_key: ''
     });
+
+    const [searchUser, setSearchUser] = useState<String>("") 
+    const navigate = useNavigate(); 
+    const [error, setError] = useState<String>("")
 
     useEffect(() => {
         async function fetchProfileData() {
@@ -138,6 +143,16 @@ function Profile() {
         setEditedProfile({ ...editedProfile, [name]: value });
     }
 
+
+    const handleFindUser = async (username: string) => {
+        try {
+            await findUserByUserName(username);
+            navigate(`/Bookazon/Profile/${username}`)
+        } catch (err: any) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);}
+        }
+    } 
     useEffect(() => {
         async function fetchData() {
             if (username) {
@@ -174,7 +189,35 @@ function Profile() {
                     <Button sx={{ mt: 1}} onClick={handleSaveClick}>Save</Button>
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
                     
-                    {/* <FavoriteBooks bookIds={profile.favoriteBook} /> */}           
+
+                    <FavoriteBooks bookIds={profile.favoriteBook} />
+                    <br></br>
+                    <br></br>
+                    <TextField
+                        margin="normal"
+                        id="username"
+                        label="Search for User"
+                        name="username"
+                        autoComplete="username"
+                        value = {searchUser}
+                        onChange={() => setSearchUser(searchUser)}
+                        autoFocus
+                        sx={{
+                            color: '#222C4E',
+                            bgcolor: 'white',
+                            '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#222C4E', 
+                            },
+                            },
+                        }}
+                        />
+                        <Button onClick={() => handleFindUser}>Add</Button>
+                  
+                    <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
+                        Navigate to Reviews
+                    </Button>         
+
                 </>
             ) : (
             <>

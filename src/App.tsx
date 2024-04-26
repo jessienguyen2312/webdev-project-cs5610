@@ -19,6 +19,7 @@ import OLAuthorProfile from "./Bookazon/Profile/OLAuthorProfile";
 import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
 import ReviewModeration from './Bookazon/BookDetail/ReviewModeration';
 import UserFollowing from './UserFollowing';
+import UserReviewsPage from './UserReviews';
 
 
 // import Box from '@mui/material/Box';
@@ -72,7 +73,11 @@ function App() {
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
                     <Route path="/Bookazon/Profile/OlAuthorProfile" element={<OLAuthorProfile/>}/>
                     <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsIndex />}/>
+
                     <Route path="Bookazon/reviews/moderation" element={<ReviewModeration />}/>
+
+                    <Route path="Bookazon/Profile/:username/Reviews" element={<UserReviewsPage/>}/>
+
                 </Routes>
             </HashRouter>
         </Provider>
