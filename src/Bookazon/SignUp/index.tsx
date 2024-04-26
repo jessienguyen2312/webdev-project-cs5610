@@ -195,6 +195,7 @@ export default function SignUp() {
                 }
               }}
               sx={{ 
+                marginTop: 2, 
                 backgroundColor: '#EF8D40',
                 '&:hover': {
                   backgroundColor: '#F1A467'
