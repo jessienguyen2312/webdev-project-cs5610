@@ -69,8 +69,17 @@ function OLAuthorProfile() {
 
 
     return(
-        <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
-            <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
+        <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#F4EEE7', p: 1}}>
+            <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '800px', borderRadius: '5px', bgcolor: 'background.paper' }}>  
+            <Box
+            
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+                >
                 <Typography variant="h1" sx={{color: "#222C4E"}}>{OLAuthor.author_name}</Typography>
                 <Divider component={"h1"} sx={{background: "#222C4E", borderBottomWidth: "2px"}}/>
                 <Box
@@ -81,10 +90,11 @@ function OLAuthorProfile() {
                         (e.target as HTMLImageElement).src = no_cover}}
                 />
                 <Typography variant="h4" sx={{color: "#222C4E"}}>{OLAuthor.author_dob}</Typography>
+                </Box>
                 <Typography variant="body1" sx={{color: "#222C4E"}}>{OLAuthor.author_bio}</Typography>
             </Paper>
 
-            <Paper elevation={3} sx={{m : 4, p: 4}}>
+            <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '800px', borderRadius: '5px', bgcolor: 'background.paper' }}>
                 <Typography variant="h3">Works by {OLAuthor.author_name}</Typography>
                 {/*<Divider component={"h1"} sx={{background: "gray", borderBottomWidth: "2px"}}/>*/}
                 <List>

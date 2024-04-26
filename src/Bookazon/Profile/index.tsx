@@ -184,11 +184,11 @@ function Profile() {
                     {/* Stringify the current user object */}
                     {/*<p>{JSON.stringify(profile)}</p>
                     <p>{JSON.stringify(editedProfile)}</p> */}
-                    <TextField name='firstName' label='First Name' value={editedProfile.firstName} onChange={handleInputChange} /> <br />
-                    <TextField name='lastName' label='Last Name' sx={{ mt: 1}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
-                    <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
-                    <TextField name='aboutMe' label='About Me' value={editedProfile.aboutMe} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
-                    <TextField name='password' label='Password' value={editedProfile.password} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
+                    <TextField name='firstName' label='First Name' value={editedProfile.firstName} sx={{color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='lastName' label='Last Name' sx={{ mt: 1, color: '#222C4E'}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
+                    <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='aboutMe' label='About Me' value={editedProfile.aboutMe} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='password' label='Password' value={editedProfile.password} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
                     <Button sx = {{
                         mt: 1,
                         marginTop: 2, 
