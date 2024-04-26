@@ -306,28 +306,7 @@ function Profile() {
                             View Catalog
                         </Button>
                     </Link>
-                    )}
-                <TextField
-                        margin="normal"
-                        id="username"
-                        label="Search for User"
-                        name="username"
-                        autoComplete="username"
-                        value = {searchUser}
-                        onChange={() => setSearchUser(searchUser)}
-                        autoFocus
-                        sx={{
-                            color: '#222C4E',
-                            bgcolor: 'white',
-                            '& .MuiOutlinedInput-root': {
-                            '&.Mui-focused fieldset': {
-                                borderColor: '#222C4E', 
-                            },
-                            },
-                        }}
-                        />
-                        <Button onClick={() => handleFindUser}>Add</Button>
-                  
+                    )}                  
                     <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
                         Navigate to Reviews
                     </Button>         
