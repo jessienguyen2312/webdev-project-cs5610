@@ -182,6 +182,22 @@ const fetchInfoForBookDetail = async (work: string) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
      
             <p>{a.text}</p>
+            <Button onClick={handleClick} style={{width: '10%', color:"#222C4E"}}><MoreVertIcon/></Button>
+            <Popover
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+                            <Button onClick={() => fetchInfoForBookDetail(a.bookId)} >
+              <Link to={`/Bookazon/BookDetail/${a.bookId}`} style={{ marginLeft: 10, textDecoration: 'none', color: 'inherit' }}>
+                                                   Book Details
+                                                </Link>
+              </Button>
+              </Popover> 
             </div>
             
           </Box>
