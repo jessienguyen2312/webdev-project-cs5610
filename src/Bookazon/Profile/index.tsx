@@ -153,17 +153,7 @@ function Profile() {
                 setError(err.response.data.message);}
         }
     } 
-    useEffect(() => {
-        async function fetchData() {
-            if (username) {
-                const userData = await findUserByUserName(username);
-                setProfile(userData);
-                console.log(userData);
-                setIsFollowing(loggedInUser?.following.includes(userData.username));
-            }
-        }
-        fetchData();
-    }, [username]);
+
 
     if (!profile) {
         return <h1>Loading profile...</h1>;
