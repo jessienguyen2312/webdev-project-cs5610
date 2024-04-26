@@ -306,7 +306,10 @@ function Profile() {
                             View Catalog
                         </Button>
                     </Link>
+
                     )}                         
+
+
                 {/* Favorite Books */}
                 <FavoriteBooks bookIds={profile.favoriteBook} />
 
