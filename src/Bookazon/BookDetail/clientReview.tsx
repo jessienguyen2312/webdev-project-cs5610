@@ -1,7 +1,12 @@
 import axios from "axios";
-const API_BASE = "http://localhost:4000"
-// const MEL_API = "http://localhost:4000/api/reviews"
+
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 // const API_BASE = `https://bookazon-node-server.onrender.com`
+
+//const API_BASE = "http://localhost:4000"
+
 const REVIEWS_API = `${API_BASE}/api/reviews`;
 
 // axios.defaults.withCredentials = true
@@ -35,7 +40,6 @@ export const findAllReviews = async () => {
     return response.data;
 };
 
-
 export const createReview = async (review: any) => {
     const response = await axios.post(`${REVIEWS_API}`, review);
     return response.data;
@@ -47,8 +51,6 @@ export const deleteReview = async (review: any) => {
     return response.data;
 };
 
-
-
 export const findReviewByBook = async (bookId: any) => {
     const response = await axios.get(`${REVIEWS_API}/book/${bookId}`);
     console.log(`${REVIEWS_API}/book/${bookId}`)
@@ -56,7 +58,7 @@ export const findReviewByBook = async (bookId: any) => {
 };
 
 export const findReviewsByUsername = async (username: any) => {
-    const response = await axios.get(`${API_BASE}/user/${username}`);
+    const response = await axios.get(`${REVIEWS_API}/user/${username}`);
     return response.data; 
 };
 

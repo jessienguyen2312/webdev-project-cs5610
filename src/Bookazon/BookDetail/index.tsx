@@ -59,10 +59,18 @@ function BookDetail() {
     return (
         <>
             {book && (
-                <Container sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
-                    <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
-                        <Typography variant="h3">{book.title}</Typography>
-                        <Typography display='inline' variant="subtitle2">By   </Typography>
+                <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#F4EEE7', p: 1}}>
+                    <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '800px', borderRadius: '5px', bgcolor: 'background.paper' }}>
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                        >
+                        <Typography sx={{color: '#222C4E'}} variant="h3">{book.title}</Typography>
+                        <Typography sx={{color: '#222C4E'}} display='inline' variant="subtitle2">By   </Typography>
                         {book.author_name?.map((name: string, index: number) => (
                             <Typography display='inline' key={index} variant="subtitle2"
                                         onClick={() => authorDetail(book.author_key[index])}
@@ -78,17 +86,28 @@ function BookDetail() {
                                 (e.target as HTMLImageElement).src = no_cover}}
                             display = 'block'
                         />
+
                         <Link to={`/Bookazon/BookDetail/${extractOLID(book.key)}/reviews`} >
-                            <Button variant="contained" sx={{m:1}}>
+                            <Button variant="contained" sx = {{
+                                mt: 1,
+                                marginTop: 2, 
+                                color: "#FFFFFF",
+                                backgroundColor: '#EF8D40',
+                                '&:hover': {
+                                backgroundColor: '#F1A467'
+                                }
+                                }}>
+
                                 Reviews
                             </Button>
                         </Link>
+                        </Box>
                     </Paper>
 
-                    <Paper elevation={3} sx={{display: 'block', p: 4, m: 4}}>
-                        <Typography variant="h4">Synopsis:</Typography>
+                    <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '800px', borderRadius: '5px', bgcolor: 'background.paper' }}>
+                        <Typography variant="h4" sx={{color: '#222C4E'}}>Synopsis:</Typography>
                         <Divider component={"h1"} sx={{background: "#222C4E", borderBottomWidth: "2px"}}/>
-                        <Typography variant="subtitle2" sx={{mt: 2}}>{book.description}</Typography>
+                        <Typography variant="subtitle2" sx={{mt: 2, color: '#222C4E'}}>{book.description}</Typography>
 
                     </Paper>
                 </Container>
