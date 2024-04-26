@@ -4,13 +4,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Container from '@mui/material/Container';
-import SearchBar from '../Bookazon/Home/SearchBar';
-import ProfileNav from "../Bookazon/Home/ProfileNav";
 import * as client from "../Bookazon/BookDetail/clientReview"; 
 import Popover from '@mui/material/Popover';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import { Rating, TextField } from '@mui/material';
+import { Paper, Rating, TextField } from '@mui/material';
 import * as clientExternal from '../Bookazon/clientExternal'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { bookState } from '../Bookazon/store';
@@ -31,12 +29,13 @@ interface Review {
 export default function UserReviewsPage() {
  
   const { username } = useParams();
-
+  const loggedInUser = useSelector((state: any) => state.userReducer.user);
   const [review, setReview] = useState<Review>({_id: "", username: "", bookId: "",
     rating: 0, text: "", datePosted: "01/01/1998", flagged: false, 
     likes: 0
   })
   const [reviews, setReviews] = useState<Review[]>([]); 
+  
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [currentUser, setCurrentUser] = useState({ _id:"",
   username: "",
@@ -91,6 +90,7 @@ export default function UserReviewsPage() {
     }
     
   }
+  
 
 const fetchInfoForBookDetail = async (work: string) => {
     // fetch work info
@@ -125,9 +125,14 @@ const fetchInfoForBookDetail = async (work: string) => {
     fetchReviews();
   }, []);  
 
+  //Delete if too much trouble & delete conditional
+  // const isCurrentUser = loggedInUser.username === username;
 
     return (
-        <Container maxWidth="xl" >
+      <>
+      {/* {isCurrentUser ? ( */}
+      <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
+      <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            
             <Container component="main" maxWidth="lg" sx={{padding: 0.25}}>
             <Box
           sx={{
@@ -138,14 +143,11 @@ const fetchInfoForBookDetail = async (work: string) => {
           }}
         >
             <Container sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}>
-            
-
-            <h1>Reviews</h1>
+            <h1>My Reviews</h1>
             {error && <div style={{ color: 'red' }}>{error}</div>}
             </Container>
         <div>
@@ -153,12 +155,13 @@ const fetchInfoForBookDetail = async (work: string) => {
           <Container>
 
           <Box sx={{
-                m: 2,
-                mt: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-            }}>
+            marginTop: 5, // Adjust the marginTop value to change the size vertically
+            width: '100%', // Adjust the width if you want to change the size horizontally
+            height: 'auto', // Adjust the height if necessary
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
  
                 <Box sx={{
                     display: 'flex',
@@ -179,7 +182,7 @@ const fetchInfoForBookDetail = async (work: string) => {
                     />
                 </Box>
  
-                <TextField sx={{ width: '100%' }}
+                <TextField sx={{ width: '75%' }}
                     placeholder="What did you think about the book?"
                     multiline
                     rows={2}
@@ -192,33 +195,51 @@ const fetchInfoForBookDetail = async (work: string) => {
                         }));
                     }}
                 />
-            </Box>
-                <Button variant="contained"
+              <Button variant="contained"
                 onClick={() => {updateReview(review)}}
                 sx = {{
+                  marginTop: 2, 
                   backgroundColor: '#EF8D40',
                 '&:hover': {
                   backgroundColor: '#F1A467'
                 }
                 }}
                 >Update Review</Button>
+            </Box>
+
           </Container>
       <ul>
+      <Container sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
         {reviews.map(a => (
           <Box
-          height={200}
+
           width={600}
           my={4}
           display="flex"
           alignItems="center"
           gap={4}
           p={2}
-          sx={{ border: '2px solid grey' }}
+          sx={{
+            border: '1px solid black',
+            marginTop: 3, 
+            width: '100%', 
+            height: 'auto', 
+            minHeight: 100,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
         >
             <Rating name="read-only" value={a.rating} readOnly />
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{width: '66.67%'}}>{a.text}</p>
-            <Button onClick={handleClick} style={{width: '10%'}}><MoreVertIcon/></Button>
+     
+            <p>{a.text}</p>
+            <Button onClick={handleClick} style={{width: '10%', color:"#222C4E"}}><MoreVertIcon/></Button>
             <Popover
               open={open}
               anchorEl={anchorEl}
@@ -228,6 +249,7 @@ const fetchInfoForBookDetail = async (work: string) => {
                 horizontal: 'left',
               }}
             >
+              
               <Button className="editing-dashboard-button" onClick={(event) => {
                 event.preventDefault();
                 setReview(a);
@@ -238,20 +260,27 @@ const fetchInfoForBookDetail = async (work: string) => {
                         deleteReview(a);
                         handleClose();
                       }}>Delete</Button>
-              </Popover> 
-              <Button onClick={() => fetchInfoForBookDetail(a.bookId)}>
+                            <Button onClick={() => fetchInfoForBookDetail(a.bookId)} >
               <Link to={`/Bookazon/BookDetail/${a.bookId}`} style={{ marginLeft: 10, textDecoration: 'none', color: 'inherit' }}>
-                                                    View Details
+                                                   Book Details
                                                 </Link>
               </Button>
+              </Popover> 
+        
+
+
             </div>
             
           </Box>
         ))}
+        </Container>
       </ul>
         </div>
         </Box>
         </Container>
+    </Paper>
     </Container>
+    {/* ) : <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', p: 1}}><h1>Not current user</h1></Container>} */}
+    </>
     );
   }
