@@ -53,7 +53,7 @@ export const findReviewByBook = async (bookId: any) => {
     return response.data;
 };
 
-export const findReviewsByUsername = async (username: string) => {
+export const findReviewsByUsername = async (username: any) => {
     const response = await axios.get(`${REVIEWS_API}/user/${username}`);
     return response.data; 
 };
