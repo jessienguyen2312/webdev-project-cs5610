@@ -195,7 +195,7 @@ function Profile() {
                     <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
                     <Typography variant="h3" sx={{ color: '#222C4E', mt: 2 }}>
                         {profile.username}
-                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
+                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'blue', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
                         {isCurrentUser && (<Button onClick={handleEditClick} sx={{ mt: 1 }}>Edit My Profile</Button>)}
                         {!isCurrentUser && !isFollowing && (<Button onClick={handleFollow} sx={{ mt: 1 }}>Follow</Button>)}
                         {/* {!isCurrentUser && isFollowing && (<Button onClick={() => handleUnfollow(profile.username)} sx={{ mt: 1 }}> Unfollow</Button>)} */}
