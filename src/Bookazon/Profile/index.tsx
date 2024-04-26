@@ -153,17 +153,7 @@ function Profile() {
                 setError(err.response.data.message);}
         }
     } 
-    useEffect(() => {
-        async function fetchData() {
-            if (username) {
-                const userData = await findUserByUserName(username);
-                setProfile(userData);
-                console.log(userData);
-                setIsFollowing(loggedInUser?.following.includes(userData.username));
-            }
-        }
-        fetchData();
-    }, [username]);
+
 
     if (!profile) {
         return <h1>Loading profile...</h1>;
@@ -184,6 +174,7 @@ function Profile() {
                     {/* Stringify the current user object */}
                     {/*<p>{JSON.stringify(profile)}</p>
                     <p>{JSON.stringify(editedProfile)}</p> */}
+
                     <TextField name='firstName' label='First Name' value={editedProfile.firstName} sx={{color: '#222C4E'}} onChange={handleInputChange} /> <br />
                     <TextField name='lastName' label='Last Name' sx={{ mt: 1, color: '#222C4E'}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
                     <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
@@ -225,7 +216,6 @@ function Profile() {
                         }}>
                         Navigate to Reviews
                     </Button>         
-
                 </>
             ) : (
             <>
@@ -273,7 +263,8 @@ function Profile() {
                     <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
                     <Typography variant="h3" sx={{ color: '#222C4E', mt: 2 }}>
                         {profile.username}
-                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'primary.main', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
+
+                        {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'blue', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
                         {isCurrentUser && (<Button onClick={handleEditClick}
                         sx = {{
                             mt: 1,
@@ -284,6 +275,7 @@ function Profile() {
                             backgroundColor: '#F1A467'
                           }
                           }}>Edit My Profile</Button>)}
+                      
                         {!isCurrentUser && !isFollowing && (<Button onClick={handleFollow} sx={{ mt: 1 }}>Follow</Button>)}
                         {/* {!isCurrentUser && isFollowing && (<Button onClick={() => handleUnfollow(profile.username)} sx={{ mt: 1 }}> Unfollow</Button>)} */}
                     </Typography>
@@ -293,25 +285,51 @@ function Profile() {
                 
                 {/* Stringify the current user object */}
                 {/*<p>{JSON.stringify(profile)}</p> */}  
-              <Typography>{profile.aboutMe}</Typography>
-              {profile.role === "AUTHOR" && (
-                  <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
-                      dispatch(setAuthorKey({author_key: profile.OL_author_key}));
-                  }}>
-                      <Button
-                          // onClick={() => navigateToOLAuthorProfile}
-                          sx={{
-                              backgroundColor: '#EF8D40', // Normal state background color
-                              '&:hover': {
-                                  backgroundColor: '#F1A467', // Hover state background color
-                                },
-                              color: 'white', // Text color for better contrast
-                              mt: 2 // Adds margin top for spacing
-                          }}>
-                          View Catalog
-                      </Button>
-                  </Link>
-                )}
+                <Typography>{profile.aboutMe}</Typography>
+                {profile.role === "AUTHOR" && (
+                    <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
+                        dispatch(setAuthorKey({author_key: profile.OL_author_key}));
+                    }}>
+                        <Button
+                            // onClick={() => navigateToOLAuthorProfile}
+                            sx={{
+                                backgroundColor: '#EF8D40', // Normal state background color
+                                '&:hover': {
+                                    backgroundColor: '#F1A467', // Hover state background color
+                                    },
+                                color: 'white', // Text color for better contrast
+                                mt: 2 // Adds margin top for spacing
+                            }}>
+                            View Catalog
+                        </Button>
+                    </Link>
+                    )}
+                <TextField
+                        margin="normal"
+                        id="username"
+                        label="Search for User"
+                        name="username"
+                        autoComplete="username"
+                        value = {searchUser}
+                        onChange={() => setSearchUser(searchUser)}
+                        autoFocus
+                        sx={{
+                            color: '#222C4E',
+                            bgcolor: 'white',
+                            '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#222C4E', 
+                            },
+                            },
+                        }}
+                        />
+                        <Button onClick={() => handleFindUser}>Add</Button>
+                  
+                    <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
+                        Navigate to Reviews
+                    </Button>         
+                
+                {/* Favorite Books */}
                 <FavoriteBooks bookIds={profile.favoriteBook} />
 
                 {/* Followers */}
