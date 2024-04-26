@@ -1,22 +1,36 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../Users/userReducer';
 import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { unfollowUser } from '../Users/client';
+
 
 interface ShowUserFollowsProps {
     follower: string[];
     following: string[];
     isCurrentUser: boolean;
+    setProfile: (profile: any) => void;
+    profileId: string;
 }
 
-const ShowUserFollows: React.FC<ShowUserFollowsProps> = ({ follower, following, isCurrentUser }) => {
+const ShowUserFollows: React.FC<ShowUserFollowsProps> = ({ follower, following, setProfile, profileId, isCurrentUser }) => {
+    const dispatch = useDispatch();
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=`;
 
-    const handleUnfollow = (username: string) => {
-        console.log("Unfollow user:", username);
-        // Implement unfollow logic here
+    const handleUnfollow = async (usernameToUnfollow: string) => {
+        try {
+            console.log('COMPONENT LOG: Unfollowing user:', usernameToUnfollow)
+            const updatedUser = await unfollowUser(profileId, usernameToUnfollow);
+            if (updatedUser) {
+                dispatch(setUser(updatedUser)); // Update global state
+                setProfile(updatedUser);
+            }
+        } catch (error) {
+            console.error('Failed to unfollow user:', error);
+        }
     };
-
 
     return (
         <Box sx={{ mt: '1rem' }}>

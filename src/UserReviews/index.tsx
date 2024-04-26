@@ -30,6 +30,20 @@ export default function UserReviewsPage() {
   })
   const [reviews, setReviews] = useState<Review[]>([]); 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [currentUser, setCurrentUser] = useState({ _id:"",
+  username: "",
+  password: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  role: "",
+  dateCreated: new Date(),
+  aboutMe: "",
+  profilePicture: "", 
+  follower: [],
+  following: [],
+  favoriteBook: [],
+  OL_author_key: ""})
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
