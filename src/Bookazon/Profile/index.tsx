@@ -113,9 +113,8 @@ function Profile() {
                     <TextField name='password' label='Password' value={editedProfile.password} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
                     <Button sx={{ mt: 1}} onClick={handleSaveClick}>Save</Button>
                     <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
+                
                     
-                    <FavoriteBooks bookIds={profile.favoriteBook} />
-                    <ShowUserFollows follower={profile.follower} following={profile.following} />
                 </>
             ) : (
             <>
@@ -123,8 +122,52 @@ function Profile() {
                 <h2>{profile.username} {isCurrentUser && (<Button onClick={handleEditClick}>Edit My Profile</Button>)}</h2>
                 <h3>About Me: </h3>
                 {/* Stringify the current user object */}
-                <p>{JSON.stringify(profile)}</p>
-                <p>{profile.aboutMe}</p>
+                {/*<p>{JSON.stringify(profile)}</p> */}  
+                <Typography>{profile.aboutMe}</Typography>
+                {profile.role === "AUTHOR" && (
+                    <Link to={`/Bookazon/Profile/OlAuthorProfile`} onClick={() => {
+                        dispatch(setAuthorKey({author_key: profile.OL_author_key}));
+                    }}>
+                        <Button
+                            // onClick={() => navigateToOLAuthorProfile}
+                            sx={{
+                                backgroundColor: '#EF8D40', // Normal state background color
+                                '&:hover': {
+                                    backgroundColor: '#F1A467', // Hover state background color
+                                    },
+                                color: 'white', // Text color for better contrast
+                                mt: 2 // Adds margin top for spacing
+                            }}>
+                            View Catalog
+                        </Button>
+                    </Link>
+                    )}
+                <TextField
+                        margin="normal"
+                        id="username"
+                        label="Search for User"
+                        name="username"
+                        autoComplete="username"
+                        value = {searchUser}
+                        onChange={() => setSearchUser(searchUser)}
+                        autoFocus
+                        sx={{
+                            color: '#222C4E',
+                            bgcolor: 'white',
+                            '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#222C4E', 
+                            },
+                            },
+                        }}
+                        />
+                        <Button onClick={() => handleFindUser}>Add</Button>
+                  
+                    <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
+                        Navigate to Reviews
+                    </Button>         
+                
+                {/* Favorite Books */}
                 <FavoriteBooks bookIds={profile.favoriteBook} />
                 <ShowUserFollows follower={profile.follower} following={profile.following} />
             </>
