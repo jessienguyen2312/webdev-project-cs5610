@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { findUserByUserName, updateUser, deleteUser } from '../Users/client';
 import { setUser } from '../Users/userReducer';
 
-import { Paper, Button, TextField, Typography, List, ListItem, Avatar, ListItemText, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import { Paper, Button, TextField, Typography, List, ListItem, Avatar, ListItemText, Accordion, AccordionSummary, AccordionDetails, Box, Container } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import FavoriteBooks from "./FavoriteBooks";
 import { unfollowUser, followUser } from '../Users/client';
@@ -52,9 +52,9 @@ function Profile() {
         OL_author_key: ''
     });
 
-    const [searchUser, setSearchUser] = useState<String>("") 
+    const [searchUser, setSearchUser] = useState<string>("") 
     const navigate = useNavigate(); 
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
 
     useEffect(() => {
         async function fetchProfileData() {
@@ -144,10 +144,10 @@ function Profile() {
     }
 
 
-    const handleFindUser = async (username: string) => {
+    const handleFindUser = async () => {
         try {
-            await findUserByUserName(username);
-            navigate(`/Bookazon/Profile/${username}`)
+            await findUserByUserName(searchUser);
+            navigate(`/Bookazon/Profile/${searchUser}`)
         } catch (err: any) {
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);}
@@ -165,24 +165,92 @@ function Profile() {
     const avatarUrl = `https://api.dicebear.com/8.x/thumbs/svg?seed=${profile.username}`;
 
     return (
+        <>
+    <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
         <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            
             {editMode ? (
                 <>
+                
                     {/* Stringify the current user object */}
                     {/*<p>{JSON.stringify(profile)}</p>
                     <p>{JSON.stringify(editedProfile)}</p> */}
-                    <TextField name='firstName' label='First Name' value={editedProfile.firstName} onChange={handleInputChange} /> <br />
-                    <TextField name='lastName' label='Last Name' sx={{ mt: 1}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
-                    <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
-                    <TextField name='aboutMe' label='About Me' value={editedProfile.aboutMe} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
-                    <TextField name='password' label='Password' value={editedProfile.password} sx={{ mt: 1}} onChange={handleInputChange} /> <br />
-                    <Button sx={{ mt: 1}} onClick={handleSaveClick}>Save</Button>
-                    <Button sx={{ mt: 1}} onClick={handleCancelClick}>Cancel</Button>
-                
+
+                    <TextField name='firstName' label='First Name' value={editedProfile.firstName} sx={{color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='lastName' label='Last Name' sx={{ mt: 1, color: '#222C4E'}} value={editedProfile.lastName} onChange={handleInputChange} /> <br />
+                    <TextField name='email' label='Email' value={editedProfile.email} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='aboutMe' label='About Me' value={editedProfile.aboutMe} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <TextField name='password' label='Password' value={editedProfile.password} sx={{ mt: 1, color: '#222C4E'}} onChange={handleInputChange} /> <br />
+                    <Button sx = {{
+                        mt: 1,
+                        marginTop: 2, 
+                        color: "#FFFFFF",
+                        backgroundColor: '#EF8D40',
+                        '&:hover': {
+                        backgroundColor: '#F1A467'
+                        }
+                        }} onClick={handleSaveClick}>Save</Button>
+                    <Button sx = {{
+                        mt: 1,
+                        marginTop: 2,
+                        marginLeft: 2,  
+                        color: "#FFFFFF",
+                        backgroundColor: '#EF8D40',
+                        '&:hover': {
+                        backgroundColor: '#F1A467'
+                        }
+                        }} onClick={handleCancelClick}>Cancel</Button>
                     
+
+                    <FavoriteBooks bookIds={profile.favoriteBook} />
+                    <br></br>
+                    <br></br>
+                    <></>
+                    <Button fullWidth onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)} 
+                    sx = {{
+                        marginTop: 2, 
+                        color: "#FFFFFF",
+                        backgroundColor: '#EF8D40',
+                        '&:hover': {
+                        backgroundColor: '#F1A467'
+                        }
+                        }}>
+                        Navigate to Reviews
+                    </Button>         
                 </>
             ) : (
             <>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+            <TextField
+                margin="normal"
+                
+                id="Search"
+                label="Search for User"
+                name="Search"
+                autoComplete="User"
+                value = {searchUser}
+                onChange={(event) => setSearchUser(event.target.value)}
+                autoFocus
+                sx={{
+                    color: '#222C4E', 
+                    width: 350, 
+                    bgcolor: 'white',
+                    '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#222C4E', 
+                    },
+                    },
+                }}
+                />
+                <Button 
+                variant="contained"
+                onClick={() => handleFindUser()} sx={{ 
+                    mt: 3, 
+                    mb: 2,
+                    mx: 1, 
+                    backgroundColor: '#EF8D40',
+                    '&:hover': {
+                    backgroundColor: '#F1A467'
+                    }}}>Search</Button>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -195,13 +263,25 @@ function Profile() {
                     <img src={avatarUrl} alt={`${profile.username}'s profile`} style={{ width: 100, height: 100, borderRadius: '50%' }} />
                     <Typography variant="h3" sx={{ color: '#222C4E', mt: 2 }}>
                         {profile.username}
+
                         {profile.role === 'AUTHOR' && <HistoryEduIcon sx={{ color: 'blue', fontSize: '2.5rem', verticalAlign: 'middle' }} />} <br/>
-                        {isCurrentUser && (<Button onClick={handleEditClick} sx={{ mt: 1 }}>Edit My Profile</Button>)}
+                        {isCurrentUser && (<Button onClick={handleEditClick}
+                        sx = {{
+                            mt: 1,
+                            marginTop: 2, 
+                            color: "#FFFFFF",
+                            backgroundColor: '#EF8D40',
+                          '&:hover': {
+                            backgroundColor: '#F1A467'
+                          }
+                          }}>Edit My Profile</Button>)}
+                      
                         {!isCurrentUser && !isFollowing && (<Button onClick={handleFollow} sx={{ mt: 1 }}>Follow</Button>)}
                         {/* {!isCurrentUser && isFollowing && (<Button onClick={() => handleUnfollow(profile.username)} sx={{ mt: 1 }}> Unfollow</Button>)} */}
                     </Typography>
                 </Box>
-                <Typography variant="h4" style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </Typography>
+                
+                {/* <Typography variant="h4" style={{  color: '#222C4E', textDecoration: 'none' }}>About Me: </Typography> */}
                 
                 {/* Stringify the current user object */}
                 {/*<p>{JSON.stringify(profile)}</p> */}  
@@ -292,6 +372,8 @@ function Profile() {
             </>
             )}
         </Paper>
+        </Container>
+        </>
     );
 }
 
