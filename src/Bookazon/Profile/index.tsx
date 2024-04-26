@@ -54,7 +54,7 @@ function Profile() {
 
     const [searchUser, setSearchUser] = useState<String>("") 
     const navigate = useNavigate(); 
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
 
     useEffect(() => {
         async function fetchProfileData() {
@@ -193,14 +193,16 @@ function Profile() {
                     <FavoriteBooks bookIds={profile.favoriteBook} />
                     <br></br>
                     <br></br>
+                    <></>
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
                     <TextField
                         margin="normal"
-                        id="username"
-                        label="Search for User"
-                        name="username"
-                        autoComplete="username"
+                        id="searchUser"
+                        label="searchUser"
+                        name="searchUser"
+                        autoComplete="searchUser"
                         value = {searchUser}
-                        onChange={() => setSearchUser(searchUser)}
+                        onChange={(event) => setSearchUser(event.target.value)}
                         autoFocus
                         sx={{
                             color: '#222C4E',
@@ -212,7 +214,7 @@ function Profile() {
                             },
                         }}
                         />
-                        <Button onClick={() => handleFindUser}>Add</Button>
+                        <Button onClick={() => handleFindUser(searchUser)}>Add</Button>
                   
                     <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
                         Navigate to Reviews

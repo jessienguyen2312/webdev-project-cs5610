@@ -4,8 +4,6 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Container from '@mui/material/Container';
-import SearchBar from '../Bookazon/Home/SearchBar';
-import ProfileNav from "../Bookazon/Home/ProfileNav";
 import * as client from "../Bookazon/BookDetail/clientReview"; 
 import Popover from '@mui/material/Popover';
 import { Link, useNavigate, useParams } from 'react-router-dom';

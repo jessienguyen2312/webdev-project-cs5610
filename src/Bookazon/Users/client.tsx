@@ -1,7 +1,8 @@
 import axios from "axios";
 
 // const API_BASE = process.env.REACT_APP_API_BASE;
-const API_BASE = `https://bookazon-node-server.onrender.com`
+//const API_BASE = `https://bookazon-node-server.onrender.com`
+const API_BASE = "http://localhost:4000"
 const API_USERS = `${API_BASE}/api/users`
 const API_SESSION = `${API_BASE}/api/session`
 
