@@ -59,7 +59,7 @@ function BookDetail() {
     return (
         <>
             {book && (
-                <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#F4EEE7', p: 1}}>
+                <Container maxWidth={false} sx={{marginTop: 2, display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#F4EEE7', p: 1}}>
                     <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '800px', borderRadius: '5px', bgcolor: 'background.paper' }}>
                     <Box
                         sx={{
