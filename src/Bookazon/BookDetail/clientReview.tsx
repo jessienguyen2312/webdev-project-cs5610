@@ -31,7 +31,7 @@ export interface Review {
 
 
 export const updateReview = async (review: any) => {
-    const response = await axios.put(`${API_BASE}/${review._id}`, review);
+    const response = await axios.put(`${REVIEWS_API}/${review._id}`, review);
     return response.data;
 };
 
@@ -62,10 +62,10 @@ export const findReviewsByUsername = async (username: any) => {
     return response.data; 
 };
 
-// export const findReviewById = async (id: string) => {
-//     const response = await axios.get(`${USERS_API}/${id}`);
-//     return response.data;
-// };
+export const findReviewById = async (id: string) => {
+    const response = await axios.get(`${REVIEWS_API}/${id}`);
+    return response.data;
+};
 
 // export const findUsersByRole = async (role: string) => {
 //     const response = await

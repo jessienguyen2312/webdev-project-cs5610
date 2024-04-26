@@ -83,7 +83,7 @@ function Search() {
             {searchQuery.criteria === 'Author' && result && (
                 <Grid container spacing={2} justifySelf="center">
                     {result.map((object: any) => (
-                        <Grid item spacing={2} xs={4}>
+                        <Grid item spacing={2}  xs={12} sm={6} md={4} lg={4} xl={4}>
                             <Card sx={{ width: 300, maxHeight: 400 }} key={object.key}>
                                 <CardMedia
                                     sx={{height: 200}}

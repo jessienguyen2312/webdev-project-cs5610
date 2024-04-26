@@ -121,6 +121,7 @@ function Reviews() {
     const handleFlag = (index: any) => {
         const updatedReviews = [...reviews];
         updatedReviews[index].flagged = true;
+        console.log(  updatedReviews[index])
         setReviews(updatedReviews);
         updateReview(updatedReviews[index]);
     };
