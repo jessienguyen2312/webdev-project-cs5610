@@ -26,9 +26,9 @@ export interface User {
     dateCreated: Date,
     aboutMe: String,
     profilePicture: String, // Default empty, set conditionally below
-    follower: [],
-    following: [],
-    favoriteBook: [],
+    follower: String [],
+    following: String[],
+    favoriteBook: string[],
     OL_author_key: String
 };
 
@@ -132,5 +132,11 @@ export const followUser = async (userId: string, usernameToFollow: string) => {
         console.error('Error while following user:', error);
         throw error;
     }
+};
+
+export const findUsersByRole = async (role: string) => {
+    const response = await
+        request.get(`${API_USERS}?role=${role}`);
+    return response.data;
 };
 

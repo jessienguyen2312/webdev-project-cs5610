@@ -15,10 +15,9 @@ import store from '../src/Bookazon/store'
 import {Provider} from "react-redux";
 
 import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
-import Reviews from './Bookazon/BookDetail/reviews';
-import ReviewsAdmin from './Bookazon/BookDetail/reviewsAdmin';
 import OLAuthorProfile from "./Bookazon/Profile/OLAuthorProfile";
 import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
+import ReviewModeration from './Bookazon/BookDetail/ReviewModeration';
 import UserFollowing from './UserFollowing';
 import UserReviewsPage from './UserReviews';
 
@@ -72,12 +71,13 @@ function App() {
                     <Route path="Bookazon/SignUp" element={<SignUp/>}/>
                     <Route path="Bookazon/Search" element={<Search/>}/>             
                     <Route path="Bookazon/BookDetail/:key" element={<BookDetail/>}/>
-                    <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/>
                     <Route path="/Bookazon/Profile/OlAuthorProfile" element={<OLAuthorProfile/>}/>
                     <Route path="Bookazon/BookDetail/:key/reviews" element={<ReviewsIndex />}/>
-                    {/* <Route path="Bookazon/BookDetail/:key/reviews/reader/:usernameId" element={<Reviews/>}/> */}
-                    <Route path="Bookazon/Profile/Edit" element={<EditUserProfile user={user}/>}/>
+
+                    <Route path="Bookazon/reviews/moderation" element={<ReviewModeration />}/>
+
                     <Route path="Bookazon/Profile/:username/Reviews" element={<UserReviewsPage/>}/>
+
                 </Routes>
             </HashRouter>
         </Provider>

@@ -16,44 +16,10 @@ import { resetUser, setUser } from "../Users/userReducer";
 
 
 function Home() {
-    const user = useSelector((state: userState) => state.userReducer.user);
-
-
-
-    const fakeUser = {
-        "_id": { "$oid": "6622b1a306e1d4495ab452d7" },
-        "username": "WilliamShakespeare",
-        "OL_author_key": "OL9388A",
-        "password": "bookazonpassword",
-        "firstName": "William",
-        "lastName": "Shakespeare",
-        "email": "williamshakespeare@bookazon.com",
-        "role": "AUTHOR",
-        "aboutMe": "William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language.",
-        "profilePicture": "profile_pictures/william_shakespeare.jpg",
-        "follower": ["username1", "username2", "username3"],
-        "following": ["username1", "username2", "username3"],
-        "favoriteBook": ["OL20930632M", "OL1216826M"]
-    };
-
-
-
-    // UNCOMMENT THIS TO DO A FAKE LOG IN
-
-    // const signin = async () => {
-    //     const userlog = await userClient.signin(fakeUser);
-    //     console.log("Signed in successfully.");
-    // };
-    //
-    // useEffect(() => {
-    //     signin(); // testing sign in
-    // }, []);
-
-
-
+    
 
     // this tests if there is a logged in user (reducer will set it to null if no one is logged in)
-    useCurrentUser();
+    // useCurrentUser();
 
 
 
@@ -62,7 +28,7 @@ function Home() {
 
         
         <div>
-            <ListOfBooks user={user}/>
+            <ListOfBooks />
         </div>
     )
 }
