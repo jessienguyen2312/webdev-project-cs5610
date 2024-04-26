@@ -306,10 +306,7 @@ function Profile() {
                             View Catalog
                         </Button>
                     </Link>
-                    )}                  
-                    <Button onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)}>
-                        Navigate to Reviews
-                    </Button>         
+                    )}                        
                 
                 {/* Favorite Books */}
                 <FavoriteBooks bookIds={profile.favoriteBook} />
