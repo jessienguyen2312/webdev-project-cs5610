@@ -146,6 +146,7 @@ function Profile() {
 
     const handleFindUser = async () => {
         try {
+            setError("");
             await findUserByUserName(searchUser);
             navigate(`/Bookazon/Profile/${searchUser}`)
         } catch (err: any) {
@@ -166,7 +167,7 @@ function Profile() {
 
     return (
         <>
-    <Container maxWidth={false} sx={{ display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
+    <Container maxWidth={false} sx={{ marginTop: 2, display: 'block', justifyContent: 'center', alignItems: 'center', height: "100%", minHeight: '10vh', backgroundColor: '#5D6BA0', p: 1}}>
         <Paper elevation={3} sx={{ mx: 'auto', mt: '2rem', p: 2, minWidth: '250px', maxWidth: '500px', borderRadius: '5px', bgcolor: 'background.paper' }}>            
             {editMode ? (
                 <>
@@ -205,7 +206,7 @@ function Profile() {
                     <br></br>
                     <br></br>
                     <></>
-                    <Button fullWidth onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews`)} 
+                    {/* <Button fullWidth onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews/Edit`)} 
                     sx = {{
                         marginTop: 2, 
                         color: "#FFFFFF",
@@ -214,8 +215,10 @@ function Profile() {
                         backgroundColor: '#F1A467'
                         }
                         }}>
-                        Navigate to Reviews
-                    </Button>         
+
+                        Edit Reviews
+                    </Button>          */}
+
                 </>
             ) : (
             <>
@@ -369,7 +372,19 @@ function Profile() {
                         </List>
                     </AccordionDetails>
                 </Accordion>
+                <Button fullWidth onClick={() => navigate(`/Bookazon/Profile/${username}/Reviews/`)} 
+                    sx = {{
+                        marginTop: 2, 
+                        color: "#FFFFFF",
+                        backgroundColor: '#EF8D40',
+                        '&:hover': {
+                        backgroundColor: '#F1A467'
+                        }
+                        }}>
+                        Navigate to Reviews
+                    </Button>   
             </>
+            
             )}
         </Paper>
         </Container>
