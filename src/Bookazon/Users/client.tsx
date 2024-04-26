@@ -1,8 +1,11 @@
 import axios from "axios";
 
-//const API_BASE = process.env.REACT_APP_API_BASE;
+
+const API_BASE = process.env.REACT_APP_API_BASE;
+
 //const API_BASE = `https://bookazon-node-server.onrender.com`
-const API_BASE = "http://localhost:4000"
+//const API_BASE = "http://localhost:4000"
+
 const API_USERS = `${API_BASE}/api/users`
 const API_SESSION = `${API_BASE}/api/session`
 
@@ -27,7 +30,7 @@ export interface User {
     dateCreated: Date,
     aboutMe: String,
     profilePicture: String, // Default empty, set conditionally below
-    follower: String [],
+    follower: String[],
     following: String[],
     favoriteBook: string[],
     OL_author_key: String
@@ -45,7 +48,7 @@ export const findAllUsers = async () => {
 
 export const findAllAuthors = async () => {
     try {
-        const response = await request.get(`${API_USERS}?role=AUTHOR`, {withCredentials: true});
+        const response = await request.get(`${API_USERS}?role=AUTHOR`, { withCredentials: true });
         console.log(response.data);
         return response.data;
 
@@ -94,7 +97,7 @@ export const session = async () => {
         return response.data;
     } catch (error: any) {
         // if error means no user
-           return null
+        return null
     }
 };
 
@@ -140,4 +143,25 @@ export const findUsersByRole = async (role: string) => {
         request.get(`${API_USERS}?role=${role}`);
     return response.data;
 };
+
+export const addFavoriteBook = async (userId: any, bookId: any) => {
+    try {
+        const response = await request.put(`${API_USERS}/${userId}/favorite`, { bookId });
+        console.log('Favorite added successfully:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Failed to add favorite:', error.response ? error.response.data : error.message);
+    }
+};
+
+export const removeFavoriteBook = async (userId: any, bookId: any) => {
+    try {
+        const response = await request.delete(`${API_USERS}/${userId}/favorites/${bookId}`);
+        console.log('Favorite removed successfully:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Failed to remove favorite:', error.response ? error.response.data : error.message);
+    }
+};
+
 

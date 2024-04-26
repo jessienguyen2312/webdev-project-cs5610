@@ -41,6 +41,10 @@ function ProfileAnon() {
         navigate(`/Bookazon/SignUp`)
     };
 
+    const home = () => {
+        navigate(`/Bookazon/Home`)
+    };
+
 
     const handleDialogOpen = () => {
         setOpen(true);  // Open the dialog
@@ -70,8 +74,9 @@ function ProfileAnon() {
                         label="profile"
                         onChange={handleChange}
                     >
-                        <MenuItem onClick={() => signIn()} >Sign In</MenuItem>
-                        <MenuItem onClick={() => signUp()}>Sign Up</MenuItem>
+                        <MenuItem> <Button onClick={() => home()} > Home </Button></MenuItem>
+                        <MenuItem> <Button onClick={() => signIn()} >Sign In</Button></MenuItem>
+                        <MenuItem>  <Button onClick={() => signUp()}>Sign Up</Button></MenuItem>
                     </Select>
                 </FormControl>
 

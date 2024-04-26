@@ -1,7 +1,13 @@
 import axios from "axios";
-//const API_BASE = process.env.REACT_APP_API_BASE;
-const API_BASE = "http://localhost:4000"
-//const API_BASE = `https://bookazon-node-server.onrender.com`
+
+
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
+// const API_BASE = `https://bookazon-node-server.onrender.com`
+
+//const API_BASE = "http://localhost:4000"
+
 const REVIEWS_API = `${API_BASE}/api/reviews`;
 
 // axios.defaults.withCredentials = true
@@ -42,7 +48,7 @@ export const createReview = async (review: any) => {
 
 export const deleteReview = async (review: any) => {
     const response = await axios.delete(
-        `${API_BASE}/${review._id}`);
+        `${REVIEWS_API}/${review._id}`);
     return response.data;
 };
 

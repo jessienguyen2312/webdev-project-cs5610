@@ -20,7 +20,7 @@ import {resetResult, setResult} from "../../Search/ResultReducer";
 import {setBook} from "../BookDetail/BookReducer";
 import {extractOLID} from "../../Search";
 import {titleTextBookSearch} from "../clientExternal";
-import bookworm_logo from "../../bookworm_logo.png"
+import bookworm_logo_color from "../../bookworm_logo_color.svg"
 
 
 
@@ -84,13 +84,13 @@ function SearchBar() {
             <Grid container alignItems="center" sx={{ mt: 2 }}>
                 <Grid item sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
                     <Link to="/Bookazon/Home"  style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Box src={bookworm_logo} sx={{height : 50, width: 50}} component="img"/>
-                        <Typography variant="h3">Bookworm</Typography>
+                        <Box src={bookworm_logo_color} sx={{height : 82, width: 82, borderRadius: '50%' }} component="img"/>
+                        {/* <Typography variant="h3" style={{ color: '#222C4E'}} >Bookworm</Typography> */}
                     </Link>
                 </Grid>
                 {/* Drop Down Menu */}
                 <Grid item xs={1}>
-                    <FormControl fullWidth>
+                    <FormControl  sx={{bgcolor: "#F4EEE7"}} fullWidth>
                         <InputLabel id="search-criteria-label">Category</InputLabel>
                         <Select variant='filled'
                             labelId="search-criteria-label"

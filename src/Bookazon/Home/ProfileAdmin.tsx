@@ -23,6 +23,10 @@ function ProfileAdmin({ userName }: { userName: string }) {
         navigate("/Bookazon/Profile");
     };
 
+    const home = () => {
+        navigate(`/Bookazon/Home`)
+    };
+
 
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -54,6 +58,7 @@ function ProfileAdmin({ userName }: { userName: string }) {
                         label="profileHome"
                         onChange={handleChange}
                     >
+                        <MenuItem> <Button onClick={() => home()} > Home </Button></MenuItem>
                         <MenuItem><Button onClick={handleProfileNav}>My Profile</Button></MenuItem>
                         <MenuItem><Button onClick={handleReviewNav}>Review Moderation</Button></MenuItem>
                         <MenuItem><Button onClick={signout}>Log Out</Button></MenuItem>
