@@ -17,11 +17,8 @@ import {Provider} from "react-redux";
 import EditUserProfile from './Bookazon/Profile/EditProfile/EditUserProfile';
 import OLAuthorProfile from "./Bookazon/Profile/OLAuthorProfile";
 import ReviewsIndex from './Bookazon/BookDetail/reviewsIndex';
-<<<<<<< HEAD
 import ReviewModeration from './Bookazon/BookDetail/ReviewModeration';
-=======
 import UserFollowing from './UserFollowing';
->>>>>>> main
 
 
 // import Box from '@mui/material/Box';
